@@ -74,7 +74,7 @@ body.modal-open { overflow: hidden; touch-action: none; }
         </div>
 
         <!-- КОРЗИНА -->
-        <div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-24 bottom-0 left-0 right-0 z-50 md:z-10 w-full md:w-80 lg:w-96 bg-white md:bg-transparent rounded-t-[2rem] md:rounded-none shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-none flex flex-col max-h-[85vh] md:max-h-[calc(100vh-120px)]">
+        <div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-24 bottom-0 left-0 right-0 z-50 md:z-10 w-full md:w-80 lg:w-96 bg-white md:bg-transparent rounded-t-[2rem] md:rounded-none shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-none flex flex-col max-h-[75dvh] md:max-h-[calc(100vh-120px)]">
             
             <div class="bg-white md:rounded-[1.5rem] md:border md:border-slate-100 md:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] flex flex-col h-full overflow-hidden">
                 
@@ -94,7 +94,7 @@ body.modal-open { overflow: hidden; touch-action: none; }
 
                 <!-- Подвал корзины -->
                 <div class="p-4 sm:p-5 bg-white border-t border-slate-100">
-                    <div class="flex justify-between items-center mb-1 text-sm font-semibold hidden"> <!-- Убрано отображение дохода -->
+                    <div class="flex justify-between items-center mb-1 text-sm font-semibold">
                         <span class="text-slate-500">Доход продавца:</span>
                         <span id="esTotalIncome" class="text-emerald-500">0 ₽</span>
                     </div>
@@ -112,8 +112,8 @@ body.modal-open { overflow: hidden; touch-action: none; }
     </div>
 
     <!-- МОДАЛЬНОЕ ОКНО ТОВАРА -->
-    <div id="esModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[90vh] overflow-hidden transform transition-all relative">
+    <div id="esModal" class="fixed top-0 left-0 w-full h-[100dvh] bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 sm:p-6">
+    <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[85dvh] overflow-hidden transform transition-all relative">
             
             <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4">Товар</h3>
@@ -489,9 +489,19 @@ body.modal-open { overflow: hidden; touch-action: none; }
             renderCart();
             
             if(window.innerWidth <= 768 && cart.length === 1) {
-                document.getElementById('esCartWidget').classList.add('is-open');
-                document.getElementById('mobile-cart-arrow').style.transform = 'rotate(180deg)';
-            }
+    const widget = document.getElementById('esCartWidget');
+    const arrow = document.getElementById('mobile-cart-arrow');
+    
+    // Показываем корзину
+    widget.classList.add('is-open');
+    arrow.style.transform = 'rotate(180deg)';
+    
+    // Автоматически прячем через 2.5 секунды
+    setTimeout(() => {
+        widget.classList.remove('is-open');
+        arrow.style.transform = 'rotate(0deg)';
+    }, 2500);
+}
         }
 
         function renderCart() {
