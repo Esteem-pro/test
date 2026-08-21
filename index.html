@@ -67,7 +67,7 @@
                 <!-- Поле поиска с эффектом матового стекла -->
                 <input type="text" id="esSearch" 
                     class="w-full bg-white/80 backdrop-blur-xl border border-white/60 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-[1.2rem] px-5 py-3.5 pl-12 outline-none transition-all text-slate-800 placeholder-slate-400 font-medium text-base" 
-                    placeholder="Поиск товаров (Коврик, Сумка)...">
+                    placeholder="Поиск товаров">
                 <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
         </div>
@@ -130,9 +130,11 @@
     <div id="esModal" class="fixed top-0 left-0 w-full h-[100dvh] bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 sm:p-6">
         <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[85dvh] overflow-hidden transform transition-all relative">
             
-            <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 shrink-0">
-                <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4 truncate">Товар</h3>
-                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full transition-colors shrink-0">
+<div class="px-5 py-4 border-b border-slate-100 flex justify-between items-start bg-slate-50/50 shrink-0">
+    <!-- Убрали класс truncate, чтобы текст мог переноситься на новые строки -->
+    <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4 leading-snug">Товар</h3>
+    <!-- Кнопке крестика добавили mt-1, чтобы она визуально лучше стояла рядом с первой строкой текста -->
+    <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full transition-colors shrink-0 mt-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
