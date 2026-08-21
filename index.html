@@ -32,6 +32,9 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
+/* Блокировка скролла фона при открытой модалке (для всех экранов) */
+body.modal-open { overflow: hidden; touch-action: none; }
+        
         /* Мобильная корзина (Bottom Sheet) */
         @media (max-width: 768px) {
             .mobile-cart-sheet {
