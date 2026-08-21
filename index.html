@@ -20,45 +20,55 @@
         }
         button, input, select, textarea { touch-action: manipulation; }
 
-        /* Эффект стекла для шапки */
-        .glass-header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
         /* Кастомный скроллбар */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-/* Блокировка скролла фона при открытой модалке (для всех экранов) */
-body.modal-open { overflow: hidden; touch-action: none; }
-        
-        /* Мобильная корзина (Bottom Sheet) */
+        /* Блокировка скролла фона при открытой модалке (для всех экранов) */
+        body.modal-open { overflow: hidden; touch-action: none; }
+
+        /* Логика островков для мобильной корзины */
         @media (max-width: 768px) {
             .mobile-cart-sheet {
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                transform: translateY(calc(100% - 70px));
+                /* В свернутом состоянии высота островка = высота его шапки (62px) */
+                max-height: 62px; 
+                transition: max-height 0.4s cubic-bezier(0.2, 1, 0.3, 1);
             }
             .mobile-cart-sheet.is-open {
-                transform: translateY(0);
+                /* Развернутая высота */
+                max-height: 75dvh;
             }
-            body.modal-open { overflow: hidden; }
+            
+            /* Плавно скрываем/показываем внутренности (товары, подвал) */
+            .mobile-cart-content {
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s ease;
+            }
+            .mobile-cart-sheet.is-open .mobile-cart-content {
+                opacity: 1;
+                pointer-events: auto;
+                transition: opacity 0.3s ease 0.15s; /* Небольшая задержка, чтобы сначала открылся островок */
+            }
+            
+            /* Убираем линию под шапкой, если корзина свернута (для эффекта цельной капсулы) */
+            .mobile-cart-sheet:not(.is-open) .cart-header-border {
+                border-color: transparent;
+            }
         }
     </style>
 </head>
-<!-- Задан точный цвет фона дашборда #f1f5f9 -->
-<body class="pb-24 md:pb-8 bg-[#f1f5f9] min-h-screen">
+<body class="pb-28 md:pb-8 bg-[#f1f5f9] min-h-screen relative">
 
-    <!-- ЛИПКИЙ ПОИСК (ШАПКА) -->
-    <div class="glass-header sticky top-0 z-40 px-4 py-3 sm:px-6 sm:py-4 mb-4 sm:mb-6 flex justify-center">
-        <div class="w-full max-w-7xl">
-            <div class="relative">
+    <!-- ЛИПКИЙ ПОИСК (ПЛАВАЮЩИЙ ОСТРОВОК) -->
+    <div class="sticky top-3 sm:top-5 z-40 px-4 sm:px-6 mb-6 sm:mb-8 flex justify-center pointer-events-none">
+        <div class="w-full max-w-7xl pointer-events-auto">
+            <div class="relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[1.2rem]">
+                <!-- Поле поиска с эффектом матового стекла -->
                 <input type="text" id="esSearch" 
-                    class="w-full bg-slate-50/50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 pl-11 outline-none transition-all text-slate-800 placeholder-slate-400 font-medium shadow-sm text-base" 
+                    class="w-full bg-white/80 backdrop-blur-xl border border-white/60 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-[1.2rem] px-5 py-3.5 pl-12 outline-none transition-all text-slate-800 placeholder-slate-400 font-medium text-base" 
                     placeholder="Поиск товаров (Коврик, Сумка)...">
-                <svg class="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
         </div>
     </div>
@@ -73,13 +83,13 @@ body.modal-open { overflow: hidden; touch-action: none; }
             </div>
         </div>
 
-        <!-- КОРЗИНА -->
-        <div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-24 bottom-0 left-0 right-0 z-50 md:z-10 w-full md:w-80 lg:w-96 bg-white md:bg-transparent rounded-t-[2rem] md:rounded-none shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-none flex flex-col max-h-[75dvh] md:max-h-[calc(100vh-120px)]">
+        <!-- КОРЗИНА (ОСТРОВОК) -->
+        <div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-24 bottom-4 left-3 right-3 md:bottom-auto md:left-auto md:right-auto z-50 md:z-10 w-auto md:w-80 lg:w-96 bg-transparent flex flex-col mx-auto">
             
-            <div class="bg-white md:rounded-[1.5rem] md:border md:border-slate-100 md:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] flex flex-col h-full overflow-hidden">
+            <div class="bg-white rounded-[1.2rem] md:rounded-[1.5rem] border border-slate-200/80 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.15)] md:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] flex flex-col h-full overflow-hidden">
                 
                 <!-- Шапка корзины -->
-                <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-900 md:bg-white text-white md:text-slate-900 cursor-pointer md:cursor-default" onclick="toggleMobileCart()">
+                <div class="cart-header-border p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-900 md:bg-white text-white md:text-slate-900 cursor-pointer md:cursor-default transition-colors shrink-0" onclick="toggleMobileCart()">
                     <div class="flex items-center gap-2">
                         <h2 class="font-extrabold text-lg">Ваш заказ</h2>
                         <span id="cart-count-badge" class="bg-blue-500 md:bg-slate-100 md:text-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
@@ -87,25 +97,30 @@ body.modal-open { overflow: hidden; touch-action: none; }
                     <svg id="mobile-cart-arrow" class="w-6 h-6 md:hidden transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                 </div>
 
-                <!-- Список товаров -->
-                <div id="esCartItems" class="flex-1 overflow-y-auto p-4 bg-[#f1f5f9]/50">
-                    <div class="text-center py-8 text-slate-400 font-medium text-sm">Корзина пуста</div>
-                </div>
-
-                <!-- Подвал корзины -->
-                <div class="p-4 sm:p-5 bg-white border-t border-slate-100">
-                    <div class="flex justify-between items-center mb-1 text-sm font-semibold">
-                        <span class="text-slate-500">Доход продавца:</span>
-                        <span id="esTotalIncome" class="text-emerald-500">0 ₽</span>
+                <!-- Контент корзины (скрывается/показывается на мобильных) -->
+                <div class="mobile-cart-content flex flex-col flex-1 overflow-hidden">
+                    
+                    <!-- Список товаров -->
+                    <div id="esCartItems" class="flex-1 overflow-y-auto p-4 bg-[#f1f5f9]/50">
+                        <div class="text-center py-8 text-slate-400 font-medium text-sm">Корзина пуста</div>
                     </div>
-                    <div class="flex justify-between items-end mb-4">
-                        <span class="text-slate-500 font-semibold mb-1">Итого:</span>
-                        <span id="esTotalSum" class="text-2xl font-extrabold text-slate-900 tracking-tight">0 ₽</span>
+
+                    <!-- Подвал корзины -->
+                    <div class="p-4 sm:p-5 bg-white border-t border-slate-100 shrink-0">
+                        <div class="flex justify-between items-center mb-1 text-sm font-semibold hidden"> <!-- Убрано отображение дохода -->
+                            <span class="text-slate-500">Доход продавца:</span>
+                            <span id="esTotalIncome" class="text-emerald-500">0 ₽</span>
+                        </div>
+                        <div class="flex justify-between items-end mb-4">
+                            <span class="text-slate-500 font-semibold mb-1">Итого:</span>
+                            <span id="esTotalSum" class="text-2xl font-extrabold text-slate-900 tracking-tight">0 ₽</span>
+                        </div>
+                        
+                        <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold p-3 rounded-[1rem] transition-colors text-sm" onclick="clearCart(event)">
+                            Очистить корзину
+                        </button>
                     </div>
                     
-                    <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold p-3 rounded-xl transition-colors text-sm" onclick="clearCart(event)">
-                        Очистить корзину
-                    </button>
                 </div>
             </div>
         </div>
@@ -113,10 +128,10 @@ body.modal-open { overflow: hidden; touch-action: none; }
 
     <!-- МОДАЛЬНОЕ ОКНО ТОВАРА -->
     <div id="esModal" class="fixed top-0 left-0 w-full h-[100dvh] bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 sm:p-6">
-    <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[85dvh] overflow-hidden transform transition-all relative">
+        <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[85dvh] overflow-hidden transform transition-all relative">
             
-            <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4">Товар</h3>
+            <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 shrink-0">
+                <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4 truncate">Товар</h3>
                 <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full transition-colors shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -132,7 +147,7 @@ body.modal-open { overflow: hidden; touch-action: none; }
                 </div>
             </div>
             
-            <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-4">
+            <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-4 shrink-0">
                 <div class="flex justify-between items-center">
                     <span class="font-semibold text-slate-600 text-sm">Количество:</span>
                     <div class="flex items-center gap-3 bg-white border border-slate-200 p-1 rounded-full shadow-sm">
@@ -167,7 +182,6 @@ body.modal-open { overflow: hidden; touch-action: none; }
         
         const fmt = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
         
-        // Защита от XSS
         const esc = (str) => {
             if (!str) return '';
             return String(str).replace(/[&<>'"]/g, match => ({
@@ -175,7 +189,6 @@ body.modal-open { overflow: hidden; touch-action: none; }
             })[match]);
         };
 
-        // Блокировка мульти-тач зума (iOS)
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
@@ -274,11 +287,9 @@ body.modal-open { overflow: hidden; touch-action: none; }
                 let priceText = minP > 0 ? `от ${fmt(minP)}` : (group.items.some(i=>i.isPercent) ? "Расчет %" : "По запросу");
 
                 let card = document.createElement('div');
-                // Мягкая тень, аккуратная рамка и плавный hover-эффект
                 card.className = 'bg-white p-4 sm:p-5 rounded-[1.5rem] border border-slate-200 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] hover:border-blue-400 hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[120px] relative group';
                 card.onclick = () => openModalFromCatalog(idx);
                 card.innerHTML = `
-                    <!-- Аккуратный шрифт -->
                     <div class="font-bold text-slate-800 text-sm sm:text-base leading-snug mb-3 group-hover:text-blue-700 transition-colors">${esc(group.title)}</div>
                     <div class="mt-auto font-extrabold text-blue-600 text-base">${priceText}</div>
                 `;
@@ -342,7 +353,6 @@ body.modal-open { overflow: hidden; touch-action: none; }
                 let pText = item.isPercent ? `${item.price}%` : (item.price===0?"По запросу":fmt(item.price));
                 let isActive = (i === currentSelection.baseIdx);
                 
-                // Явное выделение радио-кнопок
                 let activeClasses = isActive 
                     ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600 shadow-sm" 
                     : "border-slate-200 bg-white hover:border-blue-300";
@@ -374,7 +384,6 @@ body.modal-open { overflow: hidden; touch-action: none; }
                     let qty = currentSelection.addons[i] || 0;
                     let isActive = qty > 0;
                     
-                    // Подсветка доп опций
                     let activeClasses = isActive ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-slate-200 bg-white hover:border-blue-300";
 
                     aList.innerHTML += `
@@ -488,20 +497,20 @@ body.modal-open { overflow: hidden; touch-action: none; }
             closeModal();
             renderCart();
             
+            // Автоматическое показ корзины при добавлении первого товара (на мобилках)
             if(window.innerWidth <= 768 && cart.length === 1) {
-    const widget = document.getElementById('esCartWidget');
-    const arrow = document.getElementById('mobile-cart-arrow');
-    
-    // Показываем корзину
-    widget.classList.add('is-open');
-    arrow.style.transform = 'rotate(180deg)';
-    
-    // Автоматически прячем через 2.5 секунды
-    setTimeout(() => {
-        widget.classList.remove('is-open');
-        arrow.style.transform = 'rotate(0deg)';
-    }, 2500);
-}
+                const widget = document.getElementById('esCartWidget');
+                const arrow = document.getElementById('mobile-cart-arrow');
+                
+                widget.classList.add('is-open');
+                arrow.style.transform = 'rotate(180deg)';
+                
+                // Автоматически прячем через 2.5 секунды
+                setTimeout(() => {
+                    widget.classList.remove('is-open');
+                    arrow.style.transform = 'rotate(0deg)';
+                }, 2500);
+            }
         }
 
         function renderCart() {
