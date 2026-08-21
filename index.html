@@ -1,4030 +1,630 @@
-<div id="esteem-liquid-widget">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Каталог и Корзина</title>
+    
+    <!-- Шрифты и библиотеки -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
-        /* =========================================================
-           ESTEEM LIQUID GLASS WIDGET
-           Все стили изолированы внутри #esteem-liquid-widget
-        ========================================================== */
-
-        #esteem-liquid-widget {
-            --es-bg: #eef3f8;
-            --es-bg-deep: #dde7f1;
-
-            --es-glass: rgba(255, 255, 255, 0.58);
-            --es-glass-strong: rgba(255, 255, 255, 0.78);
-            --es-glass-light: rgba(255, 255, 255, 0.36);
-
-            --es-border: rgba(255, 255, 255, 0.72);
-            --es-border-dark: rgba(74, 90, 110, 0.12);
-
-            --es-text: #18202a;
-            --es-text-soft: #5f6b78;
-            --es-text-muted: #8b96a3;
-
-            --es-accent: #1677ff;
-            --es-accent-dark: #075ccc;
-            --es-accent-soft: rgba(22, 119, 255, 0.12);
-
-            --es-danger: #e5484d;
-            --es-danger-soft: rgba(229, 72, 77, 0.11);
-
-            --es-success: #179c62;
-            --es-success-soft: rgba(23, 156, 98, 0.12);
-
-            --es-shadow:
-                0 24px 70px rgba(31, 46, 66, 0.13),
-                0 6px 22px rgba(31, 46, 66, 0.07);
-
-            --es-shadow-soft:
-                0 12px 35px rgba(31, 46, 66, 0.09),
-                0 2px 10px rgba(31, 46, 66, 0.05);
-
-            --es-radius-xl: 30px;
-            --es-radius-lg: 24px;
-            --es-radius-md: 18px;
-            --es-radius-sm: 14px;
-
-            position: relative;
-            isolation: isolate;
-            width: 100%;
-            max-width: 1380px;
-            min-height: 600px;
-            margin: 0 auto;
-            padding: 24px;
-            overflow: visible;
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "SF Pro Display",
-                "SF Pro Text",
-                Inter,
-                Arial,
-                sans-serif;
-
-            color: var(--es-text);
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-
-        #esteem-liquid-widget,
-        #esteem-liquid-widget * {
-            box-sizing: border-box;
-        }
-
-        #esteem-liquid-widget button,
-        #esteem-liquid-widget input {
-            font: inherit;
-        }
-
-        #esteem-liquid-widget button,
-        #esteem-liquid-widget input,
-        #esteem-liquid-widget .es-product-card {
+        /* Базовые настройки и патч от зума */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f1f5f9; /* Цвет фона дашборда */
+            color: #0f172a; /* text-slate-900 */
             touch-action: manipulation;
-        }
-
-        #esteem-liquid-widget button {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        #esteem-liquid-widget button:focus-visible,
-        #esteem-liquid-widget input:focus-visible {
-            outline: 3px solid rgba(22, 119, 255, 0.28);
-            outline-offset: 3px;
-        }
-
-        /* =========================================================
-           ФОН
-        ========================================================== */
-
-        #esteem-liquid-widget .es-background {
-            position: absolute;
-            inset: 0;
-            z-index: -2;
-            overflow: hidden;
-            border-radius: 38px;
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(247, 250, 253, 0.96),
-                    rgba(226, 235, 244, 0.94)
-                );
-        }
-
-        #esteem-liquid-widget .es-background::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(
-                    120deg,
-                    rgba(255, 255, 255, 0.78),
-                    transparent 35%,
-                    rgba(255, 255, 255, 0.26) 65%,
-                    transparent
-                );
-            pointer-events: none;
-        }
-
-        #esteem-liquid-widget .es-orb {
-            position: absolute;
-            border-radius: 999px;
-            filter: blur(3px);
-            opacity: 0.72;
-            pointer-events: none;
-        }
-
-        #esteem-liquid-widget .es-orb-one {
-            width: 420px;
-            height: 420px;
-            top: -180px;
-            left: -100px;
-            background:
-                radial-gradient(
-                    circle at 35% 35%,
-                    rgba(110, 185, 255, 0.75),
-                    rgba(87, 139, 255, 0.24) 55%,
-                    transparent 72%
-                );
-        }
-
-        #esteem-liquid-widget .es-orb-two {
-            width: 480px;
-            height: 480px;
-            right: -190px;
-            top: 180px;
-            background:
-                radial-gradient(
-                    circle at 40% 40%,
-                    rgba(204, 167, 255, 0.62),
-                    rgba(139, 116, 255, 0.19) 58%,
-                    transparent 74%
-                );
-        }
-
-        #esteem-liquid-widget .es-orb-three {
-            width: 360px;
-            height: 360px;
-            left: 36%;
-            bottom: -200px;
-            background:
-                radial-gradient(
-                    circle at 50% 45%,
-                    rgba(118, 231, 208, 0.54),
-                    rgba(74, 195, 205, 0.12) 60%,
-                    transparent 75%
-                );
-        }
-
-        /* =========================================================
-           ОБЩИЙ GLASS-ЭФФЕКТ
-        ========================================================== */
-
-        #esteem-liquid-widget .es-glass {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--es-border);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.75),
-                    rgba(255, 255, 255, 0.42)
-                );
-            box-shadow: var(--es-shadow-soft);
-            -webkit-backdrop-filter: blur(28px) saturate(145%);
-            backdrop-filter: blur(28px) saturate(145%);
-        }
-
-        #esteem-liquid-widget .es-glass::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.72),
-                    transparent 35%,
-                    rgba(255, 255, 255, 0.15) 70%,
-                    transparent
-                );
-            opacity: 0.8;
-        }
-
-        #esteem-liquid-widget .es-glass > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* =========================================================
-           ВЕРХНЯЯ ЧАСТЬ ПК
-        ========================================================== */
-
-        #esteem-liquid-widget .es-desktop-hero {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
-            align-items: end;
-            gap: 24px;
-            margin-bottom: 24px;
-            padding: 28px 30px;
-            border-radius: var(--es-radius-xl);
-        }
-
-        #esteem-liquid-widget .es-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 11px;
-            color: var(--es-accent);
-            font-size: 12px;
-            font-weight: 750;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        #esteem-liquid-widget .es-eyebrow-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: var(--es-success);
-            box-shadow: 0 0 0 6px var(--es-success-soft);
-        }
-
-        #esteem-liquid-widget .es-main-title {
-            margin: 0;
-            font-size: clamp(29px, 3.1vw, 48px);
-            line-height: 0.98;
-            letter-spacing: -0.045em;
-            font-weight: 760;
-        }
-
-        #esteem-liquid-widget .es-subtitle {
-            max-width: 650px;
-            margin: 15px 0 0;
-            color: var(--es-text-soft);
-            font-size: 15px;
-            line-height: 1.55;
-        }
-
-        #esteem-liquid-widget .es-desktop-search {
-            position: relative;
-            display: flex;
-            align-items: center;
-            min-height: 62px;
-            padding: 7px;
-            border-radius: 21px;
-            background: rgba(255, 255, 255, 0.58);
-            border: 1px solid rgba(255, 255, 255, 0.86);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.88),
-                0 10px 30px rgba(46, 60, 79, 0.08);
-            -webkit-backdrop-filter: blur(24px);
-            backdrop-filter: blur(24px);
-        }
-
-        #esteem-liquid-widget .es-search-icon {
-            flex: 0 0 auto;
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            color: var(--es-text-soft);
-        }
-
-        #esteem-liquid-widget .es-search-icon svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        #esteem-liquid-widget .es-search-input {
-            width: 100%;
-            min-width: 0;
-            border: 0;
-            outline: 0;
-            padding: 12px 12px 12px 0;
-            color: var(--es-text);
-            background: transparent;
-            font-size: 16px;
-        }
-
-        #esteem-liquid-widget .es-search-input::placeholder {
-            color: var(--es-text-muted);
-        }
-
-        #esteem-liquid-widget .es-search-clear {
-            flex: 0 0 auto;
-            width: 38px;
-            height: 38px;
-            border: 0;
-            border-radius: 999px;
-            display: none;
-            place-items: center;
-            color: var(--es-text-soft);
-            background: rgba(93, 107, 123, 0.1);
-            cursor: pointer;
-            transition:
-                transform 160ms ease,
-                background 160ms ease;
-        }
-
-        #esteem-liquid-widget .es-search-clear.is-visible {
-            display: grid;
-        }
-
-        #esteem-liquid-widget .es-search-clear:hover {
-            background: rgba(93, 107, 123, 0.17);
-            transform: scale(1.04);
-        }
-
-        /* =========================================================
-           ОСНОВНАЯ СЕТКА
-        ========================================================== */
-
-        #esteem-liquid-widget .es-main-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 360px;
-            align-items: start;
-            gap: 24px;
-        }
-
-        #esteem-liquid-widget .es-catalog-shell {
-            min-width: 0;
-        }
-
-        #esteem-liquid-widget .es-catalog-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 15px;
-            padding: 0 5px;
-        }
-
-        #esteem-liquid-widget .es-section-title {
-            margin: 0;
-            font-size: 20px;
-            letter-spacing: -0.02em;
-        }
-
-        #esteem-liquid-widget .es-result-count {
-            color: var(--es-text-soft);
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        #esteem-liquid-widget .es-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        /* =========================================================
-           КАРТОЧКИ
-        ========================================================== */
-
-        #esteem-liquid-widget .es-product-card {
-            position: relative;
-            width: 100%;
-            min-height: 172px;
-            padding: 19px;
-            overflow: hidden;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 20px;
-
-            text-align: left;
-            color: var(--es-text);
-            border: 1px solid rgba(255, 255, 255, 0.78);
-            border-radius: var(--es-radius-lg);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.7),
-                    rgba(255, 255, 255, 0.42)
-                );
-
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.92),
-                0 13px 35px rgba(39, 55, 75, 0.08);
-
-            -webkit-backdrop-filter: blur(22px) saturate(145%);
-            backdrop-filter: blur(22px) saturate(145%);
-
-            cursor: pointer;
-            transition:
-                transform 220ms cubic-bezier(.2, .8, .2, 1),
-                box-shadow 220ms ease,
-                border-color 220ms ease,
-                background 220ms ease;
-        }
-
-        #esteem-liquid-widget .es-product-card::before {
-            content: "";
-            position: absolute;
-            top: -80px;
-            right: -60px;
-            width: 180px;
-            height: 180px;
-            border-radius: 999px;
-            background:
-                radial-gradient(
-                    circle,
-                    rgba(255, 255, 255, 0.9),
-                    rgba(255, 255, 255, 0.1) 63%,
-                    transparent 72%
-                );
-            opacity: 0.64;
-            pointer-events: none;
-            transition: transform 300ms ease;
-        }
-
-        #esteem-liquid-widget .es-product-card::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 42%;
-            background:
-                linear-gradient(
-                    to top,
-                    rgba(98, 148, 255, 0.07),
-                    transparent
-                );
-            pointer-events: none;
-        }
-
-        #esteem-liquid-widget .es-product-card:hover {
-            transform: translateY(-5px) scale(1.008);
-            border-color: rgba(255, 255, 255, 0.98);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.84),
-                    rgba(255, 255, 255, 0.5)
-                );
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 1),
-                0 22px 48px rgba(39, 55, 75, 0.14);
-        }
-
-        #esteem-liquid-widget .es-product-card:hover::before {
-            transform: translate(-15px, 15px) scale(1.14);
-        }
-
-        #esteem-liquid-widget .es-card-index {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 12px;
-            color: var(--es-accent);
-            background: var(--es-accent-soft);
-            font-size: 12px;
-            font-weight: 760;
-        }
-
-        #esteem-liquid-widget .es-card-title {
-            position: relative;
-            z-index: 1;
-            max-width: 95%;
-            font-size: 16px;
-            line-height: 1.3;
-            font-weight: 690;
-            letter-spacing: -0.018em;
-        }
-
-        #esteem-liquid-widget .es-card-bottom {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        #esteem-liquid-widget .es-card-price-block {
-            min-width: 0;
-        }
-
-        #esteem-liquid-widget .es-card-caption {
-            display: block;
-            margin-bottom: 4px;
-            color: var(--es-text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.055em;
-        }
-
-        #esteem-liquid-widget .es-card-price {
-            color: var(--es-text);
-            font-size: 16px;
-            font-weight: 740;
-        }
-
-        #esteem-liquid-widget .es-card-arrow {
-            flex: 0 0 auto;
-            width: 38px;
-            height: 38px;
-            display: grid;
-            place-items: center;
-            border-radius: 999px;
-            color: white;
-            background:
-                linear-gradient(
-                    145deg,
-                    #2688ff,
-                    #0a66e5
-                );
-            box-shadow:
-                0 10px 20px rgba(22, 119, 255, 0.24),
-                inset 0 1px 0 rgba(255, 255, 255, 0.34);
-            transition: transform 200ms ease;
-        }
-
-        #esteem-liquid-widget .es-product-card:hover .es-card-arrow {
-            transform: translateX(3px);
-        }
-
-        /* =========================================================
-           КОРЗИНА — ПК
-        ========================================================== */
-
-        #esteem-liquid-widget .es-cart {
-            position: sticky;
-            top: 20px;
-            overflow: hidden;
-            border-radius: var(--es-radius-xl);
-            min-height: 300px;
-            max-height: calc(100vh - 40px);
-
-            display: flex;
-            flex-direction: column;
-
-            border: 1px solid rgba(255, 255, 255, 0.82);
-            background:
-                linear-gradient(
-                    155deg,
-                    rgba(255, 255, 255, 0.76),
-                    rgba(255, 255, 255, 0.44)
-                );
-
-            box-shadow: var(--es-shadow);
-            -webkit-backdrop-filter: blur(32px) saturate(150%);
-            backdrop-filter: blur(32px) saturate(150%);
-        }
-
-        #esteem-liquid-widget .es-cart::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.82),
-                    transparent 32%,
-                    rgba(255, 255, 255, 0.13)
-                );
-        }
-
-        #esteem-liquid-widget .es-cart-header {
-            position: relative;
-            z-index: 1;
-            padding: 22px 22px 16px;
-        }
-
-        #esteem-liquid-widget .es-cart-heading-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-        }
-
-        #esteem-liquid-widget .es-cart-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        #esteem-liquid-widget .es-cart-icon {
-            width: 42px;
-            height: 42px;
-            flex: 0 0 auto;
-            display: grid;
-            place-items: center;
-            border-radius: 15px;
-            color: var(--es-accent);
-            background: var(--es-accent-soft);
-        }
-
-        #esteem-liquid-widget .es-cart-icon svg {
-            width: 21px;
-            height: 21px;
-        }
-
-        #esteem-liquid-widget .es-cart-title {
-            margin: 0;
-            font-size: 19px;
-            line-height: 1.1;
-            letter-spacing: -0.025em;
-        }
-
-        #esteem-liquid-widget .es-cart-count {
-            margin-top: 4px;
-            color: var(--es-text-muted);
-            font-size: 12px;
-        }
-
-        #esteem-liquid-widget .es-cart-close {
-            display: none;
-            width: 40px;
-            height: 40px;
-            border: 0;
-            border-radius: 999px;
-            place-items: center;
-            color: var(--es-text-soft);
-            background: rgba(91, 106, 123, 0.1);
-            cursor: pointer;
-        }
-
-        #esteem-liquid-widget .es-cart-items {
-            position: relative;
-            z-index: 1;
-            min-height: 110px;
-            overflow-y: auto;
-            padding: 2px 14px 10px;
-            scrollbar-width: thin;
-            scrollbar-color:
-                rgba(104, 119, 136, 0.23)
-                transparent;
-        }
-
-        #esteem-liquid-widget .es-cart-items::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #esteem-liquid-widget .es-cart-items::-webkit-scrollbar-thumb {
-            border-radius: 999px;
-            background: rgba(104, 119, 136, 0.23);
-        }
-
-        #esteem-liquid-widget .es-cart-item {
-            position: relative;
-            margin-bottom: 10px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.72);
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.45);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.72),
-                0 6px 15px rgba(31, 46, 66, 0.045);
-            cursor: pointer;
-            transition:
-                transform 180ms ease,
-                background 180ms ease;
-        }
-
-        #esteem-liquid-widget .es-cart-item:hover {
-            transform: translateY(-1px);
-            background: rgba(255, 255, 255, 0.68);
-        }
-
-        #esteem-liquid-widget .es-cart-item-title {
-            max-width: calc(100% - 34px);
-            margin-bottom: 7px;
-            font-size: 14px;
-            line-height: 1.35;
-            font-weight: 720;
-        }
-
-        #esteem-liquid-widget .es-cart-item-line {
-            margin-top: 4px;
-            color: var(--es-text-soft);
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        #esteem-liquid-widget .es-cart-item-addon {
-            margin-top: 3px;
-            color: var(--es-text-muted);
-            font-size: 11px;
-            line-height: 1.4;
-        }
-
-        #esteem-liquid-widget .es-cart-item-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 12px;
-            margin-top: 11px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(95, 107, 120, 0.1);
-        }
-
-        #esteem-liquid-widget .es-cart-edit-label {
-            color: var(--es-text-muted);
-            font-size: 10px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        #esteem-liquid-widget .es-cart-item-sum {
-            text-align: right;
-            font-size: 13px;
-            font-weight: 750;
-        }
-
-        #esteem-liquid-widget .es-remove-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 28px;
-            height: 28px;
-            border: 0;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            color: var(--es-danger);
-            background: var(--es-danger-soft);
-            cursor: pointer;
-            transition:
-                transform 150ms ease,
-                background 150ms ease;
-        }
-
-        #esteem-liquid-widget .es-remove-button:hover {
-            transform: scale(1.07);
-            background: rgba(229, 72, 77, 0.18);
-        }
-
-        #esteem-liquid-widget .es-empty-cart {
-            min-height: 165px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--es-text-muted);
-        }
-
-        #esteem-liquid-widget .es-empty-cart-icon {
-            width: 58px;
-            height: 58px;
-            margin-bottom: 13px;
-            display: grid;
-            place-items: center;
-            border-radius: 21px;
-            color: var(--es-text-muted);
-            background: rgba(255, 255, 255, 0.47);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-
-        #esteem-liquid-widget .es-empty-cart-title {
-            margin-bottom: 5px;
-            color: var(--es-text-soft);
-            font-size: 14px;
-            font-weight: 680;
-        }
-
-        #esteem-liquid-widget .es-empty-cart-text {
-            max-width: 220px;
-            font-size: 12px;
-            line-height: 1.45;
-        }
-
-        #esteem-liquid-widget .es-cart-footer {
-            position: relative;
-            z-index: 1;
-            margin-top: auto;
-            padding: 17px 20px 20px;
-            border-top: 1px solid rgba(91, 106, 123, 0.1);
-            background: rgba(255, 255, 255, 0.35);
-        }
-
-        #esteem-liquid-widget .es-total-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            margin-bottom: 8px;
-            color: var(--es-text-soft);
-            font-size: 12px;
-        }
-
-        #esteem-liquid-widget .es-total-row strong {
-            color: var(--es-text);
-        }
-
-        #esteem-liquid-widget .es-income-value {
-            color: var(--es-success) !important;
-        }
-
-        #esteem-liquid-widget .es-total-main {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 14px;
-            margin-top: 14px;
-        }
-
-        #esteem-liquid-widget .es-total-label {
-            color: var(--es-text-soft);
-            font-size: 13px;
-        }
-
-        #esteem-liquid-widget .es-total-value {
-            margin-top: 3px;
-            font-size: 24px;
-            line-height: 1;
-            font-weight: 780;
-            letter-spacing: -0.04em;
-        }
-
-        #esteem-liquid-widget .es-clear-cart {
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px 14px;
-            border: 1px solid rgba(82, 97, 113, 0.12);
-            border-radius: 15px;
-            color: var(--es-text-soft);
-            background: rgba(255, 255, 255, 0.42);
-            cursor: pointer;
-            transition:
-                background 170ms ease,
-                transform 170ms ease;
-        }
-
-        #esteem-liquid-widget .es-clear-cart:hover {
-            background: rgba(255, 255, 255, 0.72);
-            transform: translateY(-1px);
-        }
-
-        #esteem-liquid-widget .es-clear-cart:disabled {
-            opacity: 0.45;
-            cursor: default;
-            transform: none;
-        }
-
-        /* =========================================================
-           МОБИЛЬНЫЙ НИЖНИЙ DOCK
-        ========================================================== */
-
-        #esteem-liquid-widget .es-mobile-dock,
-        #esteem-liquid-widget .es-mobile-cart-backdrop {
-            display: none;
-        }
-
-        #esteem-liquid-widget .es-mobile-dock {
-            position: fixed;
-            left: 12px;
-            right: 12px;
-            bottom: calc(10px + env(safe-area-inset-bottom));
-            z-index: 8000;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-        }
-
-        #esteem-liquid-widget .es-mobile-search-shell,
-        #esteem-liquid-widget .es-mobile-cart-button {
-            pointer-events: auto;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.83),
-                    rgba(242, 247, 252, 0.63)
-                );
-            box-shadow:
-                0 18px 55px rgba(24, 39, 58, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.95);
-            -webkit-backdrop-filter: blur(28px) saturate(160%);
-            backdrop-filter: blur(28px) saturate(160%);
-        }
-
-        #esteem-liquid-widget .es-mobile-search-shell {
-            min-height: 54px;
-            padding: 5px 7px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        #esteem-liquid-widget .es-mobile-search-shell .es-search-icon {
-            width: 39px;
-            height: 39px;
-        }
-
-        #esteem-liquid-widget .es-mobile-search-shell .es-search-input {
-            padding-top: 9px;
-            padding-bottom: 9px;
-            font-size: 16px;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-button {
-            width: 100%;
-            min-height: 68px;
-            padding: 9px 10px 9px 14px;
-            border-radius: 23px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-
-            color: var(--es-text);
-            text-align: left;
-            cursor: pointer;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-left {
-            min-width: 0;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-icon {
-            position: relative;
-            flex: 0 0 auto;
-            width: 44px;
-            height: 44px;
-            display: grid;
-            place-items: center;
-            border-radius: 16px;
-            color: white;
-            background:
-                linear-gradient(
-                    145deg,
-                    #2688ff,
-                    #0865e4
-                );
-            box-shadow:
-                0 10px 24px rgba(22, 119, 255, 0.26),
-                inset 0 1px 0 rgba(255, 255, 255, 0.35);
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 5px;
-            display: grid;
-            place-items: center;
-            border: 2px solid white;
-            border-radius: 999px;
-            color: white;
-            background: var(--es-danger);
-            font-size: 10px;
-            font-weight: 750;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-text {
-            min-width: 0;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-label {
-            display: block;
-            margin-bottom: 2px;
-            font-size: 12px;
-            color: var(--es-text-soft);
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-total {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 19px;
-            font-weight: 770;
-            letter-spacing: -0.03em;
-        }
-
-        #esteem-liquid-widget .es-mobile-cart-action {
-            flex: 0 0 auto;
-            padding: 11px 15px;
-            border-radius: 15px;
-            color: var(--es-accent);
-            background: var(--es-accent-soft);
-            font-size: 12px;
-            font-weight: 720;
-        }
-
-        /* =========================================================
-           МОДАЛЬНОЕ ОКНО
-        ========================================================== */
-
-        #esteem-liquid-widget .es-modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 12000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: rgba(25, 36, 50, 0.42);
-            -webkit-backdrop-filter: blur(14px);
-            backdrop-filter: blur(14px);
-        }
-
-        #esteem-liquid-widget .es-modal-overlay.is-visible {
-            display: flex;
-            animation: es-fade-in 180ms ease both;
-        }
-
-        #esteem-liquid-widget .es-modal {
-            position: relative;
-            width: min(590px, 100%);
-            max-height: min(88vh, 820px);
-            overflow: hidden;
-
-            display: flex;
-            flex-direction: column;
-
-            border: 1px solid rgba(255, 255, 255, 0.87);
-            border-radius: 30px;
-            background:
-                linear-gradient(
-                    155deg,
-                    rgba(255, 255, 255, 0.9),
-                    rgba(241, 247, 252, 0.75)
-                );
-            box-shadow:
-                0 38px 110px rgba(18, 29, 43, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.98);
-
-            -webkit-backdrop-filter: blur(34px) saturate(160%);
-            backdrop-filter: blur(34px) saturate(160%);
-
-            animation: es-modal-in 260ms cubic-bezier(.2, .8, .2, 1) both;
-        }
-
-        #esteem-liquid-widget .es-modal::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.9),
-                    transparent 34%,
-                    rgba(255, 255, 255, 0.14)
-                );
-        }
-
-        #esteem-liquid-widget .es-modal-header {
-            position: relative;
-            z-index: 1;
-            padding: 23px 23px 17px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            border-bottom: 1px solid rgba(89, 104, 120, 0.08);
-        }
-
-        #esteem-liquid-widget .es-modal-kicker {
-            margin-bottom: 6px;
-            color: var(--es-accent);
-            font-size: 11px;
-            font-weight: 760;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-        }
-
-        #esteem-liquid-widget .es-modal-title {
-            margin: 0;
-            font-size: 22px;
-            line-height: 1.15;
-            letter-spacing: -0.035em;
-        }
-
-        #esteem-liquid-widget .es-modal-close {
-            flex: 0 0 auto;
-            width: 40px;
-            height: 40px;
-            border: 0;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            color: var(--es-text-soft);
-            background: rgba(83, 98, 115, 0.1);
-            cursor: pointer;
-            transition:
-                background 160ms ease,
-                transform 160ms ease;
-        }
-
-        #esteem-liquid-widget .es-modal-close:hover {
-            transform: scale(1.05);
-            background: rgba(83, 98, 115, 0.16);
-        }
-
-        #esteem-liquid-widget .es-modal-body {
-            position: relative;
-            z-index: 1;
-            overflow-y: auto;
-            padding: 18px 22px 7px;
-            scrollbar-width: thin;
-        }
-
-        #esteem-liquid-widget .es-option-section + .es-option-section {
-            margin-top: 24px;
-        }
-
-        #esteem-liquid-widget .es-option-section-title {
-            margin-bottom: 10px;
-            color: var(--es-text-muted);
-            font-size: 11px;
-            font-weight: 760;
-            letter-spacing: 0.065em;
-            text-transform: uppercase;
-        }
-
-        #esteem-liquid-widget .es-option-list {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        #esteem-liquid-widget .es-option-row {
-            width: 100%;
-            min-height: 64px;
-            padding: 10px 11px 10px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.74);
-            border-radius: 18px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-
-            color: var(--es-text);
-            text-align: left;
-            background: rgba(255, 255, 255, 0.45);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.74),
-                0 7px 18px rgba(31, 46, 66, 0.04);
-
-            transition:
-                border-color 160ms ease,
-                background 160ms ease,
-                transform 160ms ease;
-        }
-
-        #esteem-liquid-widget button.es-option-row {
-            cursor: pointer;
-        }
-
-        #esteem-liquid-widget button.es-option-row:hover {
-            transform: translateY(-1px);
-            background: rgba(255, 255, 255, 0.68);
-        }
-
-        #esteem-liquid-widget .es-option-row.is-active {
-            border-color: rgba(22, 119, 255, 0.4);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(238, 247, 255, 0.88),
-                    rgba(255, 255, 255, 0.66)
-                );
-            box-shadow:
-                0 10px 25px rgba(22, 119, 255, 0.09),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-
-        #esteem-liquid-widget .es-option-main {
-            min-width: 0;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
-
-        #esteem-liquid-widget .es-radio-dot {
-            flex: 0 0 auto;
-            width: 20px;
-            height: 20px;
-            display: grid;
-            place-items: center;
-            border-radius: 999px;
-            border: 1.5px solid rgba(91, 106, 123, 0.28);
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        #esteem-liquid-widget .es-radio-dot::after {
-            content: "";
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: var(--es-accent);
-            transform: scale(0);
-            transition: transform 150ms ease;
-        }
-
-        #esteem-liquid-widget .es-option-row.is-active .es-radio-dot {
-            border-color: rgba(22, 119, 255, 0.6);
-        }
-
-        #esteem-liquid-widget .es-option-row.is-active .es-radio-dot::after {
-            transform: scale(1);
-        }
-
-        #esteem-liquid-widget .es-option-name {
-            min-width: 0;
-            font-size: 14px;
-            line-height: 1.35;
-            font-weight: 640;
-        }
-
-        #esteem-liquid-widget .es-option-price {
-            flex: 0 0 auto;
-            color: var(--es-text-soft);
-            font-size: 13px;
-            font-weight: 690;
-            text-align: right;
-        }
-
-        /* =========================================================
-           СЧЁТЧИКИ
-        ========================================================== */
-
-        #esteem-liquid-widget .es-qty-control {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 999px;
-            background: rgba(226, 234, 242, 0.72);
-            box-shadow: inset 0 1px 2px rgba(46, 60, 79, 0.07);
-        }
-
-        #esteem-liquid-widget .es-qty-button {
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            border: 0;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            color: var(--es-text);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.98),
-                    rgba(248, 250, 252, 0.86)
-                );
-            box-shadow:
-                0 4px 10px rgba(45, 59, 77, 0.1),
-                inset 0 1px 0 white;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 580;
-            transition: transform 100ms ease;
-        }
-
-        #esteem-liquid-widget .es-qty-button:active {
-            transform: scale(0.92);
-        }
-
-        #esteem-liquid-widget .es-qty-value {
-            min-width: 28px;
-            text-align: center;
-            color: var(--es-text);
-            font-size: 13px;
-            font-weight: 740;
-        }
-
-        #esteem-liquid-widget .es-qty-value.is-zero {
-            color: var(--es-text-muted);
-            font-weight: 560;
-        }
-
-        /* =========================================================
-           НИЖНЯЯ ЧАСТЬ МОДАЛКИ
-        ========================================================== */
-
-        #esteem-liquid-widget .es-modal-footer {
-            position: relative;
-            z-index: 1;
-            padding: 16px 22px 21px;
-            border-top: 1px solid rgba(89, 104, 120, 0.09);
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        #esteem-liquid-widget .es-modal-quantity-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 15px;
-        }
-
-        #esteem-liquid-widget .es-modal-quantity-label {
-            color: var(--es-text-soft);
-            font-size: 13px;
-            font-weight: 620;
-        }
-
-        #esteem-liquid-widget .es-modal-action-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        #esteem-liquid-widget .es-modal-price-caption {
-            margin-bottom: 3px;
-            color: var(--es-text-muted);
-            font-size: 11px;
-        }
-
-        #esteem-liquid-widget .es-modal-price {
-            font-size: 23px;
-            line-height: 1;
-            font-weight: 780;
-            letter-spacing: -0.04em;
-        }
-
-        #esteem-liquid-widget .es-primary-button {
-            flex: 0 0 auto;
-            min-height: 50px;
-            padding: 13px 22px;
-            border: 0;
-            border-radius: 17px;
-            color: white;
-            background:
-                linear-gradient(
-                    145deg,
-                    #2688ff,
-                    #0865e4
-                );
-            box-shadow:
-                0 14px 28px rgba(22, 119, 255, 0.26),
-                inset 0 1px 0 rgba(255, 255, 255, 0.32);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 730;
-            transition:
-                transform 170ms ease,
-                box-shadow 170ms ease;
-        }
-
-        #esteem-liquid-widget .es-primary-button:hover {
-            transform: translateY(-2px);
-            box-shadow:
-                0 18px 34px rgba(22, 119, 255, 0.32),
-                inset 0 1px 0 rgba(255, 255, 255, 0.36);
-        }
-
-        #esteem-liquid-widget .es-primary-button.is-update {
-            background:
-                linear-gradient(
-                    145deg,
-                    #28b77b,
-                    #168f5e
-                );
-            box-shadow:
-                0 14px 28px rgba(23, 156, 98, 0.23),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        /* =========================================================
-           ЗАГРУЗКА И ОШИБКИ
-        ========================================================== */
-
-        @keyframes es-shimmer {
-            0% {
-                background-position: -800px 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        button, input, select, textarea { touch-action: manipulation; }
+
+        /* Эффект стекла для шапки */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Кастомный скроллбар как в дашборде */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Анимация карточек */
+        .bento-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        @media (hover: hover) {
+            .bento-card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border-color: #e2e8f0; }
+        }
+
+        /* Мобильная корзина (Bottom Sheet) */
+        @media (max-width: 768px) {
+            .mobile-cart-sheet {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                /* Скрываем корзину, оставляя только шапку (65px) */
+                transform: translateY(calc(100% - 70px));
             }
-
-            100% {
-                background-position: 800px 0;
-            }
-        }
-
-        @keyframes es-fade-in {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes es-modal-in {
-            from {
-                opacity: 0;
-                transform: translateY(18px) scale(0.975);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        #esteem-liquid-widget .es-skeleton-card {
-            min-height: 172px;
-            padding: 19px;
-            border-radius: var(--es-radius-lg);
-            border: 1px solid rgba(255, 255, 255, 0.74);
-            background: rgba(255, 255, 255, 0.48);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.8),
-                0 12px 32px rgba(39, 55, 75, 0.06);
-        }
-
-        #esteem-liquid-widget .es-skeleton-line {
-            height: 15px;
-            border-radius: 7px;
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(216, 224, 232, 0.58) 0%,
-                    rgba(245, 248, 251, 0.9) 45%,
-                    rgba(216, 224, 232, 0.58) 90%
-                );
-            background-size: 800px 100%;
-            animation: es-shimmer 1.5s linear infinite;
-        }
-
-        #esteem-liquid-widget .es-skeleton-line + .es-skeleton-line {
-            margin-top: 11px;
-        }
-
-        #esteem-liquid-widget .es-state-panel {
-            grid-column: 1 / -1;
-            min-height: 240px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.72);
-            border-radius: var(--es-radius-lg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.45);
-            -webkit-backdrop-filter: blur(22px);
-            backdrop-filter: blur(22px);
-        }
-
-        #esteem-liquid-widget .es-state-icon {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 14px;
-            display: grid;
-            place-items: center;
-            border-radius: 21px;
-            color: var(--es-accent);
-            background: var(--es-accent-soft);
-        }
-
-        #esteem-liquid-widget .es-state-title {
-            margin-bottom: 7px;
-            font-size: 17px;
-            font-weight: 720;
-        }
-
-        #esteem-liquid-widget .es-state-text {
-            max-width: 380px;
-            color: var(--es-text-soft);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        #esteem-liquid-widget .es-retry-button {
-            margin-top: 16px;
-            padding: 11px 17px;
-            border: 0;
-            border-radius: 14px;
-            color: white;
-            background: var(--es-accent);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        /* =========================================================
-           МОБИЛЬНАЯ ВЕРСИЯ
-        ========================================================== */
-
-        @media (max-width: 1100px) {
-            #esteem-liquid-widget .es-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            #esteem-liquid-widget .es-main-layout {
-                grid-template-columns: minmax(0, 1fr) 330px;
-            }
-        }
-
-        @media (max-width: 820px) {
-            #esteem-liquid-widget {
-                padding:
-                    14px
-                    12px
-                    calc(164px + env(safe-area-inset-bottom));
-                min-height: 100vh;
-            }
-
-            #esteem-liquid-widget .es-background {
-                position: fixed;
-                border-radius: 0;
-            }
-
-            #esteem-liquid-widget .es-desktop-hero {
-                display: block;
-                margin-bottom: 19px;
-                padding: 22px 20px;
-                border-radius: 25px;
-            }
-
-            #esteem-liquid-widget .es-main-title {
-                font-size: 32px;
-            }
-
-            #esteem-liquid-widget .es-subtitle {
-                margin-top: 11px;
-                font-size: 13px;
-            }
-
-            #esteem-liquid-widget .es-desktop-search {
-                display: none;
-            }
-
-            #esteem-liquid-widget .es-main-layout {
-                display: block;
-            }
-
-            #esteem-liquid-widget .es-catalog-meta {
-                margin-bottom: 12px;
-            }
-
-            #esteem-liquid-widget .es-section-title {
-                font-size: 18px;
-            }
-
-            #esteem-liquid-widget .es-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 11px;
-            }
-
-            #esteem-liquid-widget .es-product-card {
-                min-height: 158px;
-                padding: 15px;
-                border-radius: 21px;
-            }
-
-            #esteem-liquid-widget .es-card-index {
-                width: 30px;
-                height: 30px;
-                border-radius: 11px;
-            }
-
-            #esteem-liquid-widget .es-card-title {
-                font-size: 14px;
-            }
-
-            #esteem-liquid-widget .es-card-price {
-                font-size: 14px;
-            }
-
-            #esteem-liquid-widget .es-card-caption {
-                font-size: 9px;
-            }
-
-            #esteem-liquid-widget .es-card-arrow {
-                width: 34px;
-                height: 34px;
-            }
-
-            #esteem-liquid-widget .es-mobile-dock {
-                display: flex;
-            }
-
-            #esteem-liquid-widget .es-mobile-cart-backdrop {
-                position: fixed;
-                inset: 0;
-                z-index: 8800;
-                background: rgba(22, 31, 43, 0.34);
-                -webkit-backdrop-filter: blur(9px);
-                backdrop-filter: blur(9px);
-            }
-
-            #esteem-liquid-widget .es-mobile-cart-backdrop.is-visible {
-                display: block;
-                animation: es-fade-in 180ms ease both;
-            }
-
-            #esteem-liquid-widget .es-cart {
-                position: fixed;
-                top: auto;
-                left: 8px;
-                right: 8px;
-                bottom: 8px;
-                z-index: 9000;
-
-                width: auto;
-                max-height: min(
-                    82vh,
-                    calc(100vh - 16px)
-                );
-                min-height: 0;
-
-                border-radius: 29px;
-                transform: translateY(calc(100% + 30px));
-                visibility: hidden;
-                opacity: 0;
-
-                transition:
-                    transform 280ms cubic-bezier(.2, .8, .2, 1),
-                    opacity 200ms ease,
-                    visibility 0s linear 280ms;
-            }
-
-            #esteem-liquid-widget .es-cart.is-open {
+            .mobile-cart-sheet.is-open {
                 transform: translateY(0);
-                visibility: visible;
-                opacity: 1;
-                transition:
-                    transform 280ms cubic-bezier(.2, .8, .2, 1),
-                    opacity 200ms ease,
-                    visibility 0s linear 0s;
             }
-
-            #esteem-liquid-widget .es-cart-header {
-                padding: 18px 18px 13px;
-            }
-
-            #esteem-liquid-widget .es-cart-close {
-                display: grid;
-            }
-
-            #esteem-liquid-widget .es-cart-items {
-                max-height: 48vh;
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-
-            #esteem-liquid-widget .es-cart-footer {
-                padding:
-                    14px
-                    18px
-                    calc(18px + env(safe-area-inset-bottom));
-            }
-
-            #esteem-liquid-widget .es-modal-overlay {
-                align-items: flex-end;
-                padding:
-                    8px
-                    8px
-                    calc(8px + env(safe-area-inset-bottom));
-            }
-
-            #esteem-liquid-widget .es-modal {
-                width: 100%;
-                max-height: 91vh;
-                border-radius: 28px;
-            }
-
-            #esteem-liquid-widget .es-modal-header {
-                padding: 19px 18px 14px;
-            }
-
-            #esteem-liquid-widget .es-modal-title {
-                font-size: 19px;
-            }
-
-            #esteem-liquid-widget .es-modal-body {
-                padding: 15px 14px 5px;
-            }
-
-            #esteem-liquid-widget .es-modal-footer {
-                padding:
-                    14px
-                    15px
-                    calc(16px + env(safe-area-inset-bottom));
-            }
-
-            #esteem-liquid-widget .es-option-row {
-                min-height: 60px;
-                border-radius: 17px;
-            }
-
-            #esteem-liquid-widget .es-primary-button {
-                min-height: 48px;
-                padding-left: 17px;
-                padding-right: 17px;
-            }
-        }
-
-        @media (max-width: 520px) {
-            #esteem-liquid-widget .es-grid {
-                grid-template-columns: 1fr;
-            }
-
-            #esteem-liquid-widget .es-product-card {
-                min-height: 138px;
-            }
-
-            #esteem-liquid-widget .es-main-title {
-                font-size: 29px;
-            }
-
-            #esteem-liquid-widget .es-mobile-cart-action {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            #esteem-liquid-widget .es-modal-action-row {
-                align-items: stretch;
-            }
-
-            #esteem-liquid-widget .es-modal-price {
-                font-size: 20px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            #esteem-liquid-widget *,
-            #esteem-liquid-widget *::before,
-            #esteem-liquid-widget *::after {
-                scroll-behavior: auto !important;
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+            body.modal-open { overflow: hidden; }
         }
     </style>
+</head>
+<body class="pb-24 md:pb-8 bg-[#f1f5f9] min-h-screen">
 
-    <div class="es-background" aria-hidden="true">
-        <div class="es-orb es-orb-one"></div>
-        <div class="es-orb es-orb-two"></div>
-        <div class="es-orb es-orb-three"></div>
+    <!-- ЛИПКИЙ ПОИСК (ШАПКА) -->
+    <div class="glass-header sticky top-0 z-40 px-4 py-3 sm:px-6 sm:py-4 mb-4 sm:mb-6 flex justify-center">
+        <div class="w-full max-w-7xl">
+            <div class="relative">
+                <input type="text" id="esSearch" 
+                    class="w-full bg-slate-50/50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 pl-11 outline-none transition-all text-slate-800 placeholder-slate-400 font-medium shadow-sm text-base" 
+                    placeholder="Поиск товаров (Коврик, Сумка)...">
+                <svg class="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+        </div>
     </div>
 
-    <section class="es-desktop-hero es-glass">
-        <div>
-            <div class="es-eyebrow">
-                <span class="es-eyebrow-dot"></span>
-                Внутренний калькулятор
+    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-6 items-start">
+        
+        <!-- КАТАЛОГ -->
+        <div class="flex-1 w-full">
+            <div id="esGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+                <!-- Скелетоны при загрузке -->
             </div>
-
-            <h1 class="es-main-title">Каталог и расчёт заказа</h1>
-
-            <p class="es-subtitle">
-                Выберите категорию, настройте комплектацию и добавьте позиции
-                в заказ. Стоимость и доход пересчитываются автоматически.
-            </p>
         </div>
 
-        <div class="es-desktop-search">
-            <span class="es-search-icon" aria-hidden="true">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                >
-                    <circle cx="11" cy="11" r="7"></circle>
-                    <path d="M20 20L16.6 16.6"></path>
-                </svg>
-            </span>
-
-            <input
-                type="search"
-                class="es-search-input"
-                data-role="desktop-search"
-                placeholder="Найти товар или услугу"
-                aria-label="Поиск по каталогу"
-                autocomplete="off"
-            >
-
-            <button
-                type="button"
-                class="es-search-clear"
-                data-role="desktop-search-clear"
-                aria-label="Очистить поиск"
-            >
-                ×
-            </button>
-        </div>
-    </section>
-
-    <div class="es-main-layout">
-        <main class="es-catalog-shell">
-            <div class="es-catalog-meta">
-                <h2 class="es-section-title">Каталог</h2>
-                <span class="es-result-count" data-role="result-count">
-                    Загрузка…
-                </span>
-            </div>
-
-            <div class="es-grid" data-role="catalog-grid"></div>
-        </main>
-
-        <aside
-            class="es-cart"
-            data-role="cart"
-            aria-label="Корзина заказа"
-        >
-            <header class="es-cart-header">
-                <div class="es-cart-heading-row">
-                    <div class="es-cart-title-wrap">
-                        <div class="es-cart-icon" aria-hidden="true">
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.9"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <path d="M5 8H19L18 20H6L5 8Z"></path>
-                                <path d="M9 8V6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8"></path>
-                            </svg>
-                        </div>
-
-                        <div>
-                            <h2 class="es-cart-title">Ваш заказ</h2>
-                            <div
-                                class="es-cart-count"
-                                data-role="cart-count-text"
-                            >
-                                0 позиций
-                            </div>
-                        </div>
+        <!-- КОРЗИНА -->
+        <div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-24 bottom-0 left-0 right-0 z-50 md:z-10 w-full md:w-80 lg:w-96 bg-white md:bg-transparent rounded-t-[2rem] md:rounded-none shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-none flex flex-col max-h-[85vh] md:max-h-[calc(100vh-120px)]">
+            
+            <!-- Обертка Bento для корзины -->
+            <div class="bg-white md:rounded-2xl md:border md:border-slate-100 md:shadow-xl flex flex-col h-full overflow-hidden">
+                
+                <!-- Шапка корзины (кликабельно на мобилках) -->
+                <div class="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-900 md:bg-white text-white md:text-slate-900 cursor-pointer md:cursor-default" onclick="toggleMobileCart()">
+                    <div class="flex items-center gap-2">
+                        <h2 class="font-extrabold text-lg">Ваш заказ</h2>
+                        <span id="cart-count-badge" class="bg-blue-500 md:bg-slate-100 md:text-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
                     </div>
+                    <svg id="mobile-cart-arrow" class="w-6 h-6 md:hidden transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                </div>
 
-                    <button
-                        type="button"
-                        class="es-cart-close"
-                        data-action="close-cart"
-                        aria-label="Закрыть корзину"
-                    >
-                        ×
+                <!-- Список товаров -->
+                <div id="esCartItems" class="flex-1 overflow-y-auto p-4 bg-slate-50/30">
+                    <div class="text-center py-8 text-slate-400 font-medium text-sm">Корзина пуста</div>
+                </div>
+
+                <!-- Подвал корзины (Суммы и кнопка) -->
+                <div class="p-4 sm:p-5 bg-white border-t border-slate-100">
+                    <div class="flex justify-between items-center mb-1 text-sm font-semibold">
+                        <span class="text-slate-500">Доход продавца:</span>
+                        <span id="esTotalIncome" class="text-emerald-500">0 ₽</span>
+                    </div>
+                    <div class="flex justify-between items-end mb-4">
+                        <span class="text-slate-500 font-semibold mb-1">Итого:</span>
+                        <span id="esTotalSum" class="text-2xl font-extrabold text-slate-900 tracking-tight">0 ₽</span>
+                    </div>
+                    
+                    <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold p-3 rounded-xl transition-colors text-sm" onclick="clearCart(event)">
+                        Очистить корзину
                     </button>
                 </div>
-            </header>
-
-            <div
-                class="es-cart-items"
-                data-role="cart-items"
-            ></div>
-
-            <footer class="es-cart-footer">
-                <div class="es-total-row">
-                    <span>Фиксированная часть</span>
-                    <strong data-role="fixed-total">0 ₽</strong>
-                </div>
-
-                <div class="es-total-row">
-                    <span>Доход продавца</span>
-                    <strong
-                        class="es-income-value"
-                        data-role="income-total"
-                    >
-                        0 ₽
-                    </strong>
-                </div>
-
-                <div class="es-total-main">
-                    <div>
-                        <div class="es-total-label">Итого</div>
-                        <div
-                            class="es-total-value"
-                            data-role="cart-total"
-                        >
-                            0 ₽
-                        </div>
-                    </div>
-                </div>
-
-                <button
-                    type="button"
-                    class="es-clear-cart"
-                    data-action="clear-cart"
-                    disabled
-                >
-                    Очистить корзину
-                </button>
-            </footer>
-        </aside>
-    </div>
-
-    <div
-        class="es-mobile-cart-backdrop"
-        data-role="mobile-cart-backdrop"
-    ></div>
-
-    <div class="es-mobile-dock">
-        <div class="es-mobile-search-shell">
-            <span class="es-search-icon" aria-hidden="true">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                >
-                    <circle cx="11" cy="11" r="7"></circle>
-                    <path d="M20 20L16.6 16.6"></path>
-                </svg>
-            </span>
-
-            <input
-                type="search"
-                class="es-search-input"
-                data-role="mobile-search"
-                placeholder="Поиск по каталогу"
-                aria-label="Поиск по каталогу"
-                autocomplete="off"
-            >
-
-            <button
-                type="button"
-                class="es-search-clear"
-                data-role="mobile-search-clear"
-                aria-label="Очистить поиск"
-            >
-                ×
-            </button>
-        </div>
-
-        <button
-            type="button"
-            class="es-mobile-cart-button"
-            data-action="open-cart"
-            aria-label="Открыть корзину"
-        >
-            <span class="es-mobile-cart-left">
-                <span class="es-mobile-cart-icon" aria-hidden="true">
-                    <svg
-                        width="21"
-                        height="21"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.9"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path d="M5 8H19L18 20H6L5 8Z"></path>
-                        <path d="M9 8V6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8"></path>
-                    </svg>
-
-                    <span
-                        class="es-mobile-cart-badge"
-                        data-role="mobile-cart-count"
-                    >
-                        0
-                    </span>
-                </span>
-
-                <span class="es-mobile-cart-text">
-                    <span class="es-mobile-cart-label">
-                        Корзина
-                    </span>
-
-                    <span
-                        class="es-mobile-cart-total"
-                        data-role="mobile-cart-total"
-                    >
-                        0 ₽
-                    </span>
-                </span>
-            </span>
-
-            <span class="es-mobile-cart-action">
-                Открыть
-            </span>
-        </button>
-    </div>
-
-    <div
-        class="es-modal-overlay"
-        data-role="modal-overlay"
-        aria-hidden="true"
-    >
-        <section
-            class="es-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="es-liquid-modal-title"
-        >
-            <header class="es-modal-header">
-                <div>
-                    <div
-                        class="es-modal-kicker"
-                        data-role="modal-kicker"
-                    >
-                        Настройка позиции
-                    </div>
-
-                    <h2
-                        class="es-modal-title"
-                        id="es-liquid-modal-title"
-                        data-role="modal-title"
-                    >
-                        Товар
-                    </h2>
-                </div>
-
-                <button
-                    type="button"
-                    class="es-modal-close"
-                    data-action="close-modal"
-                    aria-label="Закрыть окно"
-                >
-                    ×
-                </button>
-            </header>
-
-            <div class="es-modal-body" data-role="modal-body">
-                <section class="es-option-section">
-                    <div class="es-option-section-title">
-                        Вариант исполнения
-                    </div>
-
-                    <div
-                        class="es-option-list"
-                        data-role="bases-list"
-                    ></div>
-                </section>
-
-                <section
-                    class="es-option-section"
-                    data-role="addons-section"
-                >
-                    <div class="es-option-section-title">
-                        Дополнительные опции
-                    </div>
-
-                    <div
-                        class="es-option-list"
-                        data-role="addons-list"
-                    ></div>
-                </section>
             </div>
+        </div>
+    </div>
 
-            <footer class="es-modal-footer">
-                <div class="es-modal-quantity-row">
-                    <span class="es-modal-quantity-label">
-                        Количество товара
-                    </span>
-
-                    <div class="es-qty-control">
-                        <button
-                            type="button"
-                            class="es-qty-button"
-                            data-action="decrease-base"
-                            aria-label="Уменьшить количество"
-                        >
-                            −
-                        </button>
-
-                        <span
-                            class="es-qty-value"
-                            data-role="base-quantity"
-                        >
-                            1
-                        </span>
-
-                        <button
-                            type="button"
-                            class="es-qty-button"
-                            data-action="increase-base"
-                            aria-label="Увеличить количество"
-                        >
-                            +
-                        </button>
+    <!-- МОДАЛЬНОЕ ОКНО ТОВАРА -->
+    <div id="esModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[90vh] overflow-hidden transform transition-all relative">
+            
+            <!-- Шапка модалки -->
+            <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4">Товар</h3>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full transition-colors shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Тело модалки -->
+            <div class="p-5 overflow-y-auto flex-1">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Комплектация (База)</div>
+                <div id="esBasesList" class="space-y-2"></div>
+                
+                <div id="esAddonsContainer" class="mt-6 hidden">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Дополнительные опции</div>
+                    <div id="esAddonsList" class="space-y-2"></div>
+                </div>
+            </div>
+            
+            <!-- Подвал модалки -->
+            <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold text-slate-600 text-sm">Количество:</span>
+                    <div class="flex items-center gap-3 bg-white border border-slate-200 p-1 rounded-full shadow-sm">
+                        <button class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors" onclick="changeBaseQty(-1)">-</button>
+                        <span id="esBaseQtyVal" class="w-6 text-center font-bold text-slate-900 text-sm">1</span>
+                        <button class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors" onclick="changeBaseQty(1)">+</button>
                     </div>
                 </div>
-
-                <div class="es-modal-action-row">
-                    <div>
-                        <div class="es-modal-price-caption">
-                            Стоимость позиции
-                        </div>
-
-                        <div
-                            class="es-modal-price"
-                            data-role="modal-price"
-                        >
-                            0 ₽
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="es-primary-button"
-                        data-action="confirm-selection"
-                    >
-                        В корзину
-                    </button>
+                
+                <div class="flex justify-between items-center pt-2 border-t border-slate-200/60">
+                    <div id="esModalPrice" class="text-2xl font-extrabold text-slate-900">0 ₽</div>
+                    <button id="esModalBtn" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-colors" onclick="confirmAddToCart()">В корзину</button>
                 </div>
-            </footer>
-        </section>
+            </div>
+        </div>
     </div>
 
     <script>
-        (() => {
-            "use strict";
+        // ============================================
+        // НАСТРОЙКИ КОЛОНОК И URL
+        // ============================================
+        const COL_NAME = 0;   // A
+        const COL_PRICE = 3;  // D
+        const COL_INCOME = 7; // H
+        
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcZaUg1LNjHtFku3mI5B6_xYDitZkRM94rlESJLKVqpMeMHkwqRUelOGkbuZ365Znq296r3zixxONC/pub?gid=0&single=true&output=csv" + "&t=" + new Date().getTime();
+        
+        let database = [];
+        let cart = [];
+        let catalogMemory = {}; 
+        let currentSelection = null;
+        
+        const fmt = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
+        
+        // Защита от XSS
+        const esc = (str) => {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, match => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            })[match]);
+        };
 
-            /* =====================================================
-               НАСТРОЙКИ
-            ====================================================== */
+        // Блокировка мульти-тач зума (iOS)
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            let now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) { event.preventDefault(); }
+            lastTouchEnd = now;
+        }, false);
 
-            const root = document.getElementById("esteem-liquid-widget");
+        // ============================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================
+        function renderSkeleton() {
+            const grid = document.getElementById('esGrid');
+            grid.innerHTML = "";
+            for(let i=0; i<8; i++) {
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm animate-pulse flex flex-col justify-between min-h-[120px]">
+                        <div class="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-4 bg-slate-200 rounded w-1/2 mb-6"></div>
+                        <div class="h-5 bg-slate-200 rounded w-1/3 mt-auto"></div>
+                    </div>
+                `;
+            }
+        }
 
-            if (!root || root.dataset.initialized === "true") {
-                return;
+        if(typeof Papa === 'undefined') { setTimeout(initApp, 1000); } else { initApp(); }
+
+        function initApp() {
+            renderSkeleton();
+            Papa.parse(SHEET_URL, {
+                download: true, header: false,
+                complete: function(results) { processData(results.data); },
+                error: function() { document.getElementById('esGrid').innerHTML = "<div class='col-span-full text-center text-rose-500 py-10 font-medium'>Ошибка загрузки данных</div>"; }
+            });
+        }
+
+        function parsePrice(str) {
+            if(!str) return { val:0, isPercent:false };
+            let s = str.toString().trim();
+            if(s.includes('%')) {
+                return { val: parseFloat(s.replace(',','.').replace(/[^0-9.]/g, '')), isPercent: true };
+            }
+            if(s.toLowerCase().includes('запрос')) return { val:0, isPercent:false, isRequest:true };
+            let clean = s.replace(/[^0-9]/g, ''); 
+            return { val: parseInt(clean) || 0, isPercent: false };
+        }
+
+        function processData(rows) {
+            database = [];
+            let currentGroup = null;
+            let isAddons = false;
+
+            rows.forEach((row) => {
+                if(!row[COL_NAME]) return; 
+                let name = row[COL_NAME].trim();
+                if(name === "") return;
+
+                let priceRaw = row[COL_PRICE];
+                let isHeader = (!priceRaw || priceRaw.trim() === "") 
+                               && !name.toLowerCase().includes("позиция")
+                               && !name.toLowerCase().includes("себестоимость");
+
+                if(name.toLowerCase().includes("доп. элементы")) {
+                    isAddons = true; return; 
+                }
+
+                if(isHeader) {
+                    currentGroup = { title: name, items: [], addons: [] };
+                    database.push(currentGroup);
+                    isAddons = false;
+                } else if(currentGroup && !name.toLowerCase().includes("позиция")) {
+                    let p = parsePrice(row[COL_PRICE]);
+                    let inc = parsePrice(row[COL_INCOME]);
+                    let item = { name, price: p.val, isPercent: p.isPercent, isRequest: p.isRequest, income: inc.val };
+                    
+                    if(isAddons) currentGroup.addons.push(item);
+                    else currentGroup.items.push(item);
+                }
+            });
+
+            database = database.filter(g => g.items.length > 0 || g.addons.length > 0);
+            renderCatalog();
+        }
+
+        function renderCatalog(filter = "") {
+            const grid = document.getElementById('esGrid');
+            grid.innerHTML = "";
+            let lower = filter.toLowerCase();
+
+            database.forEach((group, idx) => {
+                let match = group.title.toLowerCase().includes(lower) || group.items.some(i => i.name.toLowerCase().includes(lower));
+                if(!match) return;
+
+                let prices = group.items.map(i => i.isPercent ? 0 : i.price);
+                let minP = Math.min(...prices);
+                let priceText = minP > 0 ? `от ${fmt(minP)}` : (group.items.some(i=>i.isPercent) ? "Расчет %" : "По запросу");
+
+                let card = document.createElement('div');
+// Усилили рамку (border-2), увеличили базовую тень (shadow-md) и добавили эффект всплытия (hover:-translate-y-1)
+card.className = 'bg-white p-4 sm:p-5 rounded-[1.5rem] border-2 border-slate-200 shadow-md hover:border-blue-500 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[120px] relative group';
+card.onclick = () => openModalFromCatalog(idx);
+card.innerHTML = `
+    <!-- Уменьшили шрифт до text-sm (на мобилках) и text-base (на ПК), сделали font-bold вместо extrabold -->
+    <div class="font-bold text-slate-800 text-sm sm:text-base leading-snug mb-3 group-hover:text-blue-700 transition-colors">${esc(group.title)}</div>
+    <!-- Уменьшили цену до text-base, убрали font-black в пользу font-extrabold -->
+    <div class="mt-auto font-extrabold text-blue-600 text-base">${priceText}</div>
+`;
+                grid.appendChild(card);
+            });
+            
+            if(grid.innerHTML === "") {
+                grid.innerHTML = "<div class='col-span-full text-center text-slate-500 py-10 font-medium'>Ничего не найдено</div>";
+            }
+        }
+
+        // ============================================
+        // ЛОГИКА МОДАЛЬНОГО ОКНА
+        // ============================================
+        function openModalFromCatalog(idx) {
+            let saved = catalogMemory[idx];
+            if (saved) {
+                currentSelection = JSON.parse(JSON.stringify(saved));
+                currentSelection.mode = 'new';
+                currentSelection.cartIdx = -1;
+            } else {
+                currentSelection = { groupIdx: idx, baseIdx: 0, baseQty: 1, addons: {}, mode: 'new', cartIdx: -1 };
+            }
+            renderModalContent();
+        }
+
+        function openModalFromCart(cartIndex) {
+            let item = cart[cartIndex];
+            let groupIdx = database.findIndex(g => g.title === item.title);
+            let group = database[groupIdx];
+            let addonsMap = {};
+            item.addons.forEach(savedAddon => {
+                let foundIdx = group.addons.findIndex(a => a.name === savedAddon.name);
+                if(foundIdx !== -1) addonsMap[foundIdx] = savedAddon.qty;
+            });
+            let baseIdx = group.items.findIndex(b => b.name === item.base.name);
+            if(baseIdx === -1) baseIdx = 0;
+
+            currentSelection = { groupIdx: groupIdx, baseIdx: baseIdx, baseQty: item.baseQty, addons: addonsMap, mode: 'edit', cartIdx: cartIndex };
+            renderModalContent();
+        }
+
+        function renderModalContent() {
+            let group = database[currentSelection.groupIdx];
+            
+            // Настройка заголовка и кнопки
+            document.getElementById('esModalTitle').innerText = (currentSelection.mode === 'edit' ? "Редактирование" : esc(group.title));
+            const btn = document.getElementById('esModalBtn');
+            if(currentSelection.mode === 'edit') {
+                btn.innerText = "Сохранить";
+                btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold transition-colors";
+            } else {
+                btn.innerText = "Добавить";
+                btn.className = "bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-colors";
             }
 
-            root.dataset.initialized = "true";
+            // Рендер баз
+            const bList = document.getElementById('esBasesList');
+            bList.innerHTML = "";
+            let bases = group.items.length ? group.items : [{name: "База", price:0}];
+            
+            bases.forEach((item, i) => {
+                let pText = item.isPercent ? `${item.price}%` : (item.price===0?"По запросу":fmt(item.price));
+                let isActive = (i === currentSelection.baseIdx);
+                
+                let activeClasses = isActive 
+    ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600 shadow-sm" 
+    : "border-slate-200 bg-white hover:border-blue-300";
+    
+// Увеличили размер до w-5/h-5 и сделали явный толстый border для красивой точки внутри
+let radioStyle = isActive 
+    ? "border-[5px] border-blue-600 bg-white" 
+    : "border-2 border-slate-300 bg-white";
 
-            const COL_NAME = 0;
-            const COL_PRICE = 3;
-            const COL_INCOME = 7;
+bList.innerHTML += `
+    <div class="flex justify-between items-center p-3 rounded-xl border ${activeClasses} cursor-pointer transition-all" onclick="selectBase(${i})">
+        <div class="flex items-center gap-3">
+            <div class="w-5 h-5 rounded-full flex-shrink-0 ${radioStyle} shadow-sm transition-all"></div>
+            <span class="font-semibold text-sm ${isActive ? 'text-blue-900' : 'text-slate-700'}">${esc(item.name)}</span>
+        </div>
+        <span class="font-extrabold text-sm whitespace-nowrap ml-3 ${isActive ? 'text-blue-600' : 'text-slate-900'}">${pText}</span>
+    </div>`;
+            });
 
-            const MAX_QUANTITY = 999;
-            const MOBILE_BREAKPOINT = 820;
+            // Рендер допов
+            const aList = document.getElementById('esAddonsList');
+            const aCont = document.getElementById('esAddonsContainer');
+            aList.innerHTML = "";
+            
+            if(group.addons.length === 0) {
+                aCont.classList.add('hidden');
+            } else {
+                aCont.classList.remove('hidden');
+                group.addons.forEach((item, i) => {
+                    let pText = item.isPercent ? `${item.price}%` : fmt(item.price);
+                    let qty = currentSelection.addons[i] || 0;
+                    let isActive = qty > 0;
+                    
+                    let activeClasses = isActive ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-slate-200 bg-white hover:border-blue-300";
 
-            /*
-             * Варианты расчёта процентов:
-             *
-             * "cart-fixed" — процент от всех фиксированных позиций корзины.
-             * Это поведение соответствует исходному коду.
-             *
-             * "line-fixed" — процент только от фиксированной части
-             * конкретной позиции корзины.
-             */
-            const PERCENT_CALCULATION_MODE = "cart-fixed";
+                    aList.innerHTML += `
+                        <div class="flex justify-between items-center p-3 rounded-xl border ${activeClasses} transition-colors">
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-sm text-slate-700 leading-tight">${esc(item.name)}</span>
+                                <span class="font-bold text-xs text-slate-500 mt-0.5">${pText}</span>
+                            </div>
+                            <div class="flex items-center gap-2 bg-white border border-slate-200 p-1 rounded-full shadow-sm ml-3 shrink-0">
+                                <button class="w-6 h-6 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors text-xs" onclick="changeAddonQty(${i}, -1)">-</button>
+                                <span id="esAddonQty_${i}" class="w-4 text-center font-bold text-sm ${isActive ? 'text-slate-900' : 'text-slate-400'}">${qty}</span>
+                                <button class="w-6 h-6 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors text-xs" onclick="changeAddonQty(${i}, 1)">+</button>
+                            </div>
+                        </div>`;
+                });
+            }
+            
+            document.getElementById('esBaseQtyVal').innerText = currentSelection.baseQty;
+            
+            // Показ модалки
+            const modal = document.getElementById('esModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('modal-open');
+            updateCalc();
+        }
 
-            const BASE_SHEET_URL =
-                "https://docs.google.com/spreadsheets/d/e/" +
-                "2PACX-1vQcZaUg1LNjHtFku3mI5B6_xYDitZkRM94rlESJLKVqpMeMHkwqRUelOGkbuZ365Znq296r3zixxONC/" +
-                "pub?gid=0&single=true&output=csv";
+        function closeModal() { 
+            const modal = document.getElementById('esModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('modal-open'); 
+        }
 
-            /*
-             * Обновление cache-параметра раз в 5 минут.
-             * Это не отключает кэш полностью, но прайс остаётся актуальным.
-             */
-            const cacheSlot = Math.floor(Date.now() / (5 * 60 * 1000));
-            const SHEET_URL = `${BASE_SHEET_URL}&v=${cacheSlot}`;
+        window.selectBase = function(i) {
+            currentSelection.baseIdx = i;
+            renderModalContent(); // Перерендер для обновления классов
+        }
 
-            /* =====================================================
-               СОСТОЯНИЕ
-            ====================================================== */
+        window.changeBaseQty = function(delta) {
+            let newQty = currentSelection.baseQty + delta;
+            if(newQty < 1) newQty = 1;
+            currentSelection.baseQty = newQty;
+            document.getElementById('esBaseQtyVal').innerText = newQty;
+            updateCalc();
+        }
 
-            let database = [];
-            let cart = [];
-            let catalogMemory = {};
-            let currentSelection = null;
-            let currentSearch = "";
-            let previousBodyOverflow = "";
-            let modalTriggerElement = null;
+        window.changeAddonQty = function(idx, delta) {
+            let currentQty = currentSelection.addons[idx] || 0;
+            let newQty = currentQty + delta;
+            if(newQty < 0) newQty = 0;
+            
+            if(newQty === 0) delete currentSelection.addons[idx];
+            else currentSelection.addons[idx] = newQty;
+            
+            // Легкое обновление UI допа без полного рендера
+            let span = document.getElementById(`esAddonQty_${idx}`);
+            span.innerText = newQty;
+if(newQty > 0) {
+    span.classList.remove('text-slate-400'); 
+    span.classList.add('text-slate-900');
+    span.parentElement.parentElement.classList.add('border-blue-400', 'bg-blue-50/70', 'shadow-sm');
+    span.parentElement.parentElement.classList.remove('border-slate-200', 'bg-white');
+} else {
+    span.classList.add('text-slate-400'); 
+    span.classList.remove('text-slate-900');
+    span.parentElement.parentElement.classList.remove('border-blue-400', 'bg-blue-50/70', 'shadow-sm');
+    span.parentElement.parentElement.classList.add('border-slate-200', 'bg-white');
+}
+            updateCalc();
+        }
 
-            /* =====================================================
-               DOM
-            ====================================================== */
+        function updateCalc() {
+            let group = database[currentSelection.groupIdx];
+            let base = group.items.length ? group.items[currentSelection.baseIdx] : {price:0};
+            let total = 0;
+            let percentStr = "";
 
-            const dom = {
-                catalogGrid: root.querySelector('[data-role="catalog-grid"]'),
-                resultCount: root.querySelector('[data-role="result-count"]'),
+            if(base.isPercent) percentStr = ` + ${base.price}%`;
+            else total += base.price * currentSelection.baseQty;
+            
+            for (const [idx, qty] of Object.entries(currentSelection.addons)) {
+                let add = group.addons[idx];
+                if(add.isPercent) percentStr += ` + ${add.price}%`;
+                else total += add.price * qty;
+            }
+            document.getElementById('esModalPrice').innerText = fmt(total) + percentStr;
+        }
 
-                desktopSearch: root.querySelector('[data-role="desktop-search"]'),
-                mobileSearch: root.querySelector('[data-role="mobile-search"]'),
-
-                desktopSearchClear: root.querySelector(
-                    '[data-role="desktop-search-clear"]'
-                ),
-                mobileSearchClear: root.querySelector(
-                    '[data-role="mobile-search-clear"]'
-                ),
-
-                cart: root.querySelector('[data-role="cart"]'),
-                cartItems: root.querySelector('[data-role="cart-items"]'),
-                cartCountText: root.querySelector(
-                    '[data-role="cart-count-text"]'
-                ),
-                fixedTotal: root.querySelector('[data-role="fixed-total"]'),
-                incomeTotal: root.querySelector('[data-role="income-total"]'),
-                cartTotal: root.querySelector('[data-role="cart-total"]'),
-
-                mobileCartCount: root.querySelector(
-                    '[data-role="mobile-cart-count"]'
-                ),
-                mobileCartTotal: root.querySelector(
-                    '[data-role="mobile-cart-total"]'
-                ),
-                mobileCartBackdrop: root.querySelector(
-                    '[data-role="mobile-cart-backdrop"]'
-                ),
-
-                clearCartButton: root.querySelector(
-                    '[data-action="clear-cart"]'
-                ),
-
-                modalOverlay: root.querySelector('[data-role="modal-overlay"]'),
-                modalBody: root.querySelector('[data-role="modal-body"]'),
-                modalTitle: root.querySelector('[data-role="modal-title"]'),
-                modalKicker: root.querySelector('[data-role="modal-kicker"]'),
-                basesList: root.querySelector('[data-role="bases-list"]'),
-                addonsList: root.querySelector('[data-role="addons-list"]'),
-                addonsSection: root.querySelector(
-                    '[data-role="addons-section"]'
-                ),
-                baseQuantity: root.querySelector(
-                    '[data-role="base-quantity"]'
-                ),
-                modalPrice: root.querySelector('[data-role="modal-price"]'),
-                confirmButton: root.querySelector(
-                    '[data-action="confirm-selection"]'
-                )
+        // ============================================
+        // ЛОГИКА КОРЗИНЫ
+        // ============================================
+        function confirmAddToCart() {
+            let group = database[currentSelection.groupIdx];
+            let baseItem = group.items.length ? group.items[currentSelection.baseIdx] : {name:"Товар", price:0, income:0};
+            let selectedAddons = [];
+            for (const [idx, qty] of Object.entries(currentSelection.addons)) {
+                selectedAddons.push({ ...group.addons[idx], qty: qty });
+            }
+            
+            catalogMemory[currentSelection.groupIdx] = {
+                groupIdx: currentSelection.groupIdx, baseIdx: currentSelection.baseIdx,
+                baseQty: currentSelection.baseQty, addons: {...currentSelection.addons}
             };
 
-            /* =====================================================
-               ФОРМАТИРОВАНИЕ
-            ====================================================== */
+            let newItem = {
+                title: group.title, base: baseItem, baseQty: currentSelection.baseQty, addons: selectedAddons
+            };
 
-            const currencyFormatter = new Intl.NumberFormat("ru-RU", {
-                style: "currency",
-                currency: "RUB",
-                maximumFractionDigits: 0
+            if(currentSelection.mode === 'edit') cart[currentSelection.cartIdx] = newItem;
+            else cart.push(newItem);
+            
+            closeModal();
+            renderCart();
+            
+            // Авто-открытие корзины на мобилках при первом добавлении, если она закрыта
+            if(window.innerWidth <= 768 && cart.length === 1) {
+                document.getElementById('esCartWidget').classList.add('is-open');
+                document.getElementById('mobile-cart-arrow').style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function renderCart() {
+            let fixedSum = 0, fixedInc = 0;
+            cart.forEach(c => {
+                if(!c.base.isPercent) {
+                    fixedSum += c.base.price * c.baseQty;
+                    fixedInc += c.base.income * c.baseQty;
+                }
+                c.addons.forEach(a => {
+                    if(!a.isPercent) {
+                        fixedSum += a.price * a.qty;
+                        fixedInc += a.income * a.qty;
+                    }
+                });
             });
 
-            function formatCurrency(value) {
-                const number = Number(value);
+            let total = fixedSum, totalInc = fixedInc;
+            const list = document.getElementById('esCartItems');
+            list.innerHTML = "";
 
-                if (!Number.isFinite(number)) {
-                    return "Цена не определена";
-                }
+            cart.forEach((c, idx) => {
+                let itemTotalCost = 0; 
+                let basePriceText = "";
 
-                return currencyFormatter.format(number);
-            }
-
-            function normalizeText(value) {
-                return String(value ?? "")
-                    .replace(/\s+/g, " ")
-                    .trim();
-            }
-
-            function normalizeSearch(value) {
-                return normalizeText(value).toLocaleLowerCase("ru-RU");
-            }
-
-            function clampQuantity(value, min) {
-                const number = Number(value);
-
-                if (!Number.isFinite(number)) {
-                    return min;
-                }
-
-                return Math.min(
-                    MAX_QUANTITY,
-                    Math.max(min, Math.round(number))
-                );
-            }
-
-            function pluralizePositions(count) {
-                const mod10 = count % 10;
-                const mod100 = count % 100;
-
-                if (mod10 === 1 && mod100 !== 11) {
-                    return `${count} позиция`;
-                }
-
-                if (
-                    mod10 >= 2 &&
-                    mod10 <= 4 &&
-                    !(mod100 >= 12 && mod100 <= 14)
-                ) {
-                    return `${count} позиции`;
-                }
-
-                return `${count} позиций`;
-            }
-
-            /* =====================================================
-               ПАРСИНГ ЧИСЕЛ
-            ====================================================== */
-
-            function parsePrice(rawValue) {
-                const original = normalizeText(rawValue);
-
-                if (!original) {
-                    return {
-                        value: 0,
-                        type: "fixed"
-                    };
-                }
-
-                const lower = original.toLocaleLowerCase("ru-RU");
-
-                if (
-                    lower.includes("запрос") ||
-                    lower.includes("уточн")
-                ) {
-                    return {
-                        value: 0,
-                        type: "request"
-                    };
-                }
-
-                const isPercent = original.includes("%");
-
-                /*
-                 * Удаляем пробелы и валютные обозначения.
-                 * Для процентов допускаем дробную часть.
-                 */
-                if (isPercent) {
-                    const normalized = original
-                        .replace(/\s+/g, "")
-                        .replace(",", ".")
-                        .replace(/[^\d.-]/g, "");
-
-                    const value = Number(normalized);
-
-                    return {
-                        value: Number.isFinite(value) ? value : 0,
-                        type: "percent"
-                    };
-                }
-
-                /*
-                 * Текущая таблица предположительно использует целые рубли.
-                 * Поэтому разделители тысяч удаляются.
-                 */
-                const digitsOnly = original.replace(/[^\d-]/g, "");
-                const value = Number.parseInt(digitsOnly, 10);
-
-                return {
-                    value: Number.isFinite(value) ? value : 0,
-                    type: "fixed"
-                };
-            }
-
-            function formatPriceEntity(entity) {
-                if (!entity) {
-                    return "По запросу";
-                }
-
-                if (entity.priceType === "request") {
-                    return "По запросу";
-                }
-
-                if (entity.priceType === "percent") {
-                    return `${entity.price}%`;
-                }
-
-                return formatCurrency(entity.price);
-            }
-
-            /* =====================================================
-               СОЗДАНИЕ ЭЛЕМЕНТОВ
-            ====================================================== */
-
-            function createElement(tagName, options = {}) {
-                const element = document.createElement(tagName);
-
-                if (options.className) {
-                    element.className = options.className;
-                }
-
-                if (options.text !== undefined) {
-                    element.textContent = String(options.text);
-                }
-
-                if (options.type) {
-                    element.type = options.type;
-                }
-
-                if (options.attributes) {
-                    Object.entries(options.attributes).forEach(
-                        ([name, value]) => {
-                            element.setAttribute(name, String(value));
-                        }
-                    );
-                }
-
-                return element;
-            }
-
-            function createIconState(type) {
-                const wrapper = createElement("div", {
-                    className: "es-state-icon"
-                });
-
-                if (type === "search") {
-                    wrapper.textContent = "⌕";
-                } else if (type === "error") {
-                    wrapper.textContent = "!";
+                if(c.base.isPercent) {
+                    let oneItemVal = fixedSum * (c.base.price / 100);
+                    let allItemsVal = oneItemVal * c.baseQty;
+                    total += allItemsVal;
+                    totalInc += (fixedSum * (c.base.income / 100)) * c.baseQty;
+                    itemTotalCost = allItemsVal;
+                    basePriceText = `${c.base.price}% (${fmt(oneItemVal)} x ${c.baseQty})`;
                 } else {
-                    wrapper.textContent = "…";
+                    itemTotalCost = c.base.price * c.baseQty;
+                    basePriceText = `${fmt(c.base.price)} x ${c.baseQty}`;
                 }
 
-                return wrapper;
-            }
-
-            /* =====================================================
-               ЗАГРУЗКА
-            ====================================================== */
-
-            function renderSkeleton() {
-                dom.catalogGrid.replaceChildren();
-
-                const fragment = document.createDocumentFragment();
-
-                for (let index = 0; index < 9; index += 1) {
-                    const card = createElement("div", {
-                        className: "es-skeleton-card"
-                    });
-
-                    const lineOne = createElement("div", {
-                        className: "es-skeleton-line"
-                    });
-
-                    lineOne.style.width = "34%";
-
-                    const lineTwo = createElement("div", {
-                        className: "es-skeleton-line"
-                    });
-
-                    lineTwo.style.width = "82%";
-                    lineTwo.style.marginTop = "29px";
-
-                    const lineThree = createElement("div", {
-                        className: "es-skeleton-line"
-                    });
-
-                    lineThree.style.width = "48%";
-                    lineThree.style.marginTop = "34px";
-
-                    card.append(lineOne, lineTwo, lineThree);
-                    fragment.appendChild(card);
-                }
-
-                dom.catalogGrid.appendChild(fragment);
-                dom.resultCount.textContent = "Загрузка прайса…";
-            }
-
-            function renderError(message) {
-                dom.catalogGrid.replaceChildren();
-
-                const panel = createElement("div", {
-                    className: "es-state-panel"
-                });
-
-                const icon = createIconState("error");
-
-                const title = createElement("div", {
-                    className: "es-state-title",
-                    text: "Не удалось загрузить прайс"
-                });
-
-                const text = createElement("div", {
-                    className: "es-state-text",
-                    text: message
-                });
-
-                const retry = createElement("button", {
-                    className: "es-retry-button",
-                    text: "Повторить загрузку",
-                    type: "button"
-                });
-
-                retry.addEventListener("click", initApp);
-
-                panel.append(icon, title, text, retry);
-                dom.catalogGrid.appendChild(panel);
-                dom.resultCount.textContent = "Ошибка загрузки";
-            }
-
-            function waitForPapa(attempt = 0) {
-                if (window.Papa) {
-                    loadDatabase();
-                    return;
-                }
-
-                if (attempt >= 24) {
-                    renderError(
-                        "Библиотека чтения CSV не загрузилась. " +
-                        "Проверьте соединение с интернетом или доступ к CDN."
-                    );
-                    return;
-                }
-
-                window.setTimeout(() => {
-                    waitForPapa(attempt + 1);
-                }, 250);
-            }
-
-            function initApp() {
-                renderSkeleton();
-                waitForPapa();
-            }
-
-            function loadDatabase() {
-                window.Papa.parse(SHEET_URL, {
-                    download: true,
-                    header: false,
-                    skipEmptyLines: false,
-
-                    complete(results) {
-                        if (
-                            !results ||
-                            !Array.isArray(results.data)
-                        ) {
-                            renderError(
-                                "Google-таблица вернула данные в неизвестном формате."
-                            );
-                            return;
-                        }
-
-                        if (
-                            Array.isArray(results.errors) &&
-                            results.errors.length > 0
-                        ) {
-                            console.warn(
-                                "Ошибки разбора CSV:",
-                                results.errors
-                            );
-                        }
-
-                        try {
-                            processData(results.data);
-                        } catch (error) {
-                            console.error(error);
-
-                            renderError(
-                                "Не удалось разобрать структуру таблицы. " +
-                                "Проверьте названия групп и расположение колонок."
-                            );
-                        }
-                    },
-
-                    error(error) {
-                        console.error(error);
-
-                        renderError(
-                            "Не удалось получить опубликованную Google-таблицу. " +
-                            "Проверьте доступ к ссылке и публикацию CSV."
-                        );
+                let addonsHtml = "";
+                c.addons.forEach(a => {
+                    let aText = "", aCost = 0;
+                    if(a.isPercent) {
+                        let oneVal = fixedSum * (a.price / 100);
+                        let allVal = oneVal * a.qty;
+                        total += allVal;
+                        totalInc += (fixedSum * (a.income / 100)) * a.qty;
+                        aCost = allVal;
+                        aText = `${a.price}% (${fmt(oneVal)}) x ${a.qty}`;
+                    } else {
+                        aCost = a.price * a.qty;
+                        aText = `${fmt(a.price)} x ${a.qty}`;
                     }
-                });
-            }
-
-            /* =====================================================
-               ОБРАБОТКА ТАБЛИЦЫ
-            ====================================================== */
-
-            function processData(rows) {
-                const parsedGroups = [];
-
-                let currentGroup = null;
-                let isAddonsSection = false;
-
-                rows.forEach((row) => {
-                    if (!Array.isArray(row)) {
-                        return;
-                    }
-
-                    const name = normalizeText(row[COL_NAME]);
-
-                    if (!name) {
-                        return;
-                    }
-
-                    const lowerName = name.toLocaleLowerCase("ru-RU");
-                    const priceRaw = normalizeText(row[COL_PRICE]);
-
-                    const isTechnicalRow =
-                        lowerName.includes("позиция") ||
-                        lowerName.includes("себестоимость");
-
-                    const isAddonsHeading =
-                        lowerName.includes("доп. элементы") ||
-                        lowerName.includes("доп элементы") ||
-                        lowerName.includes("дополнительные элементы") ||
-                        lowerName.includes("дополнительные опции");
-
-                    if (isAddonsHeading) {
-                        isAddonsSection = true;
-                        return;
-                    }
-
-                    const isGroupHeader =
-                        !priceRaw &&
-                        !isTechnicalRow;
-
-                    if (isGroupHeader) {
-                        currentGroup = {
-                            id: `group-${parsedGroups.length}`,
-                            title: name,
-                            items: [],
-                            addons: []
-                        };
-
-                        parsedGroups.push(currentGroup);
-                        isAddonsSection = false;
-                        return;
-                    }
-
-                    if (!currentGroup || isTechnicalRow) {
-                        return;
-                    }
-
-                    const parsedPrice = parsePrice(row[COL_PRICE]);
-                    const parsedIncome = parsePrice(row[COL_INCOME]);
-
-                    const targetArray = isAddonsSection
-                        ? currentGroup.addons
-                        : currentGroup.items;
-
-                    targetArray.push({
-                        id:
-                            `${currentGroup.id}-` +
-                            `${isAddonsSection ? "addon" : "base"}-` +
-                            `${targetArray.length}`,
-
-                        name,
-
-                        price: parsedPrice.value,
-                        priceType: parsedPrice.type,
-
-                        income: parsedIncome.value,
-                        incomeType: parsedIncome.type
-                    });
+                    itemTotalCost += aCost;
+                    addonsHtml += `<div class="text-xs text-slate-500 mb-0.5"><span class="text-slate-400">+</span> ${esc(a.name)}: ${aText}</div>`;
                 });
 
-                database = parsedGroups.filter(
-                    (group) =>
-                        group.items.length > 0 ||
-                        group.addons.length > 0
-                );
-
-                if (database.length === 0) {
-                    renderError(
-                        "В таблице не найдено ни одной товарной группы."
-                    );
-                    return;
-                }
-
-                renderCatalog();
-                renderCart();
-            }
-
-            /* =====================================================
-               КАТАЛОГ
-            ====================================================== */
-
-            function getGroupPriceLabel(group) {
-                const fixedPrices = group.items
-                    .filter(
-                        (item) =>
-                            item.priceType === "fixed" &&
-                            item.price > 0
-                    )
-                    .map((item) => item.price);
-
-                if (fixedPrices.length > 0) {
-                    return `от ${formatCurrency(
-                        Math.min(...fixedPrices)
-                    )}`;
-                }
-
-                if (
-                    group.items.some(
-                        (item) => item.priceType === "percent"
-                    )
-                ) {
-                    return "Расчёт в процентах";
-                }
-
-                return "По запросу";
-            }
-
-            function groupMatchesSearch(group, searchValue) {
-                if (!searchValue) {
-                    return true;
-                }
-
-                if (
-                    normalizeSearch(group.title).includes(searchValue)
-                ) {
-                    return true;
-                }
-
-                if (
-                    group.items.some((item) =>
-                        normalizeSearch(item.name).includes(searchValue)
-                    )
-                ) {
-                    return true;
-                }
-
-                return group.addons.some((addon) =>
-                    normalizeSearch(addon.name).includes(searchValue)
-                );
-            }
-
-            function renderCatalog() {
-                dom.catalogGrid.replaceChildren();
-
-                const searchValue = normalizeSearch(currentSearch);
-                const matchingGroups = [];
-
-                database.forEach((group, groupIndex) => {
-                    if (groupMatchesSearch(group, searchValue)) {
-                        matchingGroups.push({
-                            group,
-                            groupIndex
-                        });
-                    }
-                });
-
-                dom.resultCount.textContent =
-                    `${matchingGroups.length} из ${database.length}`;
-
-                if (matchingGroups.length === 0) {
-                    const panel = createElement("div", {
-                        className: "es-state-panel"
-                    });
-
-                    const icon = createIconState("search");
-
-                    const title = createElement("div", {
-                        className: "es-state-title",
-                        text: "Ничего не найдено"
-                    });
-
-                    const text = createElement("div", {
-                        className: "es-state-text",
-                        text:
-                            "Попробуйте изменить запрос или ввести " +
-                            "другое название товара."
-                    });
-
-                    panel.append(icon, title, text);
-                    dom.catalogGrid.appendChild(panel);
-
-                    return;
-                }
-
-                const fragment = document.createDocumentFragment();
-
-                matchingGroups.forEach(
-                    ({ group, groupIndex }, visibleIndex) => {
-                        const card = createElement("button", {
-                            className: "es-product-card",
-                            type: "button",
-                            attributes: {
-                                "aria-label":
-                                    `Открыть ${group.title}`,
-                                "data-group-index": groupIndex
-                            }
-                        });
-
-                        const indexBadge = createElement("span", {
-                            className: "es-card-index",
-                            text: String(visibleIndex + 1).padStart(2, "0")
-                        });
-
-                        const title = createElement("div", {
-                            className: "es-card-title",
-                            text: group.title
-                        });
-
-                        const bottom = createElement("div", {
-                            className: "es-card-bottom"
-                        });
-
-                        const priceBlock = createElement("div", {
-                            className: "es-card-price-block"
-                        });
-
-                        const caption = createElement("span", {
-                            className: "es-card-caption",
-                            text: "Стоимость"
-                        });
-
-                        const price = createElement("div", {
-                            className: "es-card-price",
-                            text: getGroupPriceLabel(group)
-                        });
-
-                        const arrow = createElement("span", {
-                            className: "es-card-arrow",
-                            text: "→"
-                        });
-
-                        priceBlock.append(caption, price);
-                        bottom.append(priceBlock, arrow);
-
-                        card.append(indexBadge, title, bottom);
-
-                        card.addEventListener("click", () => {
-                            openModalFromCatalog(groupIndex, card);
-                        });
-
-                        fragment.appendChild(card);
-                    }
-                );
-
-                dom.catalogGrid.appendChild(fragment);
-            }
-
-            /* =====================================================
-               ПОИСК
-            ====================================================== */
-
-            function updateSearch(value, source) {
-                currentSearch = String(value ?? "");
-
-                if (source !== "desktop") {
-                    dom.desktopSearch.value = currentSearch;
-                }
-
-                if (source !== "mobile") {
-                    dom.mobileSearch.value = currentSearch;
-                }
-
-                updateSearchClearButtons();
-                renderCatalog();
-            }
-
-            function updateSearchClearButtons() {
-                const hasValue = currentSearch.trim().length > 0;
-
-                dom.desktopSearchClear.classList.toggle(
-                    "is-visible",
-                    hasValue
-                );
-
-                dom.mobileSearchClear.classList.toggle(
-                    "is-visible",
-                    hasValue
-                );
-            }
-
-            function clearSearch() {
-                currentSearch = "";
-                dom.desktopSearch.value = "";
-                dom.mobileSearch.value = "";
-
-                updateSearchClearButtons();
-                renderCatalog();
-
-                const target =
-                    window.innerWidth <= MOBILE_BREAKPOINT
-                        ? dom.mobileSearch
-                        : dom.desktopSearch;
-
-                target.focus();
-            }
-
-            /* =====================================================
-               МОДАЛЬНОЕ ОКНО
-            ====================================================== */
-
-            function cloneSelection(selection) {
-                return {
-                    groupIndex: selection.groupIndex,
-                    baseIndex: selection.baseIndex,
-                    baseQuantity: selection.baseQuantity,
-                    addons: { ...selection.addons },
-                    mode: selection.mode,
-                    cartIndex: selection.cartIndex
-                };
-            }
-
-            function openModalFromCatalog(groupIndex, triggerElement) {
-                modalTriggerElement = triggerElement || null;
-
-                const remembered = catalogMemory[groupIndex];
-
-                if (remembered) {
-                    currentSelection = cloneSelection({
-                        ...remembered,
-                        mode: "new",
-                        cartIndex: -1
-                    });
-                } else {
-                    currentSelection = {
-                        groupIndex,
-                        baseIndex: 0,
-                        baseQuantity: 1,
-                        addons: {},
-                        mode: "new",
-                        cartIndex: -1
-                    };
-                }
-
-                renderModal();
-            }
-
-            function openModalFromCart(cartIndex) {
-                const cartItem = cart[cartIndex];
-
-                if (!cartItem) {
-                    return;
-                }
-
-                const groupIndex = database.findIndex(
-                    (group) => group.id === cartItem.groupId
-                );
-
-                if (groupIndex < 0) {
-                    return;
-                }
-
-                const group = database[groupIndex];
-
-                let baseIndex = group.items.findIndex(
-                    (base) => base.id === cartItem.baseId
-                );
-
-                if (baseIndex < 0) {
-                    baseIndex = 0;
-                }
-
-                const addons = {};
-
-                cartItem.addons.forEach((savedAddon) => {
-                    const addonIndex = group.addons.findIndex(
-                        (addon) => addon.id === savedAddon.addonId
-                    );
-
-                    if (addonIndex >= 0) {
-                        addons[addonIndex] = savedAddon.quantity;
-                    }
-                });
-
-                currentSelection = {
-                    groupIndex,
-                    baseIndex,
-                    baseQuantity: cartItem.baseQuantity,
-                    addons,
-                    mode: "edit",
-                    cartIndex
-                };
-
-                closeMobileCart();
-                renderModal();
-            }
-
-            function renderModal() {
-                if (!currentSelection) {
-                    return;
-                }
-
-                const group = database[currentSelection.groupIndex];
-
-                if (!group) {
-                    return;
-                }
-
-                dom.modalKicker.textContent =
-                    currentSelection.mode === "edit"
-                        ? "Редактирование позиции"
-                        : "Настройка позиции";
-
-                dom.modalTitle.textContent = group.title;
-
-                dom.confirmButton.textContent =
-                    currentSelection.mode === "edit"
-                        ? "Сохранить"
-                        : "В корзину";
-
-                dom.confirmButton.classList.toggle(
-                    "is-update",
-                    currentSelection.mode === "edit"
-                );
-
-                renderBaseOptions(group);
-                renderAddonOptions(group);
-
-                dom.baseQuantity.textContent =
-                    currentSelection.baseQuantity;
-
-                updateModalCalculation();
-
-                dom.modalOverlay.classList.add("is-visible");
-                dom.modalOverlay.setAttribute("aria-hidden", "false");
-
-                previousBodyOverflow = document.body.style.overflow;
-                document.body.style.overflow = "hidden";
-
-                dom.modalBody.scrollTop = 0;
-
-                window.requestAnimationFrame(() => {
-                    const closeButton = root.querySelector(
-                        '[data-action="close-modal"]'
-                    );
-
-                    closeButton?.focus();
-                });
-            }
-
-            function renderBaseOptions(group) {
-                dom.basesList.replaceChildren();
-
-                const bases =
-                    group.items.length > 0
-                        ? group.items
-                        : [
-                            {
-                                id: "fallback-base",
-                                name: "Базовая позиция",
-                                price: 0,
-                                priceType: "request",
-                                income: 0,
-                                incomeType: "fixed"
-                            }
-                        ];
-
-                const fragment = document.createDocumentFragment();
-
-                bases.forEach((item, index) => {
-                    const row = createElement("button", {
-                        className:
-                            "es-option-row" +
-                            (
-                                index === currentSelection.baseIndex
-                                    ? " is-active"
-                                    : ""
-                            ),
-                        type: "button",
-                        attributes: {
-                            "data-base-index": index,
-                            "aria-pressed":
-                                index === currentSelection.baseIndex
-                                    ? "true"
-                                    : "false"
-                        }
-                    });
-
-                    const main = createElement("span", {
-                        className: "es-option-main"
-                    });
-
-                    const radio = createElement("span", {
-                        className: "es-radio-dot"
-                    });
-
-                    const name = createElement("span", {
-                        className: "es-option-name",
-                        text: item.name
-                    });
-
-                    const price = createElement("span", {
-                        className: "es-option-price",
-                        text: formatPriceEntity(item)
-                    });
-
-                    main.append(radio, name);
-                    row.append(main, price);
-
-                    row.addEventListener("click", () => {
-                        currentSelection.baseIndex = index;
-                        renderBaseOptions(group);
-                        updateModalCalculation();
-                    });
-
-                    fragment.appendChild(row);
-                });
-
-                dom.basesList.appendChild(fragment);
-            }
-
-            function renderAddonOptions(group) {
-                dom.addonsList.replaceChildren();
-
-                const hasAddons = group.addons.length > 0;
-
-                dom.addonsSection.hidden = !hasAddons;
-
-                if (!hasAddons) {
-                    return;
-                }
-
-                const fragment = document.createDocumentFragment();
-
-                group.addons.forEach((addon, index) => {
-                    const quantity =
-                        currentSelection.addons[index] || 0;
-
-                    const row = createElement("div", {
-                        className: "es-option-row"
-                    });
-
-                    const main = createElement("div", {
-                        className: "es-option-main"
-                    });
-
-                    const textWrap = createElement("div");
-
-                    const name = createElement("div", {
-                        className: "es-option-name",
-                        text: addon.name
-                    });
-
-                    const price = createElement("div", {
-                        className: "es-option-price",
-                        text: formatPriceEntity(addon)
-                    });
-
-                    price.style.marginTop = "3px";
-                    price.style.textAlign = "left";
-
-                    textWrap.append(name, price);
-                    main.appendChild(textWrap);
-
-                    const control = createQuantityControl({
-                        quantity,
-                        minimum: 0,
-
-                        onDecrease() {
-                            changeAddonQuantity(index, -1);
-                        },
-
-                        onIncrease() {
-                            changeAddonQuantity(index, 1);
-                        }
-                    });
-
-                    row.append(main, control);
-                    fragment.appendChild(row);
-                });
-
-                dom.addonsList.appendChild(fragment);
-            }
-
-            function createQuantityControl({
-                quantity,
-                minimum,
-                onDecrease,
-                onIncrease
-            }) {
-                const control = createElement("div", {
-                    className: "es-qty-control"
-                });
-
-                const decrease = createElement("button", {
-                    className: "es-qty-button",
-                    text: "−",
-                    type: "button",
-                    attributes: {
-                        "aria-label": "Уменьшить количество"
-                    }
-                });
-
-                const value = createElement("span", {
-                    className:
-                        "es-qty-value" +
-                        (quantity === 0 ? " is-zero" : ""),
-                    text: quantity
-                });
-
-                const increase = createElement("button", {
-                    className: "es-qty-button",
-                    text: "+",
-                    type: "button",
-                    attributes: {
-                        "aria-label": "Увеличить количество"
-                    }
-                });
-
-                decrease.addEventListener("click", (event) => {
-                    event.stopPropagation();
-
-                    if (quantity > minimum) {
-                        onDecrease();
-                    }
-                });
-
-                increase.addEventListener("click", (event) => {
-                    event.stopPropagation();
-                    onIncrease();
-                });
-
-                control.append(decrease, value, increase);
-
-                return control;
-            }
-
-            function closeModal() {
-                dom.modalOverlay.classList.remove("is-visible");
-                dom.modalOverlay.setAttribute("aria-hidden", "true");
-
-                document.body.style.overflow = previousBodyOverflow;
-
-                currentSelection = null;
-
-                if (
-                    modalTriggerElement &&
-                    typeof modalTriggerElement.focus === "function"
-                ) {
-                    modalTriggerElement.focus();
-                }
-
-                modalTriggerElement = null;
-            }
-
-            function changeBaseQuantity(delta) {
-                if (!currentSelection) {
-                    return;
-                }
-
-                currentSelection.baseQuantity = clampQuantity(
-                    currentSelection.baseQuantity + delta,
-                    1
-                );
-
-                dom.baseQuantity.textContent =
-                    currentSelection.baseQuantity;
-
-                updateModalCalculation();
-            }
-
-            function changeAddonQuantity(index, delta) {
-                if (!currentSelection) {
-                    return;
-                }
-
-                const currentQuantity =
-                    currentSelection.addons[index] || 0;
-
-                const newQuantity = clampQuantity(
-                    currentQuantity + delta,
-                    0
-                );
-
-                if (newQuantity === 0) {
-                    delete currentSelection.addons[index];
-                } else {
-                    currentSelection.addons[index] = newQuantity;
-                }
-
-                const group = database[currentSelection.groupIndex];
-
-                renderAddonOptions(group);
-                updateModalCalculation();
-            }
-
-            function updateModalCalculation() {
-                if (!currentSelection) {
-                    return;
-                }
-
-                const group = database[currentSelection.groupIndex];
-
-                if (!group) {
-                    return;
-                }
-
-                const base =
-                    group.items[currentSelection.baseIndex] || {
-                        price: 0,
-                        priceType: "request"
-                    };
-
-                let fixedTotal = 0;
-                const percentParts = [];
-                let hasRequest = false;
-
-                if (base.priceType === "fixed") {
-                    fixedTotal +=
-                        base.price *
-                        currentSelection.baseQuantity;
-                } else if (base.priceType === "percent") {
-                    percentParts.push(
-                        `${base.price}% × ${currentSelection.baseQuantity}`
-                    );
-                } else {
-                    hasRequest = true;
-                }
-
-                Object.entries(currentSelection.addons).forEach(
-                    ([indexString, quantity]) => {
-                        const index = Number(indexString);
-                        const addon = group.addons[index];
-
-                        if (!addon) {
-                            return;
-                        }
-
-                        if (addon.priceType === "fixed") {
-                            fixedTotal += addon.price * quantity;
-                        } else if (addon.priceType === "percent") {
-                            percentParts.push(
-                                `${addon.price}% × ${quantity}`
-                            );
-                        } else {
-                            hasRequest = true;
-                        }
-                    }
-                );
-
-                let result = formatCurrency(fixedTotal);
-
-                if (percentParts.length > 0) {
-                    result += ` + ${percentParts.join(" + ")}`;
-                }
-
-                if (hasRequest) {
-                    result += " + по запросу";
-                }
-
-                dom.modalPrice.textContent = result;
-            }
-
-            function confirmSelection() {
-                if (!currentSelection) {
-                    return;
-                }
-
-                const group = database[currentSelection.groupIndex];
-
-                if (!group) {
-                    return;
-                }
-
-                const base =
-                    group.items[currentSelection.baseIndex] || {
-                        id: "fallback-base",
-                        name: "Базовая позиция",
-                        price: 0,
-                        priceType: "request",
-                        income: 0,
-                        incomeType: "fixed"
-                    };
-
-                const addons = Object.entries(
-                    currentSelection.addons
-                )
-                    .map(([indexString, quantity]) => {
-                        const index = Number(indexString);
-                        const addon = group.addons[index];
-
-                        if (!addon || quantity <= 0) {
-                            return null;
-                        }
-
-                        return {
-                            addonId: addon.id,
-                            quantity
-                        };
-                    })
-                    .filter(Boolean);
-
-                catalogMemory[currentSelection.groupIndex] = {
-                    groupIndex: currentSelection.groupIndex,
-                    baseIndex: currentSelection.baseIndex,
-                    baseQuantity: currentSelection.baseQuantity,
-                    addons: { ...currentSelection.addons }
-                };
-
-                const cartItem = {
-                    groupId: group.id,
-                    title: group.title,
-                    baseId: base.id,
-                    baseQuantity: currentSelection.baseQuantity,
-                    addons
-                };
-
-                if (
-                    currentSelection.mode === "edit" &&
-                    currentSelection.cartIndex >= 0
-                ) {
-                    cart[currentSelection.cartIndex] = cartItem;
-                } else {
-                    cart.push(cartItem);
-                }
-
-                closeModal();
-                renderCart();
-
-                if (window.innerWidth <= MOBILE_BREAKPOINT) {
-                    openMobileCart();
-                }
-            }
-
-            /* =====================================================
-               РАСЧЁТ КОРЗИНЫ
-            ====================================================== */
-
-            function resolveCartItem(cartItem) {
-                const group = database.find(
-                    (candidate) =>
-                        candidate.id === cartItem.groupId
-                );
-
-                if (!group) {
-                    return null;
-                }
-
-                const base = group.items.find(
-                    (candidate) =>
-                        candidate.id === cartItem.baseId
-                ) || {
-                    id: "fallback-base",
-                    name: "Базовая позиция",
-                    price: 0,
-                    priceType: "request",
-                    income: 0,
-                    incomeType: "fixed"
-                };
-
-                const addons = cartItem.addons
-                    .map((savedAddon) => {
-                        const addon = group.addons.find(
-                            (candidate) =>
-                                candidate.id === savedAddon.addonId
-                        );
-
-                        if (!addon) {
-                            return null;
-                        }
-
-                        return {
-                            ...addon,
-                            quantity: savedAddon.quantity
-                        };
-                    })
-                    .filter(Boolean);
-
-                return {
-                    group,
-                    base,
-                    baseQuantity: cartItem.baseQuantity,
-                    addons
-                };
-            }
-
-            function calculateFixedLineTotal(resolvedItem) {
-                let total = 0;
-
-                if (resolvedItem.base.priceType === "fixed") {
-                    total +=
-                        resolvedItem.base.price *
-                        resolvedItem.baseQuantity;
-                }
-
-                resolvedItem.addons.forEach((addon) => {
-                    if (addon.priceType === "fixed") {
-                        total += addon.price * addon.quantity;
-                    }
-                });
-
-                return total;
-            }
-
-            function calculateFixedCartTotal() {
-                return cart.reduce((sum, cartItem) => {
-                    const resolved = resolveCartItem(cartItem);
-
-                    if (!resolved) {
-                        return sum;
-                    }
-
-                    return sum + calculateFixedLineTotal(resolved);
-                }, 0);
-            }
-
-            function getPercentBasis(resolvedItem, fixedCartTotal) {
-                if (PERCENT_CALCULATION_MODE === "line-fixed") {
-                    return calculateFixedLineTotal(resolvedItem);
-                }
-
-                return fixedCartTotal;
-            }
-
-            function calculateValueByType(
-                entity,
-                quantity,
-                percentBasis
-            ) {
-                if (entity.priceType === "request") {
-                    return {
-                        value: 0,
-                        hasRequest: true
-                    };
-                }
-
-                if (entity.priceType === "percent") {
-                    return {
-                        value:
-                            percentBasis *
-                            (entity.price / 100) *
-                            quantity,
-                        hasRequest: false
-                    };
-                }
-
-                return {
-                    value: entity.price * quantity,
-                    hasRequest: false
-                };
-            }
-
-            function calculateIncomeByType(
-                entity,
-                quantity,
-                percentBasis
-            ) {
-                if (entity.incomeType === "request") {
-                    return 0;
-                }
-
-                if (entity.incomeType === "percent") {
-                    return (
-                        percentBasis *
-                        (entity.income / 100) *
-                        quantity
-                    );
-                }
-
-                return entity.income * quantity;
-            }
-
-            function calculateCart() {
-                const fixedCartTotal = calculateFixedCartTotal();
-
-                let total = 0;
-                let incomeTotal = 0;
-                let hasRequest = false;
-
-                const lines = cart
-                    .map((cartItem, cartIndex) => {
-                        const resolved = resolveCartItem(cartItem);
-
-                        if (!resolved) {
-                            return null;
-                        }
-
-                        const percentBasis = getPercentBasis(
-                            resolved,
-                            fixedCartTotal
-                        );
-
-                        const baseCalculation = calculateValueByType(
-                            resolved.base,
-                            resolved.baseQuantity,
-                            percentBasis
-                        );
-
-                        let lineTotal = baseCalculation.value;
-                        let lineIncome = calculateIncomeByType(
-                            resolved.base,
-                            resolved.baseQuantity,
-                            percentBasis
-                        );
-
-                        let lineHasRequest =
-                            baseCalculation.hasRequest;
-
-                        const addonCalculations =
-                            resolved.addons.map((addon) => {
-                                const calculation =
-                                    calculateValueByType(
-                                        addon,
-                                        addon.quantity,
-                                        percentBasis
-                                    );
-
-                                lineTotal += calculation.value;
-                                lineIncome += calculateIncomeByType(
-                                    addon,
-                                    addon.quantity,
-                                    percentBasis
-                                );
-
-                                if (calculation.hasRequest) {
-                                    lineHasRequest = true;
-                                }
-
-                                return {
-                                    addon,
-                                    value: calculation.value
-                                };
-                            });
-
-                        total += lineTotal;
-                        incomeTotal += lineIncome;
-
-                        if (lineHasRequest) {
-                            hasRequest = true;
-                        }
-
-                        return {
-                            cartIndex,
-                            resolved,
-                            lineTotal,
-                            lineHasRequest,
-                            addonCalculations,
-                            percentBasis
-                        };
-                    })
-                    .filter(Boolean);
-
-                return {
-                    fixedCartTotal,
-                    total,
-                    incomeTotal,
-                    hasRequest,
-                    lines
-                };
-            }
-
-            function formatCartEntityLine(
-                entity,
-                quantity,
-                percentBasis
-            ) {
-                if (entity.priceType === "request") {
-                    return "по запросу";
-                }
-
-                if (entity.priceType === "percent") {
-                    const oneValue =
-                        percentBasis *
-                        (entity.price / 100);
-
-                    return (
-                        `${entity.price}% ` +
-                        `(${formatCurrency(oneValue)} × ${quantity})`
-                    );
-                }
-
-                return (
-                    `${formatCurrency(entity.price)} × ${quantity}`
-                );
-            }
-
-            /* =====================================================
-               ОТРИСОВКА КОРЗИНЫ
-            ====================================================== */
-
-            function renderCart() {
-                const calculations = calculateCart();
-
-                dom.cartItems.replaceChildren();
-
-                if (calculations.lines.length === 0) {
-                    renderEmptyCart();
-                } else {
-                    const fragment = document.createDocumentFragment();
-
-                    calculations.lines.forEach((line) => {
-                        fragment.appendChild(
-                            createCartItemElement(line)
-                        );
-                    });
-
-                    dom.cartItems.appendChild(fragment);
-                }
-
-                const totalText =
-                    formatCurrency(calculations.total) +
-                    (calculations.hasRequest
-                        ? " + по запросу"
-                        : "");
-
-                dom.fixedTotal.textContent = formatCurrency(
-                    calculations.fixedCartTotal
-                );
-
-                dom.incomeTotal.textContent = formatCurrency(
-                    calculations.incomeTotal
-                );
-
-                dom.cartTotal.textContent = totalText;
-                dom.mobileCartTotal.textContent = totalText;
-
-                dom.cartCountText.textContent = pluralizePositions(
-                    cart.length
-                );
-
-                dom.mobileCartCount.textContent =
-                    cart.length > 99 ? "99+" : String(cart.length);
-
-                dom.clearCartButton.disabled = cart.length === 0;
-            }
-
-            function renderEmptyCart() {
-                const empty = createElement("div", {
-                    className: "es-empty-cart"
-                });
-
-                const icon = createElement("div", {
-                    className: "es-empty-cart-icon",
-                    text: "＋"
-                });
-
-                const title = createElement("div", {
-                    className: "es-empty-cart-title",
-                    text: "Корзина пока пуста"
-                });
-
-                const text = createElement("div", {
-                    className: "es-empty-cart-text",
-                    text:
-                        "Откройте карточку товара и выберите " +
-                        "необходимую комплектацию."
-                });
-
-                empty.append(icon, title, text);
-                dom.cartItems.appendChild(empty);
-            }
-
-            function createCartItemElement(line) {
-                const {
-                    cartIndex,
-                    resolved,
-                    lineTotal,
-                    lineHasRequest,
-                    percentBasis
-                } = line;
-
-                const item = createElement("article", {
-                    className: "es-cart-item",
-                    attributes: {
-                        tabindex: "0",
-                        role: "button",
-                        "aria-label":
-                            `Редактировать ${resolved.group.title}`
-                    }
-                });
-
-                const removeButton = createElement("button", {
-                    className: "es-remove-button",
-                    text: "×",
-                    type: "button",
-                    attributes: {
-                        "aria-label":
-                            `Удалить ${resolved.group.title}`
-                    }
-                });
-
-                removeButton.addEventListener("click", (event) => {
-                    event.stopPropagation();
-                    removeFromCart(cartIndex);
-                });
-
-                const title = createElement("div", {
-                    className: "es-cart-item-title",
-                    text: resolved.group.title
-                });
-
-                const baseLine = createElement("div", {
-                    className: "es-cart-item-line",
-                    text:
-                        `${resolved.base.name} — ` +
-                        formatCartEntityLine(
-                            resolved.base,
-                            resolved.baseQuantity,
-                            percentBasis
-                        )
-                });
-
-                const addonsWrapper = createElement("div");
-
-                resolved.addons.forEach((addon) => {
-                    const addonLine = createElement("div", {
-                        className: "es-cart-item-addon",
-                        text:
-                            `+ ${addon.name}: ` +
-                            formatCartEntityLine(
-                                addon,
-                                addon.quantity,
-                                percentBasis
-                            )
-                    });
-
-                    addonsWrapper.appendChild(addonLine);
-                });
-
-                const bottom = createElement("div", {
-                    className: "es-cart-item-bottom"
-                });
-
-                const editLabel = createElement("span", {
-                    className: "es-cart-edit-label",
-                    text: "Нажмите для изменения"
-                });
-
-                const sum = createElement("span", {
-                    className: "es-cart-item-sum",
-                    text:
-                        formatCurrency(lineTotal) +
-                        (lineHasRequest
-                            ? " + по запросу"
-                            : "")
-                });
-
-                bottom.append(editLabel, sum);
-
-                item.append(
-                    removeButton,
-                    title,
-                    baseLine,
-                    addonsWrapper,
-                    bottom
-                );
-
-                item.addEventListener("click", () => {
-                    openModalFromCart(cartIndex);
-                });
-
-                item.addEventListener("keydown", (event) => {
-                    if (
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ) {
-                        event.preventDefault();
-                        openModalFromCart(cartIndex);
-                    }
-                });
-
-                return item;
-            }
-
-            function removeFromCart(cartIndex) {
-                if (
-                    cartIndex < 0 ||
-                    cartIndex >= cart.length
-                ) {
-                    return;
-                }
-
-                cart.splice(cartIndex, 1);
-                renderCart();
-
-                if (cart.length === 0) {
-                    closeMobileCart();
-                }
-            }
-
-            function clearCart() {
-                cart = [];
-                renderCart();
-                closeMobileCart();
-            }
-
-            /* =====================================================
-               МОБИЛЬНАЯ КОРЗИНА
-            ====================================================== */
-
-            function openMobileCart() {
-                if (window.innerWidth > MOBILE_BREAKPOINT) {
-                    return;
-                }
-
-                dom.cart.classList.add("is-open");
-                dom.mobileCartBackdrop.classList.add("is-visible");
-
-                previousBodyOverflow = document.body.style.overflow;
-                document.body.style.overflow = "hidden";
-
-                const closeButton = root.querySelector(
-                    '[data-action="close-cart"]'
-                );
-
-                window.requestAnimationFrame(() => {
-                    closeButton?.focus();
-                });
-            }
-
-            function closeMobileCart() {
-                dom.cart.classList.remove("is-open");
-                dom.mobileCartBackdrop.classList.remove("is-visible");
-
-                if (
-                    !dom.modalOverlay.classList.contains("is-visible")
-                ) {
-                    document.body.style.overflow =
-                        previousBodyOverflow;
-                }
-            }
-
-            /* =====================================================
-               СОБЫТИЯ
-            ====================================================== */
-
-            dom.desktopSearch.addEventListener("input", (event) => {
-                updateSearch(event.target.value, "desktop");
+                let row = document.createElement('div');
+                row.className = 'bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-3 relative cursor-pointer hover:border-blue-300 transition-colors group';
+                row.onclick = () => openModalFromCart(idx);
+                
+                row.innerHTML = `
+                    <button class="absolute top-2 right-2 text-slate-300 hover:text-rose-500 transition-colors p-2 rounded-lg opacity-100 md:opacity-0 group-hover:opacity-100 focus:opacity-100" onclick="removeFromCart(event, ${idx})">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="font-bold text-slate-800 text-sm pr-6 mb-1 leading-tight">${esc(c.title)}</div>
+                    <div class="text-xs font-semibold text-slate-500 mb-1">${esc(c.base.name)} — ${basePriceText}</div>
+                    ${addonsHtml ? `<div class="mt-2 mb-2 pl-2 border-l-2 border-slate-100">${addonsHtml}</div>` : ''}
+                    <div class="mt-3 flex justify-between items-center pt-3 border-t border-slate-100 border-dashed">
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Сумма</span>
+                        <span class="font-extrabold text-sm text-slate-900">${fmt(itemTotalCost)}</span>
+                    </div>
+                `;
+                list.appendChild(row);
             });
+            
+            if(cart.length===0) list.innerHTML = "<div class='text-center py-8 text-slate-400 font-medium text-sm'>Корзина пуста</div>";
 
-            dom.mobileSearch.addEventListener("input", (event) => {
-                updateSearch(event.target.value, "mobile");
-            });
+            document.getElementById('esTotalSum').innerText = fmt(total);
+            document.getElementById('esTotalIncome').innerText = fmt(totalInc);
+            
+            // Обновление бейджа на мобилках
+            const badge = document.getElementById('cart-count-badge');
+            if(cart.length > 0) {
+                badge.innerText = cart.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
 
-            dom.desktopSearchClear.addEventListener(
-                "click",
-                clearSearch
-            );
+        window.removeFromCart = function(e, i) { 
+            e.stopPropagation(); 
+            let item = cart[i];
+            let groupIdx = database.findIndex(g => g.title === item.title);
+            if (groupIdx !== -1) delete catalogMemory[groupIdx];
+            cart.splice(i, 1); 
+            renderCart(); 
+        }
 
-            dom.mobileSearchClear.addEventListener(
-                "click",
-                clearSearch
-            );
+        window.clearCart = function(e) { 
+            if(e) e.stopPropagation(); 
+            cart = []; 
+            catalogMemory = {}; 
+            renderCart(); 
+            if(window.innerWidth <= 768) {
+                document.getElementById('esCartWidget').classList.remove('is-open');
+                document.getElementById('mobile-cart-arrow').style.transform = 'rotate(0deg)';
+            }
+        }
 
-            root.addEventListener("click", (event) => {
-                const actionElement = event.target.closest(
-                    "[data-action]"
-                );
+        window.toggleMobileCart = function() {
+            if(window.innerWidth <= 768) {
+                const widget = document.getElementById('esCartWidget');
+                const arrow = document.getElementById('mobile-cart-arrow');
+                widget.classList.toggle('is-open');
+                arrow.style.transform = widget.classList.contains('is-open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
 
-                if (!actionElement) {
-                    return;
-                }
-
-                const action = actionElement.dataset.action;
-
-                if (action === "open-cart") {
-                    openMobileCart();
-                }
-
-                if (action === "close-cart") {
-                    closeMobileCart();
-                }
-
-                if (action === "clear-cart") {
-                    clearCart();
-                }
-
-                if (action === "close-modal") {
-                    closeModal();
-                }
-
-                if (action === "decrease-base") {
-                    changeBaseQuantity(-1);
-                }
-
-                if (action === "increase-base") {
-                    changeBaseQuantity(1);
-                }
-
-                if (action === "confirm-selection") {
-                    confirmSelection();
-                }
-            });
-
-            dom.mobileCartBackdrop.addEventListener(
-                "click",
-                closeMobileCart
-            );
-
-            dom.modalOverlay.addEventListener("click", (event) => {
-                if (event.target === dom.modalOverlay) {
-                    closeModal();
-                }
-            });
-
-            document.addEventListener("keydown", (event) => {
-                if (event.key !== "Escape") {
-                    return;
-                }
-
-                if (
-                    dom.modalOverlay.classList.contains("is-visible")
-                ) {
-                    closeModal();
-                    return;
-                }
-
-                if (dom.cart.classList.contains("is-open")) {
-                    closeMobileCart();
-                }
-            });
-
-            window.addEventListener("resize", () => {
-                if (window.innerWidth > MOBILE_BREAKPOINT) {
-                    closeMobileCart();
-                }
-            });
-
-            /* =====================================================
-               ЗАПУСК
-            ====================================================== */
-
-            initApp();
-        })();
+        document.getElementById('esSearch').addEventListener('input', (e) => renderCatalog(e.target.value));
     </script>
-</div>
+</body>
+</html>
