@@ -1,640 +1,877 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Прайс-лист</title>
-    
-    <!-- Шрифты и библиотеки -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<title>Прайс-лист | ШТАБ продавца</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23FF5A2D"/><text x="50" y="72" font-size="58" text-anchor="middle" fill="white" font-family="Arial" font-weight="900">Ш</text></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
-    <style>
-        /* Базовые настройки и патч от зума */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            color: #0f172a; 
-            touch-action: manipulation;
-            -webkit-font-smoothing: antialiased;
-        }
-        button, input, select, textarea { touch-action: manipulation; }
+<script>
+  if (!localStorage.getItem('sales_dash_user') || !localStorage.getItem('sales_dash_pass')) {
+    window.location.replace('index.html');
+  }
+</script>
 
-        /* Кастомный скроллбар */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#141B17; --paper:#F1F3ED; --line:#E1E5DA; --mut:#6C7A70;
+  --accent:#FF5A2D; --accent-d:#E64A20;
+  --side:#0F1713; --side-t:#DCE7DE; --side-m:#83988B;
+  --blue:#2E6BFF; --green:#0FA36B; --amber:#E8930C; --red:#E5484D;
+  --sh-sm:0 1px 2px rgba(20,27,23,.06),0 1px 1px rgba(20,27,23,.04);
+  --sh-md:0 12px 26px -10px rgba(20,27,23,.22);
+  --r:14px;
+}
+html{height:100%}
+body{
+  font:400 14px/1.5 'Golos Text',system-ui,sans-serif;color:var(--ink);
+  background:var(--paper);
+  background-image:radial-gradient(rgba(20,27,23,.08) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  min-height:100%;
+  -webkit-font-smoothing:antialiased;
+  touch-action:manipulation;
+  padding-top:62px;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(720px 440px at 90% -10%, rgba(255,90,45,.10), transparent 60%),
+    radial-gradient(680px 440px at -8% 112%, rgba(46,107,255,.09), transparent 60%);
+}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{height:10px;width:10px}
+::-webkit-scrollbar-thumb{background:#CBD2C3;border-radius:99px;border:2px solid var(--paper)}
+button,input,select,textarea{font-family:inherit;touch-action:manipulation}
 
-        /* Блокировка скролла фона при открытой модалке (для всех экранов) */
-        body.modal-open { overflow: hidden; touch-action: none; }
+/* ---------- topbar ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--side);
+  padding:0 22px;height:62px;display:flex;align-items:center;gap:22px;
+  box-shadow:0 2px 0 rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+body.nav-hidden .topbar{transform:translateY(-100%)}
+.brand{display:flex;gap:10px;align-items:center;flex:0 0 auto}
+.logo{width:36px;height:36px;background:var(--accent);border-radius:11px;display:grid;place-items:center;
+  font:900 17px 'Unbounded';color:#fff;transform:rotate(-4deg);
+  box-shadow:0 6px 14px -5px rgba(255,90,45,.6);transition:transform .25s}
+.brand:hover .logo{transform:rotate(4deg) scale(1.05)}
+.brand b{font:700 15px 'Unbounded';letter-spacing:.06em;color:#fff;display:block;line-height:1}
+.brand span{font-size:9.5px;color:var(--side-m);text-transform:uppercase;letter-spacing:.18em;margin-top:3px;display:block}
+.nav{display:flex;gap:2px;margin-left:12px}
+.nav a{display:flex;align-items:center;gap:8px;padding:8px 12px;
+  color:var(--side-m);font:500 13px 'Golos Text';border-radius:9px;text-decoration:none;transition:.18s;white-space:nowrap}
+.nav a:hover{background:rgba(255,255,255,.07);color:var(--side-t)}
+.nav a.on{background:rgba(255,90,45,.16);color:#fff}
+.logout{margin-left:auto;border:0;background:rgba(229,72,77,.14);color:#FF8A90;
+  padding:8px 14px;border-radius:9px;cursor:pointer;font:600 12.5px 'Golos Text';transition:.18s;
+  display:flex;align-items:center;gap:6px}
+.logout:hover{background:var(--red);color:#fff}
 
-        /* Логика островков для мобильной корзины */
-        @media (max-width: 768px) {
-            .mobile-cart-sheet {
-                /* В свернутом состоянии высота островка = высота его шапки (62px) */
-                max-height: 62px; 
-                transition: max-height 0.4s cubic-bezier(0.2, 1, 0.3, 1);
-            }
-            .mobile-cart-sheet.is-open {
-                /* Развернутая высота */
-                max-height: 75dvh;
-            }
-            
-            /* Плавно скрываем/показываем внутренности (товары, подвал) */
-            .mobile-cart-content {
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.2s ease;
-            }
-            .mobile-cart-sheet.is-open .mobile-cart-content {
-                opacity: 1;
-                pointer-events: auto;
-                transition: opacity 0.3s ease 0.15s; /* Небольшая задержка, чтобы сначала открылся островок */
-            }
-            
-            /* Убираем линию под шапкой, если корзина свернута (для эффекта цельной капсулы) */
-            .mobile-cart-sheet:not(.is-open) .cart-header-border {
-                border-color: transparent;
-            }
-        }
-    </style>
+/* ---------- layout ---------- */
+.main{max-width:1400px;margin:0 auto;padding:32px 30px 60px;position:relative;z-index:1}
+
+/* ---------- header ---------- */
+.header{margin-bottom:28px}
+.kicker{display:inline-flex;gap:9px;align-items:center;font:600 11px 'Golos Text';
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.kicker i{width:20px;height:3px;background:var(--accent);border-radius:2px}
+h1{font:900 clamp(26px,3vw,40px)/1.08 'Unbounded';margin-top:9px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.subtitle{color:var(--mut);font-size:13px;margin-top:6px}
+
+/* ---------- search + toolbar ---------- */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:11px;padding:0 14px;height:46px;flex:1;min-width:220px;max-width:480px;
+  transition:.2s;box-shadow:var(--sh-sm);color:var(--mut)}
+.search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(20,27,23,.08)}
+.search input{border:0;outline:0;background:none;font:500 14px 'Golos Text';width:100%;color:var(--ink)}
+.search input::placeholder{color:var(--mut)}
+
+.stat-pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:11px;padding:0 14px;height:46px;box-shadow:var(--sh-sm)}
+.stat-pill .lbl{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;color:var(--mut)}
+.stat-pill .num{font:700 18px/1 'Unbounded';color:var(--ink)}
+.stat-pill .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+
+/* ---------- layout grid ---------- */
+.workspace{display:flex;gap:22px;align-items:flex-start}
+.grid-area{flex:1;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+/* ---------- product card ---------- */
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 14px 13px;cursor:pointer;
+  box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .18s,border-color .18s;
+  display:flex;flex-direction:column;gap:10px;min-height:140px;position:relative;
+  animation:pop .4s both;user-select:none}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:#D0D6C6}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.card .idx{position:absolute;top:10px;right:12px;font:700 10px 'Golos Text';color:var(--mut);
+  background:var(--paper);border:1px solid var(--line);padding:2px 7px;border-radius:99px}
+.card h4{font:600 15px/1.3 'Golos Text';padding-right:30px}
+.card .desc{font-size:12px;color:var(--mut);line-height:1.45;margin-top:-4px}
+.price-row{margin-top:auto;display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding-top:10px;border-top:1px dashed var(--line)}
+.price-row .lbl{font:600 10px 'Golos Text';text-transform:uppercase;letter-spacing:.15em;color:var(--mut)}
+.price-row .price{font:700 20px/1 'Unbounded';color:var(--accent);letter-spacing:-.01em}
+.price-row .price.req{color:var(--mut);font-size:14px;font-family:'Golos Text'}
+.card .chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;font:600 10px 'Golos Text';letter-spacing:.05em;
+  text-transform:uppercase;padding:3px 8px;border-radius:99px;background:#F1F3ED;color:var(--mut)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.chip.blue{background:#E0E9FF;color:#1E4FD6}
+.chip.blue .dot{background:var(--blue)}
+.chip.green{background:#DCF2E8;color:#0A7A50}
+.chip.green .dot{background:var(--green)}
+.chip.amber{background:#FFEDD3;color:#9E5A00}
+.chip.amber .dot{background:var(--amber)}
+
+/* skeleton */
+.skel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:140px;
+  display:flex;flex-direction:column;gap:10px}
+.skel .bar{height:12px;background:linear-gradient(90deg,#E9ECE2 0%,#F1F3ED 50%,#E9ECE2 100%);
+  background-size:200% 100%;border-radius:6px;animation:shim 1.4s infinite}
+.skel .bar.w60{width:60%}.skel .bar.w40{width:40%}.skel .bar.w70{width:70%}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.empty{grid-column:1/-1;padding:54px 20px;text-align:center;color:var(--mut);background:#fff;
+  border:1.5px dashed #C6CEBC;border-radius:var(--r)}
+.empty b{font:700 16px 'Unbounded';display:block;color:var(--ink);margin-bottom:6px}
+
+/* ---------- cart widget ---------- */
+.cart-widget{width:340px;flex:0 0 340px;position:sticky;top:84px;max-height:calc(100vh - 104px);
+  display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm);overflow:hidden;animation:rise .45s both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+.cart-head{background:var(--side);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;
+  cursor:pointer}
+.cart-head h3{font:700 15px 'Unbounded';flex:1;letter-spacing:.02em}
+.cart-head .cnt{background:var(--accent);color:#fff;font:700 11px 'Golos Text';
+  padding:3px 9px;border-radius:99px;min-width:24px;text-align:center}
+.cart-head .cnt.hide{display:none}
+.cart-head .chev{transition:transform .3s}
+.cart-head .chev.flip{transform:rotate(180deg)}
+.cart-body{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--paper)}
+.cart-items{flex:1;min-height:0;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;
+  max-height:50vh}
+.cart-items::-webkit-scrollbar{width:6px}
+.cart-items::-webkit-scrollbar-thumb{background:#CBD2C3;border-radius:99px}
+.cart-empty{padding:40px 20px;text-align:center;color:var(--mut);font-size:13px}
+.cart-empty b{font:700 14px 'Unbounded';display:block;color:var(--ink);margin-bottom:4px}
+.cart-item{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;
+  cursor:pointer;transition:.18s;position:relative}
+.cart-item:hover{border-color:#D0D6C6;box-shadow:var(--sh-sm)}
+.cart-item .rm{position:absolute;top:6px;right:6px;width:24px;height:24px;border:0;background:transparent;
+  color:var(--mut);border-radius:6px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.cart-item .rm:hover{background:#FDE5E6;color:var(--red)}
+.cart-item h5{font:600 13px 'Golos Text';padding-right:22px;line-height:1.3}
+.cart-item .base{font-size:11.5px;color:var(--mut);margin-top:2px}
+.cart-item .addons{margin-top:6px;padding-left:9px;border-left:2px solid var(--line)}
+.cart-item .addons div{font-size:11px;color:var(--mut);line-height:1.5}
+.cart-item .addons span{color:var(--mut);margin-right:4px}
+.cart-item .total{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);
+  display:flex;justify-content:space-between;align-items:center}
+.cart-item .total .lbl{font:600 9.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;color:var(--mut)}
+.cart-item .total .val{font:700 13px 'Unbounded';color:var(--ink)}
+.cart-foot{padding:14px;background:#fff;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.cart-foot .line{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
+.cart-foot .line .l{color:var(--mut);font-weight:500}
+.cart-foot .line .v{font:600 13px 'Golos Text';color:var(--ink)}
+.cart-foot .line.income .v{color:var(--green)}
+.cart-foot .grand{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;
+  padding-top:10px;border-top:1px solid var(--line)}
+.cart-foot .grand .l{font:600 12px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;color:var(--mut)}
+.cart-foot .grand .v{font:800 24px/1 'Unbounded';color:var(--ink);letter-spacing:-.01em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;
+  font:700 13px 'Golos Text';border-radius:11px;padding:0 18px;height:42px;transition:.18s;white-space:nowrap}
+.btn.pri{background:var(--accent);color:#fff;box-shadow:0 10px 20px -9px rgba(255,90,45,.6)}
+.btn.pri:hover{background:var(--accent-d);transform:translateY(-1px)}
+.btn.pri:disabled{opacity:.45;pointer-events:none}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.danger{background:#FDE5E6;color:#C62A2F}
+.btn.danger:hover{background:#F9D2D4}
+.btn.full{width:100%}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(15,23,19,.52);display:grid;place-items:center;
+  z-index:70;padding:20px;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.modal{background:#fff;border-radius:16px;width:min(620px,100%);max-height:92vh;overflow:auto;
+  box-shadow:0 34px 70px -24px rgba(15,23,19,.5);animation:mpop .28s cubic-bezier(.2,.9,.3,1.15);
+  display:flex;flex-direction:column}
+@keyframes mpop{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px;
+  background:var(--paper)}
+.modal-head h3{font:700 17px 'Unbounded';flex:1;line-height:1.2}
+.modal-head .close{width:32px;height:32px;border:0;background:#fff;color:var(--ink);border-radius:9px;
+  cursor:pointer;display:grid;place-items:center;transition:.15s;flex-shrink:0;border:1px solid var(--line)}
+.modal-head .close:hover{background:var(--ink);color:#fff}
+.modal-body{padding:18px 22px;overflow-y:auto;flex:1}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--line);background:var(--paper);
+  display:flex;flex-direction:column;gap:12px}
+.f label{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;color:var(--mut);
+  margin:14px 0 8px;display:block}
+.f label:first-child{margin-top:0}
+
+.opt{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:11px;
+  border:1px solid var(--line);background:#fff;cursor:pointer;transition:.15s;margin-bottom:7px}
+.opt:hover{border-color:#B8C2AE}
+.opt.on{border-color:var(--accent);background:#FFF2EC;box-shadow:0 0 0 3px rgba(255,90,45,.08)}
+.opt .left{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
+.opt .rad{width:18px;height:18px;border-radius:50%;border:2px solid #B8C2AE;background:#fff;
+  flex-shrink:0;position:relative;transition:.15s}
+.opt.on .rad{border-color:var(--accent)}
+.opt.on .rad::after{content:'';position:absolute;inset:3px;background:var(--accent);border-radius:50%}
+.opt .nm{font:600 13.5px 'Golos Text';color:var(--ink);line-height:1.3}
+.opt .pr{font:700 14px 'Unbounded';color:var(--ink);white-space:nowrap;margin-left:10px}
+.opt.on .pr{color:var(--accent)}
+.opt.req .pr{color:var(--mut);font-family:'Golos Text';font-weight:600;font-size:13px}
+
+.addon{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:11px;
+  border:1px solid var(--line);background:#fff;margin-bottom:7px;transition:.15s;gap:10px}
+.addon.on{border-color:var(--accent);background:#FFF2EC}
+.addon .nm{font:600 13px 'Golos Text';color:var(--ink);line-height:1.3;flex:1;min-width:0}
+.addon .sub{font-size:11px;color:var(--mut);margin-top:2px}
+.qty{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--line);border-radius:99px;
+  padding:3px;flex-shrink:0}
+.qty button{width:26px;height:26px;border:0;background:var(--paper);color:var(--ink);border-radius:50%;
+  cursor:pointer;font:700 15px 'Golos Text';display:grid;place-items:center;transition:.15s}
+.qty button:hover{background:var(--ink);color:#fff}
+.qty span{width:26px;text-align:center;font:700 13px 'Golos Text';color:var(--ink)}
+.qty.zero span{color:var(--mut)}
+
+.qty-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.qty-row .lbl{font:600 12px 'Golos Text';color:var(--mut)}
+.big-qty{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--line);border-radius:99px;
+  padding:4px}
+.big-qty button{width:34px;height:34px;border:0;background:var(--paper);color:var(--ink);border-radius:50%;
+  cursor:pointer;font:700 18px 'Golos Text';display:grid;place-items:center;transition:.15s}
+.big-qty button:hover{background:var(--ink);color:#fff}
+.big-qty span{min-width:32px;text-align:center;font:700 15px 'Unbounded';color:var(--ink)}
+.price-row-modal{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding-top:12px;border-top:1px dashed var(--line)}
+.price-row-modal .lbl{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;color:var(--mut)}
+.price-row-modal .price{font:800 24px/1 'Unbounded';color:var(--accent);letter-spacing:-.01em}
+.price-row-modal .price.req{font-size:16px;color:var(--mut);font-family:'Golos Text';font-weight:700}
+
+/* ---------- toasts ---------- */
+.toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+  gap:8px;z-index:80;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;font:600 12.5px 'Golos Text';padding:10px 18px;border-radius:99px;
+  box-shadow:var(--sh-md);animation:tin .3s;display:flex;gap:9px;align-items:center}
+.toast .tdot{width:8px;height:8px;border-radius:50%;background:#3DDC84;flex:0 0 auto}
+.toast.err .tdot{background:var(--red)}
+@keyframes tin{from{opacity:0;transform:translateY(14px)}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .cart-widget{width:300px;flex:0 0 300px}
+}
+@media (max-width:920px){
+  .workspace{flex-direction:column}
+  .cart-widget{width:100%;flex:0 0 auto;position:sticky;top:62px;max-height:none}
+  .cart-items{max-height:40vh}
+}
+@media (max-width:640px){
+  .main{padding:20px 16px 40px}
+  .topbar{padding:0 14px;gap:10px}
+  .brand b{font-size:13px}
+  .brand span{font-size:8.5px}
+  .nav{display:none}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .card{padding:12px;min-height:120px}
+  .card h4{font-size:13.5px}
+  .price-row .price{font-size:17px}
+  .logout span{display:none}
+}
+</style>
 </head>
-<body class="pb-28 md:pb-8 bg-[#f1f5f9] min-h-screen relative">
+<body>
 
-<!-- ЛИПКИЙ ПОИСК (ПЛАВАЮЩИЙ ОСТРОВОК) -->
-<div class="sticky top-3 sm:top-5 z-40 w-full pointer-events-none mb-6 sm:mb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pointer-events-auto w-full">
-        <div class="relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[1.2rem]">
-                <!-- Поле поиска с эффектом матового стекла -->
-                <input type="text" id="esSearch" 
-                    class="w-full bg-white/80 backdrop-blur-xl border border-white/60 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-[1.2rem] px-5 py-3.5 pl-12 outline-none transition-all text-slate-800 placeholder-slate-400 font-medium text-base" 
-                    placeholder="Поиск товаров">
-                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-        </div>
+<!-- TOPBAR -->
+<header class="topbar" id="portal-nav">
+  <a href="#" class="brand" onclick="return false;">
+    <div class="logo">Ш</div>
+    <div><b>ШТАБ</b><span>sales desk</span></div>
+  </a>
+  <nav class="nav">
+    <a href="index.html">Аналитика</a>
+    <a href="catalog.html" class="on">Прайс</a>
+    <a href="calculator.html">Доставка</a>
+  </nav>
+  <button class="logout" onclick="logout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+    <span>Выйти</span>
+  </button>
+</header>
+
+<main class="main">
+  <header class="header">
+    <span class="kicker"><i/>Каталог · сезон 2026</span>
+    <h1>Прайс-лист<em>.</em></h1>
+    <div class="subtitle">Выбирайте позиции, настраивайте комплектацию и собирайте заказ.</div>
+    <div class="toolbar">
+      <label class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" id="esSearch" placeholder="Поиск по товарам и группам…"/>
+      </label>
+      <div class="stat-pill">
+        <span class="lbl">Позиций</span>
+        <span class="sep"></span>
+        <span class="num" id="totalCount">—</span>
+      </div>
+      <div class="stat-pill">
+        <span class="lbl">В корзине</span>
+        <span class="sep"></span>
+        <span class="num" id="cartCount">0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <div class="grid-area">
+      <div class="grid" id="esGrid"></div>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-6 items-start">
-        
-        <!-- КАТАЛОГ -->
-        <div class="flex-1 w-full">
-            <div id="esGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
-                <!-- Скелетоны при загрузке -->
-            </div>
+    <!-- CART -->
+    <aside class="cart-widget" id="esCartWidget">
+      <div class="cart-head" onclick="toggleMobileCart()">
+        <h3>Корзина</h3>
+        <span class="cnt hide" id="cart-count-badge">0</span>
+        <svg class="chev" id="mobile-cart-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></svg>
+      </div>
+      <div class="cart-body">
+        <div class="cart-items" id="esCartItems">
+          <div class="cart-empty"><b>Пусто</b>Добавьте товары из каталога</div>
         </div>
+        <div class="cart-foot">
+          <div class="line income">
+            <span class="l">Доход продавца</span>
+            <span class="v" id="esTotalIncome">0 ₽</span>
+          </div>
+          <div class="grand">
+            <span class="l">Итого</span>
+            <span class="v" id="esTotalSum">0 ₽</span>
+          </div>
+          <button class="btn danger full" onclick="clearCart(event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg>
+            Очистить корзину
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
 
-<!-- КОРЗИНА (ОСТРОВОК) -->
-<!-- 1. Добавили ограничение по высоте для ПК: md:max-h-[calc(100vh-8rem)] и опустили ниже под поиск: md:top-28 -->
-<div id="esCartWidget" class="mobile-cart-sheet md:transform-none fixed md:sticky md:top-[106px] bottom-4 inset-x-0 md:bottom-auto z-50 md:z-10 w-full md:w-80 lg:w-96 bg-transparent flex flex-col mx-auto px-4 sm:px-6 md:px-0 md:max-h-[calc(100vh-130px)] md:mt-0">
-    
-    <!-- 2. Заменили h-full на flex-1 min-h-0, чтобы блок уважал ограничение родителя по высоте -->
-    <div class="bg-white rounded-[1.2rem] md:rounded-[1.5rem] border border-slate-200/80 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.15)] md:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] flex flex-col flex-1 min-h-0 overflow-hidden">
-        
-<!-- Шапка корзины -->
-<!-- Добавлен touch-none md:touch-auto для защиты от случайного свайпа по шапке -->
-<div class="cart-header-border p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center bg-slate-900 md:bg-white text-white md:text-slate-900 cursor-pointer md:cursor-default transition-colors shrink-0 touch-none md:touch-auto" onclick="toggleMobileCart()">
-    <div class="flex items-center gap-2">
-        <h2 class="font-extrabold text-lg">Корзина</h2>
-        <span id="cart-count-badge" class="bg-blue-500 md:bg-slate-100 md:text-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+<!-- MODAL -->
+<div id="esModal" class="overlay" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="esModalTitle">Товар</h3>
+      <button class="close" onclick="closeModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
     </div>
-    <svg id="mobile-cart-arrow" class="w-6 h-6 md:hidden transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+    <div class="modal-body">
+      <div class="f">
+        <label>Комплектация (база)</label>
+        <div id="esBasesList"></div>
+        <div id="esAddonsContainer" style="display:none">
+          <label>Дополнительные опции</label>
+          <div id="esAddonsList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="qty-row">
+        <span class="lbl">Количество комплектов</span>
+        <div class="big-qty">
+          <button onclick="changeBaseQty(-1)">−</button>
+          <span id="esBaseQtyVal">1</span>
+          <button onclick="changeBaseQty(1)">+</button>
+        </div>
+      </div>
+      <div class="price-row-modal">
+        <span class="lbl">Итог</span>
+        <span class="price" id="esModalPrice">0 ₽</span>
+      </div>
+      <button class="btn pri full" id="esModalBtn" onclick="confirmAddToCart()">В корзину</button>
+    </div>
+  </div>
 </div>
 
-<!-- Контент корзины (скрывается/показывается на мобильных) -->
-<div class="mobile-cart-content flex flex-col flex-1 overflow-hidden min-h-0">
-    
-    <!-- Список товаров -->
-    <!-- Добавлен overscroll-y-contain чтобы скролл товаров не передавался странице -->
-    <div id="esCartItems" class="flex-1 overflow-y-auto overscroll-y-contain p-4 bg-[#f1f5f9]/50">
-                        <div class="text-center py-8 text-slate-400 font-medium text-sm">Корзина пуста</div>
-                    </div>
+<div class="toasts" id="toasts"></div>
 
-                    <!-- Подвал корзины -->
-                    <div class="p-4 sm:p-5 bg-white border-t border-slate-100 shrink-0">
-                        <div class="flex justify-between items-center mb-1 text-sm font-semibold">
-                            <span class="text-slate-500">Доход продавца:</span>
-                            <span id="esTotalIncome" class="text-emerald-500">0 ₽</span>
-                        </div>
-                        <div class="flex justify-between items-end mb-4">
-                            <span class="text-slate-500 font-semibold mb-1">Итого:</span>
-                            <span id="esTotalSum" class="text-2xl font-extrabold text-slate-900 tracking-tight">0 ₽</span>
-                        </div>
-                        
-                        <button class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold p-3 rounded-[1rem] transition-colors text-sm" onclick="clearCart(event)">
-                            Очистить корзину
-                        </button>
-                    </div>
-                    
-                </div>
-            </div>
+<script>
+/* ============ toast ============ */
+function toast(msg, err){
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast' + (err ? ' err' : '');
+  el.innerHTML = '<span class="tdot"></span>' + esc(msg);
+  c.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(10px)'; el.style.transition='.3s';
+    setTimeout(()=>el.remove(),300); }, 2600);
+}
+
+function logout(){
+  localStorage.removeItem('sales_dash_user');
+  localStorage.removeItem('sales_dash_pass');
+  localStorage.removeItem('sales_dash_data');
+  window.location.href = 'index.html';
+}
+
+const COL_NAME = 0;
+const COL_PRICE = 3;
+const COL_INCOME = 7;
+
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcZaUg1LNjHtFku3mI5B6_xYDitZkRM94rlESJLKVqpMeMHkwqRUelOGkbuZ365Znq296r3zixxONC/pub?gid=0&single=true&output=csv&t=" + new Date().getTime();
+
+let database = [];
+let cart = [];
+let catalogMemory = {};
+let currentSelection = null;
+
+const fmt = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
+const esc = (str) => {
+  if(!str) return '';
+  return String(str).replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+};
+
+document.addEventListener('gesturestart', e => e.preventDefault());
+let lastTouchEnd = 0;
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if(now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, false);
+
+function renderSkeleton(){
+  const grid = document.getElementById('esGrid');
+  let html = '';
+  for(let i=0;i<8;i++){
+    html += `<div class="skel"><div class="bar w70"></div><div class="bar w40"></div><div class="bar w60" style="margin-top:auto"></div></div>`;
+  }
+  grid.innerHTML = html;
+}
+
+if(typeof Papa === 'undefined') setTimeout(initApp, 1000); else initApp();
+
+function initApp(){
+  renderSkeleton();
+  Papa.parse(SHEET_URL, {
+    download:true, header:false,
+    complete: r => processData(r.data),
+    error: () => {
+      document.getElementById('esGrid').innerHTML = "<div class='empty'><b>Ошибка загрузки</b>Не удалось получить данные из таблицы</div>";
+      toast('Ошибка загрузки данных', true);
+    }
+  });
+}
+
+function parsePrice(str){
+  if(!str) return { val:0, isPercent:false };
+  let s = String(str).trim();
+  if(s.includes('%')) return { val: parseFloat(s.replace(',','.').replace(/[^0-9.]/g,'')), isPercent:true };
+  if(s.toLowerCase().includes('запрос')) return { val:0, isPercent:false, isRequest:true };
+  return { val: parseInt(s.replace(/[^0-9]/g,'')) || 0, isPercent:false };
+}
+
+function processData(rows){
+  database = [];
+  let currentGroup = null;
+  let isAddons = false;
+  rows.forEach(row => {
+    if(!row[COL_NAME]) return;
+    let name = row[COL_NAME].trim();
+    if(name === '') return;
+    let priceRaw = row[COL_PRICE];
+    let isHeader = (!priceRaw || priceRaw.trim() === '')
+      && !name.toLowerCase().includes('позиция')
+      && !name.toLowerCase().includes('себестоимость');
+    if(name.toLowerCase().includes('доп. элементы')){ isAddons = true; return; }
+    if(isHeader){
+      currentGroup = { title:name, items:[], addons:[] };
+      database.push(currentGroup);
+      isAddons = false;
+    } else if(currentGroup && !name.toLowerCase().includes('позиция')){
+      let p = parsePrice(row[COL_PRICE]);
+      let inc = parsePrice(row[COL_INCOME]);
+      let item = { name, price:p.val, isPercent:p.isPercent, isRequest:p.isRequest, income:inc.val };
+      if(isAddons) currentGroup.addons.push(item); else currentGroup.items.push(item);
+    }
+  });
+  database = database.filter(g => g.items.length > 0 || g.addons.length > 0);
+  document.getElementById('totalCount').innerText = database.length;
+  renderCatalog();
+}
+
+function renderCatalog(filter=""){
+  const grid = document.getElementById('esGrid');
+  grid.innerHTML = '';
+  const lower = filter.toLowerCase();
+  let shown = 0;
+  database.forEach((group, idx) => {
+    const match = group.title.toLowerCase().includes(lower)
+      || group.items.some(i => i.name.toLowerCase().includes(lower))
+      || group.addons.some(a => a.name.toLowerCase().includes(lower));
+    if(!match) return;
+    shown++;
+    const prices = group.items.filter(i => !i.isPercent && !i.isRequest).map(i => i.price);
+    const hasPercent = group.items.some(i => i.isPercent);
+    const hasRequest = group.items.some(i => i.isRequest);
+    const minP = prices.length ? Math.min(...prices) : 0;
+
+    let priceText, priceClass='price';
+    if(minP > 0) priceText = 'от ' + fmt(minP);
+    else if(hasPercent) priceText = 'Расчёт %';
+    else if(hasRequest) { priceText = 'По запросу'; priceClass = 'price req'; }
+    else priceText = '—';
+
+    const addonCount = group.addons.length;
+    const itemCount = group.items.length;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = (shown * 30) + 'ms';
+    card.onclick = () => openModalFromCatalog(idx);
+    card.innerHTML = `
+      <span class="idx">#${String(idx+1).padStart(2,'0')}</span>
+      <div class="chips">
+        <span class="chip blue"><span class="dot"></span>${itemCount} баз</span>
+        ${addonCount ? `<span class="chip amber"><span class="dot"></span>${addonCount} опц.</span>` : ''}
+      </div>
+      <h4>${esc(group.title)}</h4>
+      <div class="price-row">
+        <span class="lbl">Цена</span>
+        <span class="${priceClass}">${priceText}</span>
+      </div>`;
+    grid.appendChild(card);
+  });
+  if(shown === 0){
+    grid.innerHTML = "<div class='empty'><b>Ничего не нашлось</b>Попробуйте изменить запрос</div>";
+  }
+}
+
+function openModalFromCatalog(idx){
+  const saved = catalogMemory[idx];
+  if(saved){
+    currentSelection = JSON.parse(JSON.stringify(saved));
+    currentSelection.mode = 'new';
+    currentSelection.cartIdx = -1;
+  } else {
+    currentSelection = { groupIdx:idx, baseIdx:0, baseQty:1, addons:{}, mode:'new', cartIdx:-1 };
+  }
+  renderModalContent();
+}
+
+function openModalFromCart(cartIndex){
+  const item = cart[cartIndex];
+  const groupIdx = database.findIndex(g => g.title === item.title);
+  if(groupIdx === -1){ toast('Товар не найден в каталоге', true); return; }
+  const group = database[groupIdx];
+  const addonsMap = {};
+  item.addons.forEach(saved => {
+    const foundIdx = group.addons.findIndex(a => a.name === saved.name);
+    if(foundIdx !== -1) addonsMap[foundIdx] = saved.qty;
+  });
+  let baseIdx = group.items.findIndex(b => b.name === item.base.name);
+  if(baseIdx === -1) baseIdx = 0;
+  currentSelection = { groupIdx, baseIdx, baseQty:item.baseQty, addons:addonsMap, mode:'edit', cartIdx };
+  renderModalContent();
+}
+
+function renderModalContent(){
+  const group = database[currentSelection.groupIdx];
+  document.getElementById('esModalTitle').innerText = currentSelection.mode === 'edit' ? 'Редактирование' : group.title;
+  const btn = document.getElementById('esModalBtn');
+  if(currentSelection.mode === 'edit'){
+    btn.innerText = 'Сохранить изменения';
+    btn.className = 'btn pri full';
+    btn.style.background = 'var(--green)';
+    btn.style.boxShadow = '0 10px 20px -9px rgba(15,163,107,.6)';
+  } else {
+    btn.innerText = 'Добавить в корзину';
+    btn.className = 'btn pri full';
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+  }
+
+  const bList = document.getElementById('esBasesList');
+  bList.innerHTML = '';
+  const bases = group.items.length ? group.items : [{name:'База', price:0}];
+  bases.forEach((item, i) => {
+    let pText, reqCls = '';
+    if(item.isRequest){ pText = 'По запросу'; reqCls = ' req'; }
+    else if(item.isPercent) pText = item.price + '%';
+    else pText = fmt(item.price);
+    const isActive = i === currentSelection.baseIdx;
+    const div = document.createElement('div');
+    div.className = 'opt' + (isActive ? ' on' : '') + reqCls;
+    div.onclick = () => selectBase(i);
+    div.innerHTML = `
+      <div class="left">
+        <div class="rad"></div>
+        <span class="nm">${esc(item.name)}</span>
+      </div>
+      <span class="pr">${pText}</span>`;
+    bList.appendChild(div);
+  });
+
+  const aList = document.getElementById('esAddonsList');
+  const aCont = document.getElementById('esAddonsContainer');
+  aList.innerHTML = '';
+  if(group.addons.length === 0){
+    aCont.style.display = 'none';
+  } else {
+    aCont.style.display = 'block';
+    group.addons.forEach((item, i) => {
+      let pText;
+      if(item.isRequest) pText = 'По запросу';
+      else if(item.isPercent) pText = item.price + '%';
+      else pText = fmt(item.price);
+      const qty = currentSelection.addons[i] || 0;
+      const isActive = qty > 0;
+      const div = document.createElement('div');
+      div.className = 'addon' + (isActive ? ' on' : '');
+      div.innerHTML = `
+        <div>
+          <div class="nm">${esc(item.name)}</div>
+          <div class="sub">${pText}</div>
         </div>
-    </div>
+        <div class="qty ${qty === 0 ? 'zero' : ''}">
+          <button onclick="event.stopPropagation();changeAddonQty(${i},-1)">−</button>
+          <span id="esAddonQty_${i}">${qty}</span>
+          <button onclick="event.stopPropagation();changeAddonQty(${i},1)">+</button>
+        </div>`;
+      aList.appendChild(div);
+    });
+  }
 
-    <!-- МОДАЛЬНОЕ ОКНО ТОВАРА -->
-    <div id="esModal" class="fixed top-0 left-0 w-full h-[100dvh] bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 sm:p-6">
-        <div class="bg-white rounded-[1.5rem] shadow-2xl max-w-lg w-full flex flex-col max-h-[85dvh] overflow-hidden transform transition-all relative">
-            
-<div class="px-5 py-4 border-b border-slate-100 flex justify-between items-start bg-slate-50/50 shrink-0">
-    <!-- Убрали класс truncate, чтобы текст мог переноситься на новые строки -->
-    <h3 id="esModalTitle" class="font-extrabold text-slate-900 text-lg pr-4 leading-snug">Товар</h3>
-    <!-- Кнопке крестика добавили mt-1, чтобы она визуально лучше стояла рядом с первой строкой текста -->
-    <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full transition-colors shrink-0 mt-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <div class="p-5 overflow-y-auto flex-1">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Комплектация (База)</div>
-                <div id="esBasesList" class="space-y-2"></div>
-                
-                <div id="esAddonsContainer" class="mt-6 hidden">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Дополнительные опции</div>
-                    <div id="esAddonsList" class="space-y-2"></div>
-                </div>
-            </div>
-            
-            <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-4 shrink-0">
-                <div class="flex justify-between items-center">
-                    <span class="font-semibold text-slate-600 text-sm">Количество:</span>
-                    <div class="flex items-center gap-3 bg-white border border-slate-200 p-1 rounded-full shadow-sm">
-                        <button class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors" onclick="changeBaseQty(-1)">-</button>
-                        <span id="esBaseQtyVal" class="w-6 text-center font-bold text-slate-900 text-sm">1</span>
-                        <button class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors" onclick="changeBaseQty(1)">+</button>
-                    </div>
-                </div>
-                
-                <div class="flex justify-between items-center pt-2 border-t border-slate-200/60">
-                    <div id="esModalPrice" class="text-2xl font-extrabold text-slate-900">0 ₽</div>
-                    <button id="esModalBtn" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-colors" onclick="confirmAddToCart()">В корзину</button>
-                </div>
-            </div>
-        </div>
-    </div>
+  document.getElementById('esBaseQtyVal').innerText = currentSelection.baseQty;
+  document.getElementById('esModal').style.display = 'grid';
+  document.body.style.overflow = 'hidden';
+  updateCalc();
+}
 
-    <script>
-        // ============================================
-        // НАСТРОЙКИ КОЛОНОК И URL
-        // ============================================
-        const COL_NAME = 0;   // A
-        const COL_PRICE = 3;  // D
-        const COL_INCOME = 7; // H
-        
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcZaUg1LNjHtFku3mI5B6_xYDitZkRM94rlESJLKVqpMeMHkwqRUelOGkbuZ365Znq296r3zixxONC/pub?gid=0&single=true&output=csv" + "&t=" + new Date().getTime();
-        
-        let database = [];
-        let cart = [];
-        let catalogMemory = {}; 
-        let currentSelection = null;
-        
-        const fmt = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
-        
-        const esc = (str) => {
-            if (!str) return '';
-            return String(str).replace(/[&<>'"]/g, match => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-            })[match]);
-        };
+function closeModal(){
+  document.getElementById('esModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
 
-        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            let now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) { event.preventDefault(); }
-            lastTouchEnd = now;
-        }, false);
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && document.getElementById('esModal').style.display === 'grid') closeModal();
+});
 
-        // ============================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================
-        function renderSkeleton() {
-            const grid = document.getElementById('esGrid');
-            grid.innerHTML = "";
-            for(let i=0; i<8; i++) {
-                grid.innerHTML += `
-                    <div class="bg-white p-4 sm:p-5 rounded-[1.5rem] border border-slate-200 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] animate-pulse flex flex-col justify-between min-h-[120px]">
-                        <div class="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
-                        <div class="h-4 bg-slate-200 rounded w-1/2 mb-6"></div>
-                        <div class="h-5 bg-slate-200 rounded w-1/3 mt-auto"></div>
-                    </div>
-                `;
-            }
-        }
+window.selectBase = function(i){ currentSelection.baseIdx = i; renderModalContent(); }
 
-        if(typeof Papa === 'undefined') { setTimeout(initApp, 1000); } else { initApp(); }
+window.changeBaseQty = function(delta){
+  let n = currentSelection.baseQty + delta;
+  if(n < 1) n = 1;
+  currentSelection.baseQty = n;
+  document.getElementById('esBaseQtyVal').innerText = n;
+  updateCalc();
+}
 
-        function initApp() {
-            renderSkeleton();
-            Papa.parse(SHEET_URL, {
-                download: true, header: false,
-                complete: function(results) { processData(results.data); },
-                error: function() { document.getElementById('esGrid').innerHTML = "<div class='col-span-full text-center text-rose-500 py-10 font-medium'>Ошибка загрузки данных</div>"; }
-            });
-        }
+window.changeAddonQty = function(idx, delta){
+  const cur = currentSelection.addons[idx] || 0;
+  let n = cur + delta;
+  if(n < 0) n = 0;
+  if(n === 0) delete currentSelection.addons[idx];
+  else currentSelection.addons[idx] = n;
+  const span = document.getElementById('esAddonQty_' + idx);
+  if(span){
+    span.innerText = n;
+    const row = span.parentElement.parentElement;
+    if(n > 0){
+      row.classList.add('on');
+      span.parentElement.classList.remove('zero');
+    } else {
+      row.classList.remove('on');
+      span.parentElement.classList.add('zero');
+    }
+  }
+  updateCalc();
+}
 
-        function parsePrice(str) {
-            if(!str) return { val:0, isPercent:false };
-            let s = str.toString().trim();
-            if(s.includes('%')) {
-                return { val: parseFloat(s.replace(',','.').replace(/[^0-9.]/g, '')), isPercent: true };
-            }
-            if(s.toLowerCase().includes('запрос')) return { val:0, isPercent:false, isRequest:true };
-            let clean = s.replace(/[^0-9]/g, ''); 
-            return { val: parseInt(clean) || 0, isPercent: false };
-        }
+function updateCalc(){
+  const group = database[currentSelection.groupIdx];
+  const base = group.items.length ? group.items[currentSelection.baseIdx] : {price:0};
+  let total = 0;
+  let percentStr = '';
+  let hasRequest = false;
+  if(base.isRequest) hasRequest = true;
+  else if(base.isPercent) percentStr = ' + ' + base.price + '%';
+  else total += base.price * currentSelection.baseQty;
+  for(const [idx, qty] of Object.entries(currentSelection.addons)){
+    const add = group.addons[idx];
+    if(add.isRequest) hasRequest = true;
+    else if(add.isPercent) percentStr += ' + ' + add.price + '%';
+    else total += add.price * qty;
+  }
+  let finalStr;
+  const el = document.getElementById('esModalPrice');
+  if(total === 0 && hasRequest){ finalStr = 'По запросу' + percentStr; el.classList.add('req'); }
+  else if(hasRequest){ finalStr = fmt(total) + ' + запрос' + percentStr; el.classList.remove('req'); }
+  else { finalStr = fmt(total) + percentStr; el.classList.remove('req'); }
+  el.innerText = finalStr;
+}
 
-        function processData(rows) {
-            database = [];
-            let currentGroup = null;
-            let isAddons = false;
+function confirmAddToCart(){
+  const group = database[currentSelection.groupIdx];
+  const baseItem = group.items.length ? group.items[currentSelection.baseIdx] : {name:'Товар', price:0, income:0};
+  const selectedAddons = [];
+  for(const [idx, qty] of Object.entries(currentSelection.addons)){
+    selectedAddons.push({ ...group.addons[idx], qty });
+  }
+  catalogMemory[currentSelection.groupIdx] = {
+    groupIdx: currentSelection.groupIdx, baseIdx: currentSelection.baseIdx,
+    baseQty: currentSelection.baseQty, addons:{...currentSelection.addons}
+  };
+  const newItem = { title:group.title, base:baseItem, baseQty:currentSelection.baseQty, addons:selectedAddons };
+  if(currentSelection.mode === 'edit'){
+    cart[currentSelection.cartIdx] = newItem;
+    toast('Изменения сохранены');
+  } else {
+    cart.push(newItem);
+    toast('«' + group.title.slice(0, 26) + (group.title.length > 26 ? '…' : '') + '» в корзине');
+  }
+  closeModal();
+  renderCart();
+}
 
-            rows.forEach((row) => {
-                if(!row[COL_NAME]) return; 
-                let name = row[COL_NAME].trim();
-                if(name === "") return;
+function renderCart(){
+  let fixedSum = 0, fixedInc = 0;
+  cart.forEach(c => {
+    if(!c.base.isPercent && !c.base.isRequest){ fixedSum += c.base.price * c.baseQty; fixedInc += c.base.income * c.baseQty; }
+    c.addons.forEach(a => { if(!a.isPercent && !a.isRequest){ fixedSum += a.price * a.qty; fixedInc += a.income * a.qty; } });
+  });
+  let total = fixedSum, totalInc = fixedInc;
+  const list = document.getElementById('esCartItems');
+  list.innerHTML = '';
 
-                let priceRaw = row[COL_PRICE];
-                let isHeader = (!priceRaw || priceRaw.trim() === "") 
-                               && !name.toLowerCase().includes("позиция")
-                               && !name.toLowerCase().includes("себестоимость");
+  cart.forEach((c, idx) => {
+    let itemTotalCost = 0;
+    let basePriceText = '';
+    let itemHasRequest = false;
+    if(c.base.isRequest){
+      itemHasRequest = true;
+      basePriceText = 'По запросу' + (c.baseQty > 1 ? ' × ' + c.baseQty : '');
+    } else if(c.base.isPercent){
+      const one = fixedSum * (c.base.price / 100);
+      const all = one * c.baseQty;
+      total += all; totalInc += (fixedSum * (c.base.income / 100)) * c.baseQty;
+      itemTotalCost = all;
+      basePriceText = c.base.price + '% · ' + fmt(one) + ' × ' + c.baseQty;
+    } else {
+      itemTotalCost = c.base.price * c.baseQty;
+      basePriceText = fmt(c.base.price) + ' × ' + c.baseQty;
+    }
+    let addonsHtml = '';
+    c.addons.forEach(a => {
+      let aText, aCost = 0;
+      if(a.isRequest){
+        itemHasRequest = true;
+        aText = 'По запросу' + (a.qty > 1 ? ' × ' + a.qty : '');
+      } else if(a.isPercent){
+        const one = fixedSum * (a.price / 100);
+        const all = one * a.qty;
+        total += all; totalInc += (fixedSum * (a.income / 100)) * a.qty;
+        aCost = all;
+        aText = a.price + '% · ' + fmt(one) + ' × ' + a.qty;
+      } else {
+        aCost = a.price * a.qty;
+        aText = fmt(a.price) + ' × ' + a.qty;
+      }
+      itemTotalCost += aCost;
+      addonsHtml += `<div><span>+</span> ${esc(a.name)}: ${aText}</div>`;
+    });
+    let rowTotalText;
+    if(itemTotalCost === 0 && itemHasRequest) rowTotalText = 'По запросу';
+    else if(itemHasRequest) rowTotalText = fmt(itemTotalCost) + ' + запрос';
+    else rowTotalText = fmt(itemTotalCost);
 
-                if(name.toLowerCase().includes("доп. элементы")) {
-                    isAddons = true; return; 
-                }
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.onclick = () => openModalFromCart(idx);
+    row.innerHTML = `
+      <button class="rm" onclick="event.stopPropagation();removeFromCart(event,${idx})" aria-label="Удалить">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <h5>${esc(c.title)}</h5>
+      <div class="base">${esc(c.base.name)} · ${basePriceText}</div>
+      ${addonsHtml ? `<div class="addons">${addonsHtml}</div>` : ''}
+      <div class="total">
+        <span class="lbl">Сумма</span>
+        <span class="val">${rowTotalText}</span>
+      </div>`;
+    list.appendChild(row);
+  });
 
-                if(isHeader) {
-                    currentGroup = { title: name, items: [], addons: [] };
-                    database.push(currentGroup);
-                    isAddons = false;
-                } else if(currentGroup && !name.toLowerCase().includes("позиция")) {
-                    let p = parsePrice(row[COL_PRICE]);
-                    let inc = parsePrice(row[COL_INCOME]);
-                    let item = { name, price: p.val, isPercent: p.isPercent, isRequest: p.isRequest, income: inc.val };
-                    
-                    if(isAddons) currentGroup.addons.push(item);
-                    else currentGroup.items.push(item);
-                }
-            });
+  if(cart.length === 0){
+    list.innerHTML = "<div class='cart-empty'><b>Пусто</b>Добавьте товары из каталога</div>";
+  }
 
-            database = database.filter(g => g.items.length > 0 || g.addons.length > 0);
-            renderCatalog();
-        }
+  const globalHasRequest = cart.some(c => c.base.isRequest || c.addons.some(a => a.isRequest));
+  let globalTotalText;
+  if(total === 0 && globalHasRequest) globalTotalText = 'По запросу';
+  else if(globalHasRequest) globalTotalText = fmt(total) + ' + запрос';
+  else globalTotalText = fmt(total);
 
-        function renderCatalog(filter = "") {
-            const grid = document.getElementById('esGrid');
-            grid.innerHTML = "";
-            let lower = filter.toLowerCase();
+  document.getElementById('esTotalSum').innerText = globalTotalText;
+  document.getElementById('esTotalIncome').innerText = fmt(totalInc);
+  document.getElementById('cartCount').innerText = cart.length;
 
-            database.forEach((group, idx) => {
-                let match = group.title.toLowerCase().includes(lower) || group.items.some(i => i.name.toLowerCase().includes(lower));
-                if(!match) return;
+  const badge = document.getElementById('cart-count-badge');
+  if(cart.length > 0){ badge.innerText = cart.length; badge.classList.remove('hide'); }
+  else badge.classList.add('hide');
+}
 
-                let prices = group.items.map(i => i.isPercent ? 0 : i.price);
-                let minP = Math.min(...prices);
-                let priceText = minP > 0 ? `от ${fmt(minP)}` : (group.items.some(i=>i.isPercent) ? "Расчет %" : "По запросу");
+window.removeFromCart = function(e, i){
+  e.stopPropagation();
+  const item = cart[i];
+  const groupIdx = database.findIndex(g => g.title === item.title);
+  if(groupIdx !== -1) delete catalogMemory[groupIdx];
+  cart.splice(i, 1);
+  renderCart();
+  toast('Удалено из корзины');
+}
 
-                let card = document.createElement('div');
-                card.className = 'bg-white p-4 sm:p-5 rounded-[1.5rem] border border-slate-200 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.03)] hover:border-blue-400 hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[120px] relative group';
-                card.onclick = () => openModalFromCatalog(idx);
-                card.innerHTML = `
-                    <div class="font-bold text-slate-800 text-sm sm:text-base leading-snug mb-3 group-hover:text-blue-700 transition-colors">${esc(group.title)}</div>
-                    <div class="mt-auto font-extrabold text-blue-600 text-base">${priceText}</div>
-                `;
-                grid.appendChild(card);
-            });
-            
-            if(grid.innerHTML === "") {
-                grid.innerHTML = "<div class='col-span-full text-center text-slate-500 py-10 font-medium'>Ничего не найдено</div>";
-            }
-        }
+window.clearCart = function(e){
+  if(e) e.stopPropagation();
+  if(cart.length === 0) return;
+  cart = []; catalogMemory = {};
+  renderCart();
+  toast('Корзина очищена');
+}
 
-        // ============================================
-        // ЛОГИКА МОДАЛЬНОГО ОКНА
-        // ============================================
-        function openModalFromCatalog(idx) {
-            let saved = catalogMemory[idx];
-            if (saved) {
-                currentSelection = JSON.parse(JSON.stringify(saved));
-                currentSelection.mode = 'new';
-                currentSelection.cartIdx = -1;
-            } else {
-                currentSelection = { groupIdx: idx, baseIdx: 0, baseQty: 1, addons: {}, mode: 'new', cartIdx: -1 };
-            }
-            renderModalContent();
-        }
+window.toggleMobileCart = function(){
+  // На мобильных можно сделать сворачивание — оставлено пустым, т.к. виджет всегда раскрыт
+}
 
-        function openModalFromCart(cartIndex) {
-            let item = cart[cartIndex];
-            let groupIdx = database.findIndex(g => g.title === item.title);
-            let group = database[groupIdx];
-            let addonsMap = {};
-            item.addons.forEach(savedAddon => {
-                let foundIdx = group.addons.findIndex(a => a.name === savedAddon.name);
-                if(foundIdx !== -1) addonsMap[foundIdx] = savedAddon.qty;
-            });
-            let baseIdx = group.items.findIndex(b => b.name === item.base.name);
-            if(baseIdx === -1) baseIdx = 0;
+document.getElementById('esSearch').addEventListener('input', e => renderCatalog(e.target.value));
 
-            currentSelection = { groupIdx: groupIdx, baseIdx: baseIdx, baseQty: item.baseQty, addons: addonsMap, mode: 'edit', cartIdx: cartIndex };
-            renderModalContent();
-        }
-
-        function renderModalContent() {
-            let group = database[currentSelection.groupIdx];
-            
-            document.getElementById('esModalTitle').innerText = (currentSelection.mode === 'edit' ? "Редактирование" : esc(group.title));
-            const btn = document.getElementById('esModalBtn');
-            if(currentSelection.mode === 'edit') {
-                btn.innerText = "Сохранить";
-                btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold transition-colors";
-            } else {
-                btn.innerText = "Добавить";
-                btn.className = "bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-colors";
-            }
-
-            const bList = document.getElementById('esBasesList');
-            bList.innerHTML = "";
-            let bases = group.items.length ? group.items : [{name: "База", price:0}];
-            
-            bases.forEach((item, i) => {
-                let pText = item.isPercent ? `${item.price}%` : (item.price===0?"По запросу":fmt(item.price));
-                let isActive = (i === currentSelection.baseIdx);
-                
-                let activeClasses = isActive 
-                    ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600 shadow-sm" 
-                    : "border-slate-200 bg-white hover:border-blue-300";
-                    
-                let radioStyle = isActive 
-                    ? "border-[5px] border-blue-600 bg-white" 
-                    : "border-2 border-slate-300 bg-white";
-
-                bList.innerHTML += `
-                    <div class="flex justify-between items-center p-3 rounded-xl border ${activeClasses} cursor-pointer transition-all" onclick="selectBase(${i})">
-                        <div class="flex items-center gap-3">
-                            <div class="w-5 h-5 rounded-full flex-shrink-0 ${radioStyle} shadow-sm transition-all"></div>
-                            <span class="font-semibold text-sm ${isActive ? 'text-blue-900' : 'text-slate-700'}">${esc(item.name)}</span>
-                        </div>
-                        <span class="font-extrabold text-sm whitespace-nowrap ml-3 ${isActive ? 'text-blue-600' : 'text-slate-900'}">${pText}</span>
-                    </div>`;
-            });
-
-            const aList = document.getElementById('esAddonsList');
-            const aCont = document.getElementById('esAddonsContainer');
-            aList.innerHTML = "";
-            
-            if(group.addons.length === 0) {
-                aCont.classList.add('hidden');
-            } else {
-                aCont.classList.remove('hidden');
-                group.addons.forEach((item, i) => {
-                    let pText = item.isPercent ? `${item.price}%` : fmt(item.price);
-                    let qty = currentSelection.addons[i] || 0;
-                    let isActive = qty > 0;
-                    
-                    let activeClasses = isActive ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-slate-200 bg-white hover:border-blue-300";
-
-                    aList.innerHTML += `
-                        <div class="flex justify-between items-center p-3 rounded-xl border ${activeClasses} transition-colors">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-sm text-slate-700 leading-tight">${esc(item.name)}</span>
-                                <span class="font-bold text-xs text-slate-500 mt-0.5">${pText}</span>
-                            </div>
-                            <div class="flex items-center gap-2 bg-white border border-slate-200 p-1 rounded-full shadow-sm ml-3 shrink-0">
-                                <button class="w-6 h-6 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors text-xs" onclick="changeAddonQty(${i}, -1)">-</button>
-                                <span id="esAddonQty_${i}" class="w-4 text-center font-bold text-sm ${isActive ? 'text-slate-900' : 'text-slate-400'}">${qty}</span>
-                                <button class="w-6 h-6 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 font-bold transition-colors text-xs" onclick="changeAddonQty(${i}, 1)">+</button>
-                            </div>
-                        </div>`;
-                });
-            }
-            
-            document.getElementById('esBaseQtyVal').innerText = currentSelection.baseQty;
-            
-            const modal = document.getElementById('esModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.classList.add('modal-open');
-            updateCalc();
-        }
-
-        function closeModal() { 
-            const modal = document.getElementById('esModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.classList.remove('modal-open'); 
-        }
-
-        window.selectBase = function(i) {
-            currentSelection.baseIdx = i;
-            renderModalContent(); 
-        }
-
-        window.changeBaseQty = function(delta) {
-            let newQty = currentSelection.baseQty + delta;
-            if(newQty < 1) newQty = 1;
-            currentSelection.baseQty = newQty;
-            document.getElementById('esBaseQtyVal').innerText = newQty;
-            updateCalc();
-        }
-
-        window.changeAddonQty = function(idx, delta) {
-            let currentQty = currentSelection.addons[idx] || 0;
-            let newQty = currentQty + delta;
-            if(newQty < 0) newQty = 0;
-            
-            if(newQty === 0) delete currentSelection.addons[idx];
-            else currentSelection.addons[idx] = newQty;
-            
-            let span = document.getElementById(`esAddonQty_${idx}`);
-            span.innerText = newQty;
-            if(newQty > 0) {
-                span.classList.remove('text-slate-400'); 
-                span.classList.add('text-slate-900');
-                span.parentElement.parentElement.classList.add('border-blue-400', 'bg-blue-50/70', 'shadow-sm');
-                span.parentElement.parentElement.classList.remove('border-slate-200', 'bg-white');
-            } else {
-                span.classList.add('text-slate-400'); 
-                span.classList.remove('text-slate-900');
-                span.parentElement.parentElement.classList.remove('border-blue-400', 'bg-blue-50/70', 'shadow-sm');
-                span.parentElement.parentElement.classList.add('border-slate-200', 'bg-white');
-            }
-            updateCalc();
-        }
-
-        function updateCalc() {
-            let group = database[currentSelection.groupIdx];
-            let base = group.items.length ? group.items[currentSelection.baseIdx] : {price:0};
-            let total = 0;
-            let percentStr = "";
-
-            if(base.isPercent) percentStr = ` + ${base.price}%`;
-            else total += base.price * currentSelection.baseQty;
-            
-            for (const [idx, qty] of Object.entries(currentSelection.addons)) {
-                let add = group.addons[idx];
-                if(add.isPercent) percentStr += ` + ${add.price}%`;
-                else total += add.price * qty;
-            }
-            document.getElementById('esModalPrice').innerText = fmt(total) + percentStr;
-        }
-
-        // ============================================
-        // ЛОГИКА КОРЗИНЫ
-        // ============================================
-        function confirmAddToCart() {
-            let group = database[currentSelection.groupIdx];
-            let baseItem = group.items.length ? group.items[currentSelection.baseIdx] : {name:"Товар", price:0, income:0};
-            let selectedAddons = [];
-            for (const [idx, qty] of Object.entries(currentSelection.addons)) {
-                selectedAddons.push({ ...group.addons[idx], qty: qty });
-            }
-            
-            catalogMemory[currentSelection.groupIdx] = {
-                groupIdx: currentSelection.groupIdx, baseIdx: currentSelection.baseIdx,
-                baseQty: currentSelection.baseQty, addons: {...currentSelection.addons}
-            };
-
-            let newItem = {
-                title: group.title, base: baseItem, baseQty: currentSelection.baseQty, addons: selectedAddons
-            };
-
-            if(currentSelection.mode === 'edit') cart[currentSelection.cartIdx] = newItem;
-            else cart.push(newItem);
-            
-            closeModal();
-            renderCart();
-            
-            // Автоматическое показ корзины при добавлении первого товара (на мобилках)
-            if(window.innerWidth <= 768 && cart.length === 1) {
-                const widget = document.getElementById('esCartWidget');
-                const arrow = document.getElementById('mobile-cart-arrow');
-                
-                widget.classList.add('is-open');
-                arrow.style.transform = 'rotate(180deg)';
-                
-                // Автоматически прячем через 2.5 секунды
-                setTimeout(() => {
-                    widget.classList.remove('is-open');
-                    arrow.style.transform = 'rotate(0deg)';
-                }, 2500);
-            }
-        }
-
-        function renderCart() {
-            let fixedSum = 0, fixedInc = 0;
-            cart.forEach(c => {
-                if(!c.base.isPercent) {
-                    fixedSum += c.base.price * c.baseQty;
-                    fixedInc += c.base.income * c.baseQty;
-                }
-                c.addons.forEach(a => {
-                    if(!a.isPercent) {
-                        fixedSum += a.price * a.qty;
-                        fixedInc += a.income * a.qty;
-                    }
-                });
-            });
-
-            let total = fixedSum, totalInc = fixedInc;
-            const list = document.getElementById('esCartItems');
-            list.innerHTML = "";
-
-            cart.forEach((c, idx) => {
-                let itemTotalCost = 0; 
-                let basePriceText = "";
-
-                if(c.base.isPercent) {
-                    let oneItemVal = fixedSum * (c.base.price / 100);
-                    let allItemsVal = oneItemVal * c.baseQty;
-                    total += allItemsVal;
-                    totalInc += (fixedSum * (c.base.income / 100)) * c.baseQty;
-                    itemTotalCost = allItemsVal;
-                    basePriceText = `${c.base.price}% (${fmt(oneItemVal)} x ${c.baseQty})`;
-                } else {
-                    itemTotalCost = c.base.price * c.baseQty;
-                    basePriceText = `${fmt(c.base.price)} x ${c.baseQty}`;
-                }
-
-                let addonsHtml = "";
-                c.addons.forEach(a => {
-                    let aText = "", aCost = 0;
-                    if(a.isPercent) {
-                        let oneVal = fixedSum * (a.price / 100);
-                        let allVal = oneVal * a.qty;
-                        total += allVal;
-                        totalInc += (fixedSum * (a.income / 100)) * a.qty;
-                        aCost = allVal;
-                        aText = `${a.price}% (${fmt(oneVal)}) x ${a.qty}`;
-                    } else {
-                        aCost = a.price * a.qty;
-                        aText = `${fmt(a.price)} x ${a.qty}`;
-                    }
-                    itemTotalCost += aCost;
-                    addonsHtml += `<div class="text-xs text-slate-500 mb-0.5"><span class="text-slate-400">+</span> ${esc(a.name)}: ${aText}</div>`;
-                });
-
-                let row = document.createElement('div');
-                row.className = 'bg-white p-4 rounded-[1rem] border border-slate-100 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.03)] mb-3 relative cursor-pointer hover:border-blue-300 transition-colors group';
-                row.onclick = () => openModalFromCart(idx);
-                
-                row.innerHTML = `
-                    <button class="absolute top-2 right-2 text-slate-300 hover:text-rose-500 transition-colors p-2 rounded-lg opacity-100 md:opacity-0 group-hover:opacity-100 focus:opacity-100" onclick="removeFromCart(event, ${idx})">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                    <div class="font-bold text-slate-800 text-sm pr-6 mb-1 leading-tight">${esc(c.title)}</div>
-                    <div class="text-xs font-semibold text-slate-500 mb-1">${esc(c.base.name)} — ${basePriceText}</div>
-                    ${addonsHtml ? `<div class="mt-2 mb-2 pl-2 border-l-2 border-slate-100">${addonsHtml}</div>` : ''}
-                    <div class="mt-3 flex justify-between items-center pt-3 border-t border-slate-100 border-dashed">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Сумма</span>
-                        <span class="font-extrabold text-sm text-slate-900">${fmt(itemTotalCost)}</span>
-                    </div>
-                `;
-                list.appendChild(row);
-            });
-            
-            if(cart.length===0) list.innerHTML = "<div class='text-center py-8 text-slate-400 font-medium text-sm'>Корзина пуста</div>";
-
-            document.getElementById('esTotalSum').innerText = fmt(total);
-            document.getElementById('esTotalIncome').innerText = fmt(totalInc);
-            
-            const badge = document.getElementById('cart-count-badge');
-            if(cart.length > 0) {
-                badge.innerText = cart.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        window.removeFromCart = function(e, i) { 
-            e.stopPropagation(); 
-            let item = cart[i];
-            let groupIdx = database.findIndex(g => g.title === item.title);
-            if (groupIdx !== -1) delete catalogMemory[groupIdx];
-            cart.splice(i, 1); 
-            renderCart(); 
-        }
-
-        window.clearCart = function(e) { 
-            if(e) e.stopPropagation(); 
-            cart = []; 
-            catalogMemory = {}; 
-            renderCart(); 
-            if(window.innerWidth <= 768) {
-                document.getElementById('esCartWidget').classList.remove('is-open');
-                document.getElementById('mobile-cart-arrow').style.transform = 'rotate(0deg)';
-            }
-        }
-
-        window.toggleMobileCart = function() {
-            if(window.innerWidth <= 768) {
-                const widget = document.getElementById('esCartWidget');
-                const arrow = document.getElementById('mobile-cart-arrow');
-                widget.classList.toggle('is-open');
-                arrow.style.transform = widget.classList.contains('is-open') ? 'rotate(180deg)' : 'rotate(0deg)';
-            }
-        }
-
-        document.getElementById('esSearch').addEventListener('input', (e) => renderCatalog(e.target.value));
-    </script>
+/* ============ scroll hide nav ============ */
+let lastScrollTop = 0;
+const portalNav = document.getElementById('portal-nav');
+if(portalNav){
+  const onScroll = () => {
+    const currentScroll = window.scrollY;
+    if(currentScroll <= 0){ document.body.classList.remove('nav-hidden'); lastScrollTop = currentScroll; return; }
+    if(Math.abs(currentScroll - lastScrollTop) <= 5) return;
+    if(currentScroll > lastScrollTop && currentScroll > 50){
+      document.body.classList.add('nav-hidden');
+    } else {
+      document.body.classList.remove('nav-hidden');
+    }
+    lastScrollTop = currentScroll;
+  };
+  window.addEventListener('scroll', onScroll, { passive:true });
+}
+</script>
 </body>
 </html>
