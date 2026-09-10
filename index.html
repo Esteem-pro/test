@@ -1,31 +1,881 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Анализ и Прогноз Лидов</title>
-    <!-- Подключаем стили stlite -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.63.1/build/stlite.css" />
-  </head>
-  <body>
-    <div id="root"></div>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ШТАБ — таск-трекер маркетинг-команды</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23FF5A2D"/><text x="50" y="72" font-size="58" text-anchor="middle" fill="white" font-family="Arial" font-weight="900">Ш</text></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#141B17; --paper:#F1F3ED; --line:#E1E5DA; --line2:#EDF0E6; --mut:#6C7A70;
+  --card:#FFFFFF; --soft:#F1F3ED; --soft2:#F6F8F2; --field:#FAFBF7; --colbg:#E9ECE2;
+  --track:#EEF0E7;
+  --accent:#FF5A2D; --accent-d:#E64A20;
+  --side:#0F1713; --side-t:#DCE7DE; --side-m:#83988B;
+  --blue:#2E6BFF; --green:#0FA36B; --amber:#E8930C; --red:#E5484D;
+  --griddot:rgba(20,27,23,.08); --ring:rgba(20,27,23,.09);
+  --dash:color-mix(in srgb, var(--ink) 22%, transparent);
+  --sh-sm:0 1px 2px rgba(20,27,23,.06),0 1px 1px rgba(20,27,23,.04);
+  --sh-md:0 12px 26px -10px rgba(20,27,23,.22);
+  --r:14px;
+}
+.dark{
+  --ink:#E9EFE7; --paper:#0F1512; --line:#28332B; --line2:#1E2821; --mut:#8CA093;
+  --card:#171F1A; --soft:#212B24; --soft2:#1C2620; --field:#131A15; --colbg:#141C17;
+  --track:#263129;
+  --griddot:rgba(233,239,231,.05); --ring:rgba(233,239,231,.13);
+  --sh-sm:0 1px 2px rgba(0,0,0,.4);
+  --sh-md:0 14px 30px -12px rgba(0,0,0,.6);
+}
+html,body{height:100%}
+body{
+  font:400 14px/1.5 'Golos Text',system-ui,sans-serif;color:var(--ink);
+  background:var(--paper);
+  background-image:radial-gradient(var(--griddot) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  transition:background-color .3s,color .3s;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(720px 440px at 90% -10%, rgba(255,90,45,.10), transparent 60%),
+    radial-gradient(680px 440px at -8% 112%, rgba(46,107,255,.09), transparent 60%);
+}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{height:10px;width:10px}
+::-webkit-scrollbar-thumb{background:#CBD2C3;border-radius:99px;border:2px solid var(--paper)}
+.dark ::-webkit-scrollbar-thumb{background:#33413A;border-color:var(--paper)}
+button{font-family:inherit}
+
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.main{flex:1;min-width:0;padding:26px 30px 44px}
+
+/* sidebar */
+.side{width:262px;flex:0 0 262px;background:var(--side);color:var(--side-t);
+  padding:22px 14px 18px;display:flex;flex-direction:column;gap:18px;
+  position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:0 8px}
+.logo{width:44px;height:44px;background:var(--accent);border-radius:13px;display:grid;place-items:center;
+  font:900 21px 'Unbounded';color:#fff;transform:rotate(-4deg);
+  box-shadow:0 8px 16px -6px rgba(255,90,45,.6);transition:transform .25s}
+.brand:hover .logo{transform:rotate(4deg) scale(1.05)}
+.brand b{font:700 17px 'Unbounded';letter-spacing:.06em;display:block;color:#fff}
+.brand span{font-size:10px;color:var(--side-m);text-transform:uppercase;letter-spacing:.18em}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;padding:8px 11px;border:0;background:transparent;
+  color:var(--side-m);font:500 13px 'Golos Text';border-radius:9px;cursor:pointer;text-align:left;transition:.18s}
+.nav button:hover{background:rgba(255,255,255,.07);color:var(--side-t);transform:translateX(2px)}
+.nav button.on{background:rgba(255,90,45,.16);color:#fff}
+.nav .grp{font:600 9.5px 'Golos Text';text-transform:uppercase;letter-spacing:.18em;color:var(--side-m);
+  padding:8px 11px 3px;opacity:.8}
+.pulse{width:7px;height:7px;border-radius:50%;background:#3DDC84;margin-left:auto;flex:0 0 auto;
+  box-shadow:0 0 0 0 rgba(61,220,132,.55);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+.sb h5{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.18em;color:var(--side-m);
+  margin:0 8px 8px;display:flex;align-items:center}
+.sb{display:flex;flex-direction:column;gap:1px}
+.srow{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:9px;cursor:pointer;
+  border:1px solid transparent;transition:.15s;color:var(--side-t);font-size:12.5px;background:transparent;
+  width:100%;text-align:left;font-family:inherit}
+.srow:hover{background:rgba(255,255,255,.06)}
+.srow.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.thash{color:var(--side-m);font-weight:700;font-size:12px}
+.cnt{margin-left:auto;font:600 10.5px 'Golos Text';background:rgba(255,255,255,.09);
+  padding:2px 8px;border-radius:99px;color:var(--side-t)}
+.sprint{margin-top:auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);
+  border-radius:13px;padding:13px 14px}
+.sprint .live{display:flex;align-items:center;gap:8px;font:600 10.5px 'Golos Text';color:#8FE3B0;
+  text-transform:uppercase;letter-spacing:.14em}
+.sprint b{font:600 13px 'Unbounded';display:block;margin:8px 0 4px;color:#fff}
+.sprint small{color:var(--side-m);font-size:11.5px;line-height:1.5;display:block}
+.reset{margin-top:10px;border:0;background:transparent;color:var(--side-m);font:500 11px 'Golos Text';
+  cursor:pointer;padding:7px 10px;border-radius:8px;display:flex;gap:8px;align-items:center;transition:.15s;width:100%}
+.reset:hover{color:#fff;background:rgba(255,255,255,.07)}
+
+/* topbar */
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.kicker{display:inline-flex;gap:9px;align-items:center;font:600 11px 'Golos Text';
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.kicker i{width:20px;height:3px;background:var(--accent);border-radius:2px}
+h1{font:900 clamp(24px,2.8vw,36px)/1.1 'Unbounded';margin-top:9px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:11px;padding:0 12px;height:42px;width:240px;transition:.2s;box-shadow:var(--sh-sm);color:var(--mut)}
+.search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
+.search input{border:0;outline:0;background:none;font:500 13.5px 'Golos Text';width:100%;color:var(--ink)}
+.search .x{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;padding:3px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:700 13.5px 'Golos Text';
+  border-radius:11px;padding:0 18px;height:42px;transition:.18s;white-space:nowrap}
+.btn.pri{background:var(--accent);color:#fff;box-shadow:0 10px 20px -9px rgba(255,90,45,.75)}
+.btn.pri:hover{background:var(--accent-d);transform:translateY(-2px)}
+.btn.pri:disabled{opacity:.45;pointer-events:none}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.danger{background:color-mix(in srgb,#E5484D 13%,transparent);color:var(--red);height:38px;padding:0 14px}
+.btn.danger:hover{background:color-mix(in srgb,#E5484D 20%,transparent)}
+.btn.sm{height:34px;padding:0 13px;font-size:12px;border-radius:9px}
+.iconbtn{position:relative;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);
+  background:var(--card);color:var(--mut);display:grid;place-items:center;cursor:pointer;
+  box-shadow:var(--sh-sm);transition:.18s}
+.iconbtn:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
+
+/* selections */
+.selection-bar{display:flex;align-items:center;gap:12px;background:var(--accent);color:#fff;
+  padding:10px 16px;border-radius:12px;margin-bottom:16px;box-shadow:var(--sh-md);animation:bpop .3s}
+.selection-bar button{background:rgba(255,255,255,0.2);color:#fff;border:0;padding:6px 12px;
+  border-radius:8px;cursor:pointer;font:600 12px 'Golos Text';display:flex;gap:6px;align-items:center;transition:.15s}
+.selection-bar button:hover{background:rgba(255,255,255,0.3)}
+
+/* filters */
+.fbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.achip{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
+  border-radius:99px;padding:6px 7px 6px 12px;font:600 11.5px 'Golos Text';box-shadow:var(--sh-sm);animation:bpop .25s}
+.achip button{border:0;background:var(--soft);border-radius:50%;width:18px;height:18px;display:grid;
+  place-items:center;cursor:pointer;color:var(--mut);transition:.12s}
+.achip button:hover{background:color-mix(in srgb,#E5484D 16%,transparent);color:var(--red)}
+.achip.clear{background:transparent;border-style:dashed;color:var(--mut);cursor:pointer;padding:6px 13px}
+.achip.clear:hover{color:var(--red);border-color:var(--red)}
+.fbar-note{font:600 10.5px 'Golos Text';color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+
+/* ctrl row */
+.ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.vseg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;box-shadow:var(--sh-sm)}
+.vseg button{border:0;background:none;font:600 12px 'Golos Text';padding:8px 13px;border-radius:8px;
+  cursor:pointer;color:var(--mut);display:flex;gap:7px;align-items:center;transition:.15s;white-space:nowrap}
+.vseg button:hover{color:var(--ink)}
+.vseg button.on{background:var(--ink);color:var(--paper)}
+.fchips{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{border:1.5px solid var(--line);background:var(--card);color:var(--mut);font:600 11.5px 'Golos Text';
+  padding:7px 12px;border-radius:99px;cursor:pointer;transition:.15s;display:inline-flex;gap:6px;align-items:center}
+.fchip:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.sortsel{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:10px 12px;
+  font:600 12px 'Golos Text';color:var(--ink);cursor:pointer;box-shadow:var(--sh-sm);outline:none}
+
+/* board */
+.board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:14px}
+.col{flex:1 1 0;min-width:260px;background:var(--colbg);border:1px solid var(--line);border-top:3px solid;
+  border-radius:var(--r);display:flex;flex-direction:column;transition:background .2s;animation:rise .45s both}
+.col.over{outline:2px dashed var(--accent);outline-offset:-3px;background:var(--soft2)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
+@keyframes bpop{from{transform:scale(.4);opacity:0}}
+@keyframes fade{from{opacity:0}}
+.col-head{display:flex;align-items:center;gap:8px;padding:12px 12px 10px}
+.col-dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.col-head h3{font:600 11px 'Unbounded';letter-spacing:.04em;text-transform:uppercase}
+.col-head .n{font:700 11px 'Golos Text';background:var(--card);border:1px solid var(--line);
+  border-radius:99px;padding:2px 9px;color:var(--mut)}
+.col-add{margin-left:auto;border:0;background:transparent;width:26px;height:26px;border-radius:8px;
+  cursor:pointer;color:var(--mut);display:grid;place-items:center;transition:.15s}
+.col-add:hover{background:var(--card);color:var(--accent);transform:scale(1.1)}
+.col-body{display:flex;flex-direction:column;gap:10px;padding:2px 10px 12px;min-height:120px}
+.empty{border:1.5px dashed var(--dash);border-radius:11px;padding:24px 10px;text-align:center;color:var(--mut);font-size:12px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 12px 11px;cursor:grab;
+  box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .18s,opacity .18s,border-color .18s;
+  animation:pop .4s both;user-select:none;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+.card.drag{opacity:.4;transform:rotate(2deg) scale(.98);cursor:grabbing}
+.card.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.ctop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.card-chk{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
+.pr{font:600 10.5px 'Golos Text';display:inline-flex;gap:5px;align-items:center;white-space:nowrap}
+.card h4{font:600 14px/1.35 'Golos Text';margin-bottom:3px}
+.donecheck{color:var(--green);font-weight:700}
+.card .desc{font-size:12px;color:var(--mut);line-height:1.45;margin-bottom:6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ctags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.minitag{font:600 10px 'Golos Text';color:var(--mut);background:var(--soft);padding:2px 8px;border-radius:99px}
+.rchip{display:inline-flex;align-items:center;gap:4px;font:600 10px 'Golos Text';color:#0EA5C6;
+  background:color-mix(in srgb,#0EA5C6 12%,transparent);padding:3px 8px;border-radius:99px;white-space:nowrap}
+.subbar{margin-top:8px;display:flex;align-items:center;gap:8px}
+.track{flex:1;height:4px;background:var(--track);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:99px;background:var(--green)}
+.subn{font:600 10.5px 'Golos Text';color:var(--mut)}
+.foot{display:flex;align-items:center;gap:7px;margin-top:10px}
+.ava{border-radius:50%;display:inline-grid;place-items:center;font:700 9px 'Golos Text';color:#fff;
+  flex:0 0 auto;border:2px solid rgba(255,255,255,.25);box-shadow:var(--sh-sm)}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:600 10.5px 'Golos Text';font-variant-numeric:tabular-nums;
+  border:1px solid var(--line);background:var(--soft);color:var(--mut);padding:3px 8px;border-radius:99px;
+  cursor:pointer;transition:.15s;white-space:nowrap}
+.tchip:hover{border-color:var(--ink);color:var(--ink)}
+.tchip.run{background:color-mix(in srgb,#E5484D 12%,transparent);color:var(--red);
+  border-color:color-mix(in srgb,#E5484D 35%,transparent)}
+.due{font:600 11px 'Golos Text';padding:3px 9px;border-radius:99px;
+  background:var(--soft);color:var(--mut);white-space:nowrap;display:inline-block;margin-left:auto}
+.due.warn{background:color-mix(in srgb,#E8930C 16%,transparent);color:#D97706}
+.due.bad{background:color-mix(in srgb,#E5484D 15%,transparent);color:var(--red);animation:alarm 1.6s infinite}
+@keyframes alarm{50%{background:color-mix(in srgb,#E5484D 26%,transparent)}}
+
+/* list view */
+.ltab{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow-x:auto;animation:rise .4s both;margin-bottom:20px;}
+.lrow{display:grid;grid-template-columns:30px minmax(250px,2.4fr) 112px 132px 112px 158px 168px;gap:10px;
+  align-items:center;padding:11px 16px;border-bottom:1px solid var(--line2);cursor:pointer;
+  transition:background .15s;min-width:1020px;animation:fade .35s both}
+.lrow:hover{background:var(--soft2)}
+.lrow:last-child{border-bottom:0}
+.lrow.sel{background:var(--soft2)}
+.lrow.lhead{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.12em;color:var(--mut);
+  cursor:default;background:var(--field)}
+.lrow.lhead:hover{background:var(--field)}
+.lrow.done .lt{color:var(--mut);text-decoration:line-through}
+.lmain{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.lt{font:600 13.5px/1.3 'Golos Text';display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ld{font-size:11px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.lwho{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut)}
+.lprog{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* projects */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;
+  box-shadow:var(--sh-sm);animation:rise .4s both;cursor:pointer;transition:.2s}
+.pcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.ptop{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ptop .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.pcard h3{font:700 16px 'Unbounded'}
+.pcard p{color:var(--mut);font-size:12px;line-height:1.5;margin-bottom:14px}
+.pbar{display:flex;align-items:center;gap:10px;font:600 11px 'Golos Text';color:var(--mut)}
+.pnew{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  border:1.5px dashed var(--dash);border-radius:var(--r);color:var(--mut);cursor:pointer;transition:.2s}
+.pnew:hover{background:var(--soft);color:var(--ink)}
+
+/* admin */
+.apanel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  padding:20px;margin-bottom:20px;animation:rise .45s both}
+.apanel h4{display:flex;align-items:center;gap:8px;font:700 14px 'Unbounded';margin-bottom:16px}
+.arow2{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;transition:.15s}
+.arow2:hover{background:var(--soft2)}
+.aname{font:600 13px 'Golos Text';display:flex;align-items:center;gap:7px}
+.asub{font-size:11px;color:var(--mut)}
+.ibtn{border:0;background:transparent;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+  cursor:pointer;color:var(--mut);transition:.15s}
+.ibtn:hover{background:color-mix(in srgb,#E5484D 14%,transparent);color:var(--red)}
+.rolesel{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:600 11px 'Golos Text';
+  background:var(--card);color:var(--ink);cursor:pointer;outline:none;margin-left:auto}
+.aadd{display:flex;gap:8px;margin-top:12px}
+.aadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;min-width:0;color:var(--ink)}
+.swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.sw{width:26px;height:26px;border-radius:9px;cursor:pointer;border:2.5px solid transparent;transition:.15s}
+.sw:hover{transform:scale(1.1)}
+.sw.on{border-color:var(--ink);transform:scale(1.12)}
+.you{font:600 9.5px 'Golos Text';background:color-mix(in srgb,#0FA36B 16%,transparent);color:var(--green);
+  padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em}
+
+/* lock */
+.lock{max-width:540px;margin:40px auto;text-align:center;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:42px 32px;box-shadow:var(--sh-sm);animation:rise .4s both}
+.lock .lic{width:58px;height:58px;border-radius:16px;background:color-mix(in srgb,var(--red) 13%,transparent);
+  color:var(--red);display:grid;place-items:center;margin:0 auto 16px}
+.lock h3{font:700 18px 'Unbounded';margin-bottom:9px}
+.lock p{color:var(--mut);font-size:13px;line-height:1.6}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(10,15,12,.55);display:grid;place-items:center;
+  z-index:50;padding:20px;animation:fade .2s}
+.modal{background:var(--card);border-radius:16px;width:min(700px,100%);max-height:92vh;overflow:auto;
+  padding:22px 24px;box-shadow:0 34px 70px -24px rgba(0,0,0,.55);position:relative;
+  animation:mpop .28s cubic-bezier(.2,.9,.3,1.15)}
+.mclose{position:absolute;top:16px;right:16px;border:0;background:var(--soft);width:32px;height:32px;
+  border-radius:9px;cursor:pointer;color:var(--mut);display:grid;place-items:center;transition:.15s}
+.mclose:hover{background:var(--ink);color:var(--paper)}
+.f label{display:block;font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;
+  color:var(--mut);margin:14px 0 6px}
+.f input[type=text],.f input[type=date],.f textarea,.f select{width:100%;border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;font:500 14px 'Golos Text';color:var(--ink);background:var(--field);
+  outline:none;transition:.15s;font-family:inherit}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.mcols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
+.chipsel{display:flex;flex-wrap:wrap;gap:6px}
+.chipsel button{border:1.5px solid var(--line);background:var(--card);color:var(--mut);font:600 12px 'Golos Text';
+  padding:7px 13px;border-radius:99px;cursor:pointer;transition:.15s}
+.chipsel button:hover{border-color:var(--ink);color:var(--ink)}
+.avasel{display:flex;gap:8px;flex-wrap:wrap}
+.avasel button{width:36px;height:36px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;
+  color:#fff;font:700 11px 'Golos Text';transition:.15s}
+.avasel button:hover{transform:translateY(-2px)}
+.avasel button.on{border-color:var(--ink);transform:scale(1.1)}
+.mfoot{display:flex;gap:10px;margin-top:22px;align-items:center}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px;
+  background:var(--field);align-items:center}
+.tagbox input{flex:1;min-width:110px;border:0;background:none;outline:none;font:500 13px 'Golos Text';color:var(--ink)}
+.tagchip{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:99px;
+  padding:3px 6px 3px 10px;font:600 11px 'Golos Text';color:var(--ink);animation:bpop .25s}
+.tagchip button{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;
+  padding:2px;border-radius:50%;transition:.12s}
+.tagchip button:hover{color:var(--red)}
+.ck{display:flex;align-items:center;gap:8px;padding:6px 5px;border-radius:8px;transition:background .15s}
+.ck:hover{background:var(--soft2)}
+.ck input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+.ck span{flex:1;font-size:13px}
+.ck.done span{text-decoration:line-through;color:var(--mut)}
+.ck .rm{opacity:0;border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;
+  padding:3px;border-radius:6px;transition:.15s}
+.ck:hover .rm{opacity:1}
+.ck .rm:hover{color:var(--red);background:color-mix(in srgb,#E5484D 14%,transparent)}
+.ckadd input{width:100%;border:1px dashed var(--dash);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;color:var(--ink)}
+
+/* dock & toasts */
+.timer-dock{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:12px;
+  align-items:center;background:var(--side);color:var(--side-t);padding:10px 20px;border-radius:99px;
+  box-shadow:var(--sh-md);border:1px solid rgba(255,255,255,0.1);z-index:60;animation:tin .3s}
+.toasts{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:70;pointer-events:none}
+.toast{background:var(--ink);color:var(--paper);font:600 12.5px 'Golos Text';padding:10px 16px;border-radius:12px;
+  box-shadow:var(--sh-md);animation:tin .3s;display:flex;gap:9px;align-items:center;pointer-events:auto}
+.nothing{margin-top:16px;padding:54px 20px;text-align:center;color:var(--mut);background:var(--colbg);
+  border:1.5px dashed var(--dash);border-radius:var(--r)}
+.nothing b{font:700 16px 'Unbounded';display:block;color:var(--ink);margin-bottom:6px}
+
+@media(max-width:1040px){.side{display:none}.main{padding:20px 16px 40px}}
+@media(max-width:720px){.frow,.frow3,.mcols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+const {useState,useEffect,useMemo,useRef,useContext,createContext} = React;
+const Ctx = createContext(null);
+const useCtx = () => useContext(Ctx);
+const cmix = (c,p) => `color-mix(in srgb, ${c} ${p}%, transparent)`;
+
+/* ================= Иконки (из Код 2 + недостающие из Код 1) ================= */
+const Icon = ({d,size=17,sw=1.8}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" style={{flex:'0 0 auto'}}>{d}</svg>
+);
+const IC = {
+  board:<><rect x="3" y="4" width="7.5" height="16" rx="2"/><rect x="13.5" y="4" width="7.5" height="10" rx="2"/></>,
+  kanban:<><rect x="4" y="4" width="6.5" height="16" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="9" rx="1.8"/></>,
+  list:<path d="M4 6h16M4 12h16M4 18h16"/>,
+  camera:<><path d="M3 8.5a2 2 0 0 1 2-2h2.2l1.6-2h6.4l1.6 2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5z"/><circle cx="12" cy="13" r="3.4"/></>,
+  video:<><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.8 6-3.3v9l-6-3.3"/></>,
+  layers:<><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8z"/><path d="M2 12a1 1 0 0 0 .6.9l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 .6-.9"/><path d="M2 17a1 1 0 0 0 .6.9l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 .6-.9"/></>,
+  target:<><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>,
+  user:<><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.6-3.6 4.2-5.2 7.5-5.2s5.9 1.6 7.5 5.2"/></>,
+  shield:<path d="M12 3l7 2.8v5.4c0 4.6-3 8.2-7 9.8-4-1.6-7-5.2-7-9.8V5.8L12 3z"/>,
+  search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>,
+  plus:<path d="M12 5v14M5 12h14"/>,
+  play:<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>,
+  pause:<path d="M8.5 5.5v13M15.5 5.5v13" strokeWidth="2.6"/>,
+  repeat:<><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></>,
+  trash:<path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/>,
+  arrow:<path d="M4 12h15m-6-6 6 6-6 6"/>,
+  check:<path d="m5 13 4 4L19 7"/>,
+  x:<path d="M6 6l12 12M18 6 6 18"/>,
+  redo:<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>,
+};
+
+/* ================= Даты ================= */
+const DAY = 864e5;
+const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = n => { const d=today(); d.setDate(d.getDate()+n); return d; };
+const pdate = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmt = d => new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(d).replace('.','');
+const daysLeft = s => Math.round((pdate(s)-today())/DAY);
+const fmtDur = s => {
+  s=Math.max(0,Math.floor(s));
+  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
+  return h>0?`${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`:`${m}:${String(ss).padStart(2,'0')}`;
+};
+const getElapsed = (t,now) => t.elapsed + (t.startedAt ? Math.floor((now-t.startedAt)/1000) : 0);
+
+/* ================= Справочники из Код 1 ================= */
+const BOARDS = {
+  marketing: { id: 'marketing', label: 'Маркетинг', c: '#9980c7', ic: IC.board },
+  photo:     { id: 'photo', label: 'Фото', c: '#69a393', ic: IC.camera },
+  video:     { id: 'video', label: 'Видео', c: '#c6a165', ic: IC.video }
+};
+const STATUSES = {
+  marketing: [
+    {id:'backlog', label:'Бэклог', c:'#b2a2c7'}, {id:'progress', label:'В работе', c:'#b896d8'},
+    {id:'review', label:'На согласовании', c:'#d4b784'}, {id:'done', label:'Готово', c:'#90bfa8'}
+  ],
+  production: [
+    {id:'planned', label:'Съемки на будущее', c:'#b2a2c7'}, {id:'shooting', label:'В процессе съемки', c:'#b896d8'},
+    {id:'queued', label:'В очереди на обработку', c:'#d4b784'}, {id:'editing', label:'В обработке', c:'#9aaad3'},
+    {id:'done', label:'Готово', c:'#90bfa8'}
+  ]
+};
+const getStatuses = b => b === 'marketing' ? STATUSES.marketing : STATUSES.production;
+const doneStatusId = 'done';
+const isDone = t => t.status === doneStatusId;
+
+const PRIORITY = {
+  high: { l: 'Высокий', c: '#E5484D', arrow: '▲' },
+  medium: { l: 'Средний', c: '#E8930C', arrow: '●' },
+  low: { l: 'Низкий', c: '#5BA26B', arrow: '▽' }
+};
+const REPEAT = { none:'Без повтора', daily:'Каждый день', weekdays:'По будням', weekly:'Каждую неделю', monthly:'Каждый месяц' };
+const TASK_TYPES_COLORS = ['#8965ce','#518e85','#c68642','#527ea8','#c2607c','#7b8798'];
+const BUCKETS = [
+  {id:'overdue', t:'Просрочено', c:'#E5484D'}, {id:'today', t:'Сегодня', c:'#FF5A2D'},
+  {id:'tomorrow', t:'Завтра', c:'#E8930C'}, {id:'week', t:'На этой неделе', c:'#2E6BFF'},
+  {id:'later', t:'Позже', c:'#98A29B'}, {id:'none', t:'Без срока', c:'#6C7A70'}, {id:'done', t:'Готово', c:'#0FA36B'}
+];
+const bucketOf = t => {
+  if(isDone(t)) return 'done';
+  if(!t.due) return 'none';
+  const dl = daysLeft(t.due);
+  if(dl < 0) return 'overdue';
+  if(dl === 0) return 'today';
+  if(dl === 1) return 'tomorrow';
+  const eow = (7 - today().getDay()) % 7;
+  if(dl <= eow) return 'week';
+  return 'later';
+};
+
+/* ================= Демо-данные из Код 1 ================= */
+const SEED_PEOPLE = [
+  {id:'anna', name:'Анна Смирнова', job:'Маркетолог', role:'admin', c:'#e3d5f3'},
+  {id:'max', name:'Максим Орлов', job:'Видеограф', role:'member', c:'#ddd7c6'},
+  {id:'maria', name:'Мария Волкова', job:'Фотограф', role:'member', c:'#c7dfd7'},
+  {id:'dasha', name:'Дарья Соколова', job:'SMM', role:'member', c:'#e8ced6'},
+  {id:'ilya', name:'Илья Козлов', job:'Дизайнер', role:'member', c:'#cdd8ec'}
+];
+const SEED_PROJECTS = [
+  {id:'autumn', name:'Осенний запуск', description:'От концепции до контента и рекламы.', color:'#8965ce', owner:'anna', archived:false},
+  {id:'always-on', name:'Контент и соцсети', description:'Регулярные публикации.', color:'#518e85', owner:'dasha', archived:false}
+];
+const SEED_SPRINTS = [{id:'sprint-1', name:'Осенний запуск', start:iso(today()), end:iso(addDays(13))}];
+const SEED_TYPES = [
+  {id:'Кампания', name:'Кампания', color:TASK_TYPES_COLORS[0], archived:false},
+  {id:'Стратегия', name:'Стратегия', color:TASK_TYPES_COLORS[1], archived:false},
+  {id:'Реклама', name:'Реклама', color:TASK_TYPES_COLORS[2], archived:false}
+];
+const SEED_TASKS = [
+  {id:'t1', number:101, title:'Разработать концепцию осенней кампании', board:'marketing', status:'backlog', assignee:'anna', priority:'high', due:iso(today()), tags:['Кампания','Стратегия'], repeat:'none', elapsed:0, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[{id:'c1',text:'Собрать референсы',done:true},{id:'c2',text:'Согласовать',done:false}]},
+  {id:'t2', number:102, title:'Собрать референсы для новой коллекции', board:'photo', status:'planned', assignee:'maria', priority:'medium', due:iso(addDays(1)), tags:['Кампания'], repeat:'none', elapsed:0, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[]},
+  {id:'t3', number:103, title:'Обновить контент-план на сентябрь', board:'marketing', status:'progress', assignee:'dasha', priority:'high', due:iso(today()), tags:[], repeat:'weekly', elapsed:3840, startedAt:null, project:'always-on', sprint:'', checklist:[]},
+  {id:'t4', number:104, title:'Снять новую коллекцию в студии', board:'photo', status:'shooting', assignee:'maria', priority:'high', due:iso(today()), tags:[], repeat:'none', elapsed:4200, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[]},
+  {id:'t5', number:105, title:'Фотографии команды для сайта', board:'photo', status:'done', assignee:'maria', priority:'medium', due:iso(addDays(-2)), tags:[], repeat:'none', elapsed:7200, startedAt:null, project:'always-on', sprint:'', checklist:[]},
+];
+
+const LS_KEY = 'shtab-mk-prototype-v3';
+
+/* ================= Компоненты UI ================= */
+const Avatar = ({person, size=24}) => {
+  if(!person) return <span className="ava" style={{width:size,height:size,background:'#e9e4ef',color:'#5e526e'}}><Icon d={IC.user} size={14}/></span>;
+  const ini = person.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  return <span className="ava" title={person.name} style={{width:size,height:size,background:person.c,color:'#141B17',fontSize:Math.max(7,Math.round(size*0.36))}}>{ini}</span>;
+};
+
+function Kanban({tasks, boardId, onEdit, onToggleTimer, now}){
+  const statuses = getStatuses(boardId);
+  const [dragId, setDragId] = useState(null);
+  const [overId, setOverId] = useState(null);
+  
+  return <div className="board">
+    {statuses.map(st => {
+      const list = tasks.filter(t => t.status === st.id);
+      return <section key={st.id} className={'col' + (overId === st.id ? ' over':'')} style={{borderTopColor: st.c}}
+        onDragOver={e=>{e.preventDefault(); setOverId(st.id);}}
+        onDragLeave={()=>setOverId(null)}
+        onDrop={e=>{e.preventDefault(); const id=e.dataTransfer.getData('text/plain'); if(id) onEdit({...tasks.find(x=>x.id===id), status:st.id}); setOverId(null);}}>
+        <div className="col-head">
+          <span className="col-dot" style={{background:st.c}}/><h3>{st.label}</h3><span className="n">{list.length}</span>
+        </div>
+        <div className="col-body">
+          {list.length===0 && <div className="empty">Нет задач</div>}
+          {list.map(t => {
+            const pr = PRIORITY[t.priority];
+            const chkDone = t.checklist.filter(c=>c.done).length;
+            const dueCls = bucketOf(t)==='overdue'?'bad': bucketOf(t)==='today'?'warn':'';
+            const isRun = t.startedAt !== null;
+            return <article key={t.id} className={'card'+(dragId===t.id?' drag':'')} draggable
+              onDragStart={e=>{e.dataTransfer.setData('text/plain',t.id); setDragId(t.id);}} onDragEnd={()=>setDragId(null)}
+              onClick={()=>onEdit(t)}>
+              <div className="ctop">
+                <span className="bchip" style={{background:cmix(BOARDS[t.board].c,15), color:BOARDS[t.board].c}}>{BOARDS[t.board].label}</span>
+                <span className="pr" style={{color:pr.c}} title={pr.l}>{pr.arrow}</span>
+              </div>
+              <h4>{isDone(t)&&<span className="donecheck">✓ </span>}{t.title}</h4>
+              {t.tags.length>0 && <div className="ctags">{t.tags.map(tg=><span key={tg} className="minitag">#{tg}</span>)}</div>}
+              {t.checklist.length>0 && <div className="subbar">
+                <div className="track"><i style={{width: `${chkDone/t.checklist.length*100}%`}}/></div>
+                <span className="subn">{chkDone}/{t.checklist.length}</span>
+              </div>}
+              <div className="foot">
+                {t.repeat!=='none' && <span className="rchip"><Icon d={IC.repeat} size={10} sw={2.2}/>повт</span>}
+                <button className={'tchip'+(isRun?' run':'')} onClick={e=>{e.stopPropagation(); onToggleTimer(t.id);}}>
+                  {isRun ? <span className="pulse" style={{width:6,height:6,marginRight:3,boxShadow:'none'}}/> : <Icon d={IC.play} size={9}/>}
+                  <span>{fmtDur(getElapsed(t,now))}</span>
+                </button>
+                {t.due && <span className={`due ${dueCls}`} style={{marginLeft:'auto'}}>{fmt(pdate(t.due))}</span>}
+              </div>
+            </article>;
+          })}
+        </div>
+      </section>;
+    })}
+  </div>;
+}
+
+/* ================= Приложение ================= */
+function App(){
+  const saved = useRef(loadState()).current;
+  const [tasks, setTasks] = useState(saved ? saved.tasks : SEED_TASKS);
+  const [people, setPeople] = useState(saved ? saved.people : SEED_PEOPLE);
+  const [projects, setProjects] = useState(saved ? saved.projects : SEED_PROJECTS);
+  const [taskTypes, setTaskTypes] = useState(saved ? saved.taskTypes : SEED_TYPES);
+  const [sprints, setSprints] = useState(saved ? saved.sprints : SEED_SPRINTS);
+  
+  const [view, setView] = useState('board');
+  const [boardId, setBoardId] = useState('marketing');
+  const [theme, setTheme] = useState('light');
+  const [now, setNow] = useState(Date.now());
+  const [modal, setModal] = useState(null); // null | {type: 'task'|'project'|'admin', data: any}
+
+  // Фильтры
+  const [q, setQ] = useState('');
+  const [fProj, setFProj] = useState([]);
+  const [fWho, setFWho] = useState([]);
+  const [fTags, setFTags] = useState([]);
+  const [showDone, setShowDone] = useState(false);
+
+  useEffect(()=>{ document.documentElement.classList.toggle('dark',theme==='dark'); },[theme]);
+  useEffect(()=>{
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({tasks, people, projects, taskTypes, sprints})); } catch(e){}
+  }, [tasks, people, projects, taskTypes, sprints]);
+
+  // Таймер
+  const anyRunning = useMemo(()=>tasks.some(t=>t.startedAt!==null), [tasks]);
+  useEffect(()=>{
+    if(!anyRunning) return;
+    const iv = setInterval(()=>setNow(Date.now()), 1000);
+    return ()=>clearInterval(iv);
+  }, [anyRunning]);
+
+  const toggleTimer = id => {
+    setTasks(ts => ts.map(t => {
+      if(t.id === id) {
+        if(t.startedAt) return {...t, elapsed: t.elapsed + Math.floor((Date.now()-t.startedAt)/1000), startedAt: null};
+        return {...t, startedAt: Date.now()};
+      }
+      if(t.startedAt) return {...t, elapsed: t.elapsed + Math.floor((Date.now()-t.startedAt)/1000), startedAt: null};
+      return t;
+    }));
+  };
+
+  const completeTask = t => {
+    let updates = {...t, status: 'done', startedAt: null};
+    if(t.startedAt) updates.elapsed = t.elapsed + Math.floor((Date.now()-t.startedAt)/1000);
+    let newTs = tasks.map(x => x.id === t.id ? updates : x);
     
-    <!-- Подключаем скрипт stlite -->
-    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.63.1/build/stlite.js"></script>
-    <script>
-      stlite.mount(
-        {
-          // Указываем нужные Python библиотеки (openpyxl нужен для Excel файлов)
-          requirements: ["pandas", "numpy", "scipy", "matplotlib", "openpyxl", "streamlit"],
-          entrypoint: "app.py",
-          files: {
-            "app.py": {
-              url: "./app.py" // Подтягиваем ваш файл из репозитория
-            }
-          },
-        },
-        document.getElementById("root")
-      );
-    </script>
-  </body>
+    // Создаем следующий повтор
+    if(t.repeat !== 'none' && t.due) {
+      const nextD = nextDue(t.due, t.repeat);
+      newTs.push({ ...t, id:'t'+Date.now(), number: Math.max(...tasks.map(x=>x.number))+1,
+        status: getStatuses(t.board)[0].id, due: nextD, elapsed: 0, startedAt: null,
+        checklist: t.checklist.map(c=>({...c, done:false}))
+      });
+    }
+    setTasks(newTs);
+    setModal(null);
+  };
+
+  const saveTask = t => {
+    if(t.id) setTasks(ts => ts.map(x => x.id === t.id ? t : x));
+    else setTasks(ts => [...ts, {...t, id:'t'+Date.now(), number: Math.max(...tasks.map(x=>x.number))+1}]);
+    setModal(null);
+  };
+
+  const deleteTask = id => { setTasks(ts => ts.filter(x => x.id !== id)); setModal(null); };
+
+  // AI Tool Registration (как в Код 1)
+  useEffect(()=>{
+    const mCtx = document.modelContext;
+    if(!mCtx?.registerTool) return;
+    const ac = new AbortController();
+    mCtx.registerTool({
+      name: 'list_marketing_tasks', title: 'Получить задачи', description: 'Возвращает задачи.',
+      execute: () => ({tasks: tasks.map(t=>({id:t.id, title:t.title, board:t.board, status:t.status, due:t.due}))})
+    }, {signal: ac.signal});
+    mCtx.registerTool({
+      name: 'set_marketing_task_status', title: 'Изменить статус', description: 'Изменяет статус задачи.',
+      inputSchema: {type:'object', properties:{taskId:{type:'string'}, status:{type:'string'}}, required:['taskId','status']},
+      execute: async (args) => {
+        setTasks(ts => ts.map(t => t.id===args.taskId ? {...t, status:args.status} : t));
+        return {id: args.taskId, status: args.status};
+      }
+    }, {signal: ac.signal});
+    return () => ac.abort();
+  }, [tasks]);
+
+  function loadState(){
+    try{ const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : null; } catch(e){return null;}
+  }
+
+  // Фильтрация
+  const filteredTasks = useMemo(() => tasks.filter(t => {
+    if(view === 'board' && t.board !== boardId) return false;
+    if(view === 'projects' && !t.project) return false;
+    if(!showDone && isDone(t)) return false;
+    if(fProj.length && !fProj.includes(t.project)) return false;
+    if(fWho.length && !fWho.includes(t.assignee)) return false;
+    if(fTags.length && !fTags.some(tg => t.tags.includes(tg))) return false;
+    if(q.trim() && !t.title.toLowerCase().includes(q.trim().toLowerCase())) return false;
+    return true;
+  }), [tasks, view, boardId, fProj, fWho, fTags, q, showDone]);
+
+  const activeTimer = tasks.find(t => t.startedAt !== null);
+
+  return (
+    <div className="app">
+      {/* Сайдбар */}
+      <aside className="side">
+        <div className="brand">
+          <div className="logo">Ш</div>
+          <div><b>ШТАБ</b><span>marketing desk</span></div>
+        </div>
+        <nav className="nav">
+          <button className={view==='all'?'on':''} onClick={()=>setView('all')}><Icon d={IC.list}/>Все задачи</button>
+          <button className={view==='recurring'?'on':''} onClick={()=>setView('recurring')}><Icon d={IC.repeat}/>Повторяющиеся</button>
+          <div className="grp">Доски команды</div>
+          {Object.values(BOARDS).map(b => (
+            <button key={b.id} className={view==='board'&&boardId===b.id?'on':''} onClick={()=>{setView('board'); setBoardId(b.id);}}>
+              <Icon d={b.ic}/>{b.label}
+            </button>
+          ))}
+          <div className="grp">Проекты</div>
+          <button className={view==='projects'?'on':''} onClick={()=>setView('projects')}><Icon d={IC.layers}/>Все проекты</button>
+        </nav>
+        {projects.slice(0,5).map(p => (
+           <div className="sb" key={p.id}>
+             <button className={'srow'+(fProj.includes(p.id)?' on':'')} onClick={()=>{
+               if(fProj.includes(p.id)) setFProj(f.filter(x=>x!==p.id)); else setFProj([...fProj, p.id]);
+             }}><span className="dot" style={{background:p.color}}/>{p.name}</button>
+           </div>
+        ))}
+        <div className="sprint">
+          <div className="live"><span className="pulse"/>Спринт активен</div>
+          <b>{sprints[0].name}</b>
+          <small>{fmt(pdate(sprints[0].start))} — {fmt(pdate(sprints[0].end))}</small>
+        </div>
+      </aside>
+
+      {/* Основной контент */}
+      <main className="main">
+        <header className="topbar">
+          <div>
+            <span className="kicker"><i/>Штаб · маркетинг</span>
+            <h1>{view==='board' ? BOARDS[boardId].label : view==='projects' ? 'Проекты' : 'Все задачи'}<em>.</em></h1>
+          </div>
+          <div className="tools">
+            <label className="search">
+              <Icon d={IC.search} size={15}/>
+              <input placeholder="Поиск…" value={q} onChange={e=>setQ(e.target.value)}/>
+              {q && <button className="x" onClick={()=>setQ('')}><Icon d={IC.x} size={13}/></button>}
+            </label>
+            <button className="iconbtn" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')}><Icon d={theme==='dark'?IC.sun:IC.moon} size={16}/></button>
+            <button className="btn pri" onClick={() => setModal({type:'task', data: {
+              board: view==='board'?boardId:'marketing', status: getStatuses(view==='board'?boardId:'marketing')[0].id,
+              title: '', description: '', assignee: '', priority: 'medium', due: iso(today()), repeat: 'none', tags: [], checklist: []
+            }})}><Icon d={IC.plus} size={15} sw={2.4}/>Новая задача</button>
+          </div>
+        </header>
+
+        {/* Панель фильтров */}
+        <div className="fbar">
+          <button className={'achip clear'+(showDone?' on':'')} onClick={()=>setShowDone(!showDone)}>
+            {showDone?'Скрыть готовые':'Показать готовые'}
+          </button>
+          {fProj.map(id => <span className="achip" key={id}><span className="dot" style={{background:projects.find(p=>p.id===id)?.color}}/>{projects.find(p=>p.id===id)?.name} <button onClick={()=>setFProj(f.filter(x=>x!==id))}><Icon d={IC.x} size={10}/></button></span>)}
+        </div>
+
+        {/* Контент: Доска */}
+        {view === 'board' && (
+          <Kanban tasks={filteredTasks} boardId={boardId} now={now} onToggleTimer={toggleTimer} onEdit={t => setModal({type:'task', data:t})} />
+        )}
+
+        {/* Контент: Список (Все задачи) */}
+        {(view === 'all' || view === 'recurring') && (
+          <div className="ltab">
+            <div className="lrow lhead">
+              <div style={{width: 30}}></div>
+              <div>Задача</div><div>Доска</div><div>Статус</div><div>Исполнитель</div><div>Срок</div><div>Таймер</div>
+            </div>
+            {filteredTasks.filter(t => view==='recurring' ? t.repeat !== 'none' : true).map(t => {
+              const b = BOARDS[t.board];
+              const st = getStatuses(t.board).find(s=>s.id===t.status);
+              const isRun = t.startedAt !== null;
+              return <div key={t.id} className="lrow" onClick={()=>setModal({type:'task', data:t})}>
+                <div>{isDone(t) ? <span className="donecheck">✓</span> : ''}</div>
+                <div className="lmain">
+                  <span className="pr" style={{color: PRIORITY[t.priority].c}}>{PRIORITY[t.priority].arrow}</span>
+                  <div>
+                    <span className="lt">{t.title}</span>
+                    {t.tags.length>0 && <span className="ld">{t.tags.map(tg=>`#${tg}`).join(' ')}</span>}
+                  </div>
+                </div>
+                <div><span className="bchip" style={{color:b.c}}>{b.label}</span></div>
+                <div><span className="chip" style={{background:cmix(st.c,15), color:st.c}}><span className="dot" style={{background:st.c}}/>{st.label}</span></div>
+                <div className="lwho"><Avatar person={people.find(p=>p.id===t.assignee)} size={22}/> {people.find(p=>p.id===t.assignee)?.name.split(' ')[0]||'Нет'}</div>
+                <div>{t.due ? <span className={`due ${bucketOf(t)==='overdue'?'bad':''}`}>{fmt(pdate(t.due))}</span> : '—'}</div>
+                <div>
+                  <button className={'tchip'+(isRun?' run':'')} onClick={e=>{e.stopPropagation(); toggleTimer(t.id);}}>
+                    {isRun ? <span className="pulse" style={{width:6,height:6,marginRight:3,boxShadow:'none'}}/> : <Icon d={IC.play} size={9}/>}
+                    <span>{fmtDur(getElapsed(t,now))}</span>
+                  </button>
+                </div>
+              </div>;
+            })}
+          </div>
+        )}
+
+        {/* Контент: Проекты */}
+        {view === 'projects' && (
+          <div className="pgrid">
+            {projects.map(p => {
+              const ptasks = tasks.filter(t => t.project === p.id);
+              const pdone = ptasks.filter(isDone).length;
+              const pct = ptasks.length ? Math.round((pdone/ptasks.length)*100) : 0;
+              return <div key={p.id} className="pcard" onClick={()=>{setView('all'); setFProj([p.id]);}}>
+                <div className="ptop"><span className="ic" style={{background:p.color}}><Icon d={IC.layers}/></span><h3>{p.name}</h3></div>
+                <p>{p.description}</p>
+                <div className="pbar"><span>{pct}% выполнено</span><div className="track"><i style={{width:`${pct}%`, background:p.color}}/></div></div>
+              </div>;
+            })}
+          </div>
+        )}
+      </main>
+
+      {/* Плавающий таймер внизу */}
+      {activeTimer && (
+        <div className="timer-dock">
+          <span className="pulse" style={{boxShadow:'none'}}/>
+          <b style={{cursor:'pointer'}} onClick={()=>setModal({type:'task', data:activeTimer})}>{activeTimer.title.slice(0,30)}...</b>
+          <strong style={{fontVariantNumeric:'tabular-nums'}}>{fmtDur(getElapsed(activeTimer, now))}</strong>
+          <button className="iconbtn" onClick={()=>toggleTimer(activeTimer.id)}><Icon d={IC.pause}/></button>
+        </div>
+      )}
+
+      {/* Модалка: Задача */}
+      {modal && modal.type === 'task' && (() => {
+        const [f, setF] = useState(modal.data);
+        const set = (k,v) => setF(s=>({...s, [k]:v}));
+        const ok = f.title.trim().length > 0;
+        return <div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget) setModal(null);}}>
+          <div className="modal">
+            <button className="mclose" onClick={()=>setModal(null)}><Icon d={IC.x} size={16}/></button>
+            <h3>{f.id ? 'Детали задачи' : 'Новая задача'}</h3>
+            <div className="f">
+              <label>Название</label>
+              <input type="text" autoFocus value={f.title} onChange={e=>set('title',e.target.value)} placeholder="Что нужно сделать?"/>
+              
+              <div className="frow" style={{marginTop:14}}>
+                <div>
+                  <label>Доска</label>
+                  <select value={f.board} onChange={e=>setF(s=>({...s, board:e.target.value, status:getStatuses(e.target.value)[0].id}))}>
+                    {Object.values(BOARDS).map(b=><option key={b.id} value={b.id}>{b.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label>Статус</label>
+                  <select value={f.status} onChange={e=>set('status',e.target.value)}>
+                    {getStatuses(f.board).map(s=><option key={s.id} value={s.id}>{s.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="frow3">
+                <div>
+                  <label>Исполнитель</label>
+                  <select value={f.assignee} onChange={e=>set('assignee',e.target.value)}>
+                    <option value="">Не назначен</option>
+                    {people.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label>Приоритет</label>
+                  <select value={f.priority} onChange={e=>set('priority',e.target.value)}>
+                    {Object.entries(PRIORITY).map(([k,p])=><option key={k} value={k}>{p.l}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label>Проект</label>
+                  <select value={f.project} onChange={e=>set('project',e.target.value)}>
+                    <option value="">Без проекта</option>
+                    {projects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="frow">
+                <div>
+                  <label>Срок</label>
+                  <input type="date" value={f.due || ''} onChange={e=>set('due',e.target.value)}/>
+                </div>
+                <div>
+                  <label>Повторение</label>
+                  <select value={f.repeat} onChange={e=>set('repeat',e.target.value)}>
+                    {Object.entries(REPEAT).map(([k,v])=><option key={k} value={k}>{v}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <label>Типы задачи (Теги)</label>
+              <div className="chipsel">
+                {taskTypes.map(tt => (
+                  <button key={tt.id} type="button" onClick={()=>{
+                    if(f.tags.includes(tt.id)) set('tags', f.tags.filter(x=>x!==tt.id));
+                    else set('tags', [...f.tags, tt.id]);
+                  }} style={f.tags.includes(tt.id) ? {background:cmix(tt.color,15), borderColor:tt.color, color:tt.color} : {}}>
+                    {tt.name}
+                  </button>
+                ))}
+              </div>
+
+              <label>Чек-лист</label>
+              {f.checklist.map((c, i) => (
+                <div key={c.id} className={'ck'+(c.done?' done':'')}>
+                  <input type="checkbox" checked={c.done} onChange={() => set('checklist', f.checklist.map((x,j)=>j===i?{...x, done:!x.done}:x))} />
+                  <span>{c.text}</span>
+                  <button className="rm" type="button" onClick={() => set('checklist', f.checklist.filter((_,j)=>j!==i))}><Icon d={IC.x} size={11}/></button>
+                </div>
+              ))}
+              <div className="ckadd">
+                <input placeholder="Новый пункт и Enter..." onKeyDown={e=>{
+                  if(e.key==='Enter' && e.target.value.trim()){
+                    set('checklist', [...f.checklist, {id:'c'+Date.now(), text:e.target.value.trim(), done:false}]);
+                    e.target.value='';
+                  }
+                }}/>
+              </div>
+
+            </div>
+            <div className="mfoot">
+              {f.id && <button className="btn danger" onClick={()=>deleteTask(f.id)}><Icon d={IC.trash} size={14}/>Удалить</button>}
+              <span style={{flex:1}}/>
+              <button className="btn ghost" onClick={()=>setModal(null)}>Отмена</button>
+              {f.id && !isDone(f) && <button className="btn" style={{background:'var(--green)', color:'#fff'}} onClick={()=>completeTask(f)}><Icon d={IC.check} size={15}/>Завершить</button>}
+              <button className="btn pri" disabled={!ok} onClick={()=>saveTask(f)}>{f.id ? 'Сохранить' : 'Создать'}</button>
+            </div>
+          </div>
+        </div>;
+      })()}
+
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
 </html>
