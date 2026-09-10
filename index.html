@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ШТАБ — таск-трекер маркетинг-команды</title>
-<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23FF5A2D"/><text x="50" y="72" font-size="58" text-anchor="middle" fill="white" font-family="Arial" font-weight="900">Ш</text></svg>'>
+<title>ПОТОК — таск-трекер маркетинг-команды</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23FF5A2D"/><text x="50" y="72" font-size="58" text-anchor="middle" fill="white" font-family="Arial" font-weight="900">П</text></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@ button{font-family:inherit}
 
 /* sidebar */
 .side{width:262px;flex:0 0 262px;background:var(--side);color:var(--side-t);
-  padding:22px 14px 18px;display:flex;flex-direction:column;gap:18px;
+  padding:22px 14px 18px;display:flex;flex-direction:column;gap:14px;
   position:sticky;top:0;height:100vh;overflow:auto}
 .brand{display:flex;gap:12px;align-items:center;padding:0 8px}
 .logo{width:44px;height:44px;background:var(--accent);border-radius:13px;display:grid;place-items:center;
@@ -76,6 +76,9 @@ button{font-family:inherit}
 @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
 .sb h5{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.18em;color:var(--side-m);
   margin:0 8px 8px;display:flex;align-items:center}
+.tmode{margin-left:auto;border:0;background:rgba(255,255,255,.1);color:var(--side-t);font:700 9px 'Golos Text';
+  padding:2px 8px;border-radius:99px;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;transition:.15s}
+.tmode:hover{background:var(--accent)}
 .sb{display:flex;flex-direction:column;gap:1px}
 .srow{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:9px;cursor:pointer;
   border:1px solid transparent;transition:.15s;color:var(--side-t);font-size:12.5px;background:transparent;
@@ -86,15 +89,27 @@ button{font-family:inherit}
 .thash{color:var(--side-m);font-weight:700;font-size:12px}
 .cnt{margin-left:auto;font:600 10.5px 'Golos Text';background:rgba(255,255,255,.09);
   padding:2px 8px;border-radius:99px;color:var(--side-t)}
-.sprint{margin-top:auto;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);
+.sprint{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);
   border-radius:13px;padding:13px 14px}
 .sprint .live{display:flex;align-items:center;gap:8px;font:600 10.5px 'Golos Text';color:#8FE3B0;
   text-transform:uppercase;letter-spacing:.14em}
 .sprint b{font:600 13px 'Unbounded';display:block;margin:8px 0 4px;color:#fff}
 .sprint small{color:var(--side-m);font-size:11.5px;line-height:1.5;display:block}
+.sprint-goal{margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;
+  font:500 11px 'Golos Text';color:var(--side-t);line-height:1.4}
 .reset{margin-top:10px;border:0;background:transparent;color:var(--side-m);font:500 11px 'Golos Text';
   cursor:pointer;padding:7px 10px;border-radius:8px;display:flex;gap:8px;align-items:center;transition:.15s;width:100%}
 .reset:hover{color:#fff;background:rgba(255,255,255,.07)}
+.hotkeys{margin-top:8px;font:500 10px 'Golos Text';color:var(--side-m);padding:0 8px;line-height:2.1}
+.hotkeys b{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;font-weight:600;margin-right:2px;color:var(--side-t)}
+
+/* quick notes (scratchpad) */
+.scratch{margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:11px;padding:10px 12px}
+.scratch h5{margin:0 0 6px;display:flex;align-items:center;gap:6px}
+.scratch textarea{width:100%;min-height:72px;resize:vertical;border:0;background:transparent;
+  font:500 11.5px 'Golos Text';color:var(--side-t);outline:none;line-height:1.45}
+.scratch textarea::placeholder{color:var(--side-m)}
 
 /* topbar */
 .topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:20px}
@@ -109,6 +124,12 @@ h1 em{font-style:normal;color:var(--accent)}
 .search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
 .search input{border:0;outline:0;background:none;font:500 13.5px 'Golos Text';width:100%;color:var(--ink)}
 .search .x{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;padding:3px}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;
+  height:42px;align-items:center;box-shadow:var(--sh-sm);flex-wrap:wrap}
+.seg button{border:0;background:transparent;font:600 12px 'Golos Text';color:var(--mut);
+  padding:7px 11px;border-radius:8px;cursor:pointer;transition:.15s;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper)}
 .btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:700 13.5px 'Golos Text';
   border-radius:11px;padding:0 18px;height:42px;transition:.18s;white-space:nowrap}
 .btn.pri{background:var(--accent);color:#fff;box-shadow:0 10px 20px -9px rgba(255,90,45,.75)}
@@ -119,24 +140,55 @@ h1 em{font-style:normal;color:var(--accent)}
 .btn.danger{background:color-mix(in srgb,#E5484D 13%,transparent);color:var(--red);height:38px;padding:0 14px}
 .btn.danger:hover{background:color-mix(in srgb,#E5484D 20%,transparent)}
 .btn.sm{height:34px;padding:0 13px;font-size:12px;border-radius:9px}
+.btn.xs{height:26px;padding:0 10px;font-size:10.5px;border-radius:7px}
+.vtool{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:16px;color:var(--mut);font-size:12.5px}
 .iconbtn{position:relative;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);
   background:var(--card);color:var(--mut);display:grid;place-items:center;cursor:pointer;
   box-shadow:var(--sh-sm);transition:.18s}
 .iconbtn:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
+.iconbtn.has{border-color:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--accent)}
+.livechip{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:11px;
+  border:1px solid color-mix(in srgb,var(--red) 40%,transparent);
+  background:color-mix(in srgb,var(--red) 9%,transparent);color:var(--red);font:700 12px 'Golos Text';
+  cursor:pointer;transition:.15s;max-width:320px}
+.livechip:hover{transform:translateY(-1px)}
+.livechip .lct{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.livechip b{font-variant-numeric:tabular-nums}
+.pomobadge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:99px;
+  background:color-mix(in srgb,var(--amber) 18%,transparent);color:#D97706;font:700 10px 'Golos Text';
+  text-transform:uppercase;letter-spacing:.08em;margin-left:6px}
+.rdot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:0 0 auto;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.3}}
+.bbadge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#fff;font:700 9.5px 'Golos Text';
+  padding:2px 6px;border-radius:99px;box-shadow:0 3px 8px -2px rgba(255,90,45,.8);animation:bpop .3s}
+@keyframes bpop{from{transform:scale(.4);opacity:0}}
+.bellwrap{position:relative}
+.bback{position:fixed;inset:0;z-index:44;background:transparent}
+.bpanel{position:absolute;right:0;top:calc(100% + 10px);width:336px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh-md);z-index:45;overflow:hidden;animation:mpop .22s}
+.bp-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;
+  border-bottom:1px solid var(--line2);font:600 13px 'Golos Text'}
+.bp-head span{font:700 11px;background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red);
+  padding:2px 9px;border-radius:99px}
+.bp-sec{padding:10px 16px 4px;font:600 10px 'Golos Text';letter-spacing:.15em;text-transform:uppercase;color:var(--mut)}
+.bp-row{display:flex;gap:9px;align-items:center;width:100%;padding:9px 16px;border:0;background:none;
+  cursor:pointer;text-align:left;font-family:inherit;transition:.15s}
+.bp-row:hover{background:var(--soft2)}
+.bp-row .t{flex:1;font:600 12.5px 'Golos Text';color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bp-row .d{font:600 10.5px 'Golos Text';color:var(--mut);white-space:nowrap}
+.bp-empty{padding:24px 16px;text-align:center;color:var(--mut);font-size:12.5px}
+.bp-all{width:100%;border:0;background:var(--soft);padding:12px;font:600 12px 'Golos Text';color:var(--ink);
+  cursor:pointer;border-top:1px solid var(--line2);transition:.15s}
+.bp-all:hover{background:var(--soft2);color:var(--accent)}
 
-/* selections */
-.selection-bar{display:flex;align-items:center;gap:12px;background:var(--accent);color:#fff;
-  padding:10px 16px;border-radius:12px;margin-bottom:16px;box-shadow:var(--sh-md);animation:bpop .3s}
-.selection-bar button{background:rgba(255,255,255,0.2);color:#fff;border:0;padding:6px 12px;
-  border-radius:8px;cursor:pointer;font:600 12px 'Golos Text';display:flex;gap:6px;align-items:center;transition:.15s}
-.selection-bar button:hover{background:rgba(255,255,255,0.3)}
-
-/* filters */
+/* active filter chips */
 .fbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
 .achip{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
-  border-radius:99px;padding:6px 7px 6px 12px;font:600 11.5px 'Golos Text';box-shadow:var(--sh-sm);animation:bpop .25s}
+  border-radius:99px;padding:6px 7px 6px 12px;font:600 11.5px 'Golos Text';box-shadow:var(--sh-sm);animation:bpop .25s;max-width:280px}
+.achip .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .achip button{border:0;background:var(--soft);border-radius:50%;width:18px;height:18px;display:grid;
-  place-items:center;cursor:pointer;color:var(--mut);transition:.12s}
+  place-items:center;cursor:pointer;color:var(--mut);transition:.12s;flex:0 0 auto}
 .achip button:hover{background:color-mix(in srgb,#E5484D 16%,transparent);color:var(--red)}
 .achip.clear{background:transparent;border-style:dashed;color:var(--mut);cursor:pointer;padding:6px 13px}
 .achip.clear:hover{color:var(--red);border-color:var(--red)}
@@ -154,17 +206,29 @@ h1 em{font-style:normal;color:var(--accent)}
   padding:7px 12px;border-radius:99px;cursor:pointer;transition:.15s;display:inline-flex;gap:6px;align-items:center}
 .fchip:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
 .fchip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.fchip b{font:700 10px 'Golos Text';background:var(--ring);padding:1px 7px;border-radius:99px;color:inherit}
 .sortsel{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:10px 12px;
   font:600 12px 'Golos Text';color:var(--ink);cursor:pointer;box-shadow:var(--sh-sm);outline:none}
+.sortsel:focus{border-color:var(--ink)}
+
+/* stats */
+.stats{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm);margin-bottom:20px;overflow:hidden;flex-wrap:wrap;animation:rise .45s both}
+.stat{flex:1;padding:15px 20px;border-right:1px solid var(--line);min-width:150px}
+.stat .lbl{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.15em;color:var(--mut)}
+.stat .num{font:700 28px/1.2 'Unbounded';margin-top:3px}
+.stat .sub{font-size:11.5px;color:var(--mut);margin-top:1px}
+.ringbox{display:flex;align-items:center;gap:14px;padding:12px 22px}
+.ringbox b{font:600 12.5px 'Unbounded'}
+.ringbox small{color:var(--mut);font-size:11px;display:block;margin-top:2px}
 
 /* board */
 .board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:14px}
-.col{flex:1 1 0;min-width:260px;background:var(--colbg);border:1px solid var(--line);border-top:3px solid;
+.col{flex:1 1 0;min-width:230px;background:var(--colbg);border:1px solid var(--line);border-top:3px solid;
   border-radius:var(--r);display:flex;flex-direction:column;transition:background .2s;animation:rise .45s both}
 .col.over{outline:2px dashed var(--accent);outline-offset:-3px;background:var(--soft2)}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}}
 @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
-@keyframes bpop{from{transform:scale(.4);opacity:0}}
 @keyframes fade{from{opacity:0}}
 .col-head{display:flex;align-items:center;gap:8px;padding:12px 12px 10px}
 .col-dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
@@ -177,98 +241,267 @@ h1 em{font-style:normal;color:var(--accent)}
 .col-body{display:flex;flex-direction:column;gap:10px;padding:2px 10px 12px;min-height:120px}
 .empty{border:1.5px dashed var(--dash);border-radius:11px;padding:24px 10px;text-align:center;color:var(--mut);font-size:12px}
 
+/* pinned section */
+.pinned{margin-bottom:20px;background:linear-gradient(180deg,color-mix(in srgb,var(--amber) 8%,transparent),transparent);
+  border:1px solid color-mix(in srgb,var(--amber) 25%,var(--line));border-radius:var(--r);padding:14px 16px;
+  animation:rise .4s both}
+.pinned h3{font:600 11px 'Unbounded';letter-spacing:.08em;text-transform:uppercase;color:var(--amber);
+  display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pinned-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+
 /* card */
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 12px 11px;cursor:grab;
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:grab;
   box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .18s,opacity .18s,border-color .18s;
-  animation:pop .4s both;user-select:none;position:relative}
+  animation:pop .4s both;user-select:none;position:relative;
+  display:flex;flex-direction:column;gap:8px;overflow:hidden;max-width:100%}
+.card.pinned{border-color:color-mix(in srgb,var(--amber) 40%,var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--amber) 25%,transparent),var(--sh-sm)}
+.card.fav{border-color:color-mix(in srgb,#E8930C 40%,var(--line))}
+.card.selected{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
 .card.drag{opacity:.4;transform:rotate(2deg) scale(.98);cursor:grabbing}
-.card.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.ctop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.card-chk{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}
-.pr{font:600 10.5px 'Golos Text';display:inline-flex;gap:5px;align-items:center;white-space:nowrap}
-.card h4{font:600 14px/1.35 'Golos Text';margin-bottom:3px}
+.card-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.card-actions{display:flex;gap:2px;margin-left:auto;flex:0 0 auto;opacity:0;transition:.15s}
+.card:hover .card-actions,.card.selected .card-actions{opacity:1}
+.card-actions button{width:24px;height:24px;border:0;background:transparent;color:var(--mut);
+  border-radius:6px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.card-actions button:hover{background:var(--soft);color:var(--ink)}
+.card-actions button.on{color:var(--amber)}
+.card-actions button.pinned-on{color:var(--amber)}
+.card-actions button.fav-on{color:#E8930C}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 10.5px 'Golos Text';letter-spacing:.05em;
+  text-transform:uppercase;padding:3.5px 9px;border-radius:99px;white-space:nowrap;
+  border:0;cursor:pointer;transition:.15s;font-family:inherit;max-width:100%;overflow:hidden}
+.chip .dot{width:7px;height:7px;flex:0 0 auto}
+.chip .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip:hover{filter:brightness(1.1)}
+.bchip{font:700 9px 'Golos Text';letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;
+  white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
+.pr{font:600 10.5px 'Golos Text';display:inline-flex;gap:5px;align-items:center;white-space:nowrap;
+  border:0;background:transparent;cursor:pointer;padding:3px 7px;border-radius:99px;transition:.15s;
+  font-family:inherit}
+.pr:hover{background:var(--soft)}
+.pr small{color:var(--mut)}
+.card h4{font:600 14px/1.35 'Golos Text';margin:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;min-width:0}
 .donecheck{color:var(--green);font-weight:700}
-.card .desc{font-size:12px;color:var(--mut);line-height:1.45;margin-bottom:6px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ctags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.minitag{font:600 10px 'Golos Text';color:var(--mut);background:var(--soft);padding:2px 8px;border-radius:99px}
-.rchip{display:inline-flex;align-items:center;gap:4px;font:600 10px 'Golos Text';color:#0EA5C6;
-  background:color-mix(in srgb,#0EA5C6 12%,transparent);padding:3px 8px;border-radius:99px;white-space:nowrap}
-.subbar{margin-top:8px;display:flex;align-items:center;gap:8px}
-.track{flex:1;height:4px;background:var(--track);border-radius:99px;overflow:hidden}
-.track i{display:block;height:100%;border-radius:99px;background:var(--green)}
-.subn{font:600 10.5px 'Golos Text';color:var(--mut)}
-.foot{display:flex;align-items:center;gap:7px;margin-top:10px}
+.card .desc{font-size:12px;color:var(--mut);line-height:1.45;margin:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;min-width:0}
+.ctypes{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.ttype{font:600 10px 'Golos Text';color:#fff;padding:2.5px 9px;border-radius:99px;
+  white-space:nowrap;display:inline-flex;align-items:center;gap:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+  border:0;cursor:pointer;transition:.15s;font-family:inherit}
+.ttype:hover{filter:brightness(1.15)}
+.subbar{display:flex;align-items:center;gap:8px;min-width:0}
+.track{flex:1;height:4px;background:var(--track);border-radius:99px;overflow:hidden;min-width:0}
+.track i{display:block;height:100%;border-radius:99px}
+.subn{font:600 10.5px 'Golos Text';color:var(--mut);flex:0 0 auto;white-space:nowrap}
+.foot{display:flex;align-items:center;gap:7px;margin-top:2px;min-width:0;flex-wrap:wrap}
 .ava{border-radius:50%;display:inline-grid;place-items:center;font:700 9px 'Golos Text';color:#fff;
-  flex:0 0 auto;border:2px solid rgba(255,255,255,.25);box-shadow:var(--sh-sm)}
+  flex:0 0 auto;border:2px solid rgba(255,255,255,.25);box-shadow:var(--sh-sm);
+  cursor:pointer;transition:.15s}
+.ava:hover{transform:scale(1.1)}
+.who{font-size:11.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px}
+.com{display:inline-flex;gap:4px;align-items:center;font:600 11px 'Golos Text';color:var(--mut);
+  border:0;background:transparent;cursor:pointer;padding:3px 7px;border-radius:99px;transition:.15s;font-family:inherit}
+.com:hover{background:var(--soft);color:var(--ink)}
 .tchip{display:inline-flex;align-items:center;gap:5px;font:600 10.5px 'Golos Text';font-variant-numeric:tabular-nums;
   border:1px solid var(--line);background:var(--soft);color:var(--mut);padding:3px 8px;border-radius:99px;
-  cursor:pointer;transition:.15s;white-space:nowrap}
+  cursor:pointer;transition:.15s;white-space:nowrap;flex:0 0 auto;font-family:inherit}
 .tchip:hover{border-color:var(--ink);color:var(--ink)}
 .tchip.run{background:color-mix(in srgb,#E5484D 12%,transparent);color:var(--red);
   border-color:color-mix(in srgb,#E5484D 35%,transparent)}
 .due{font:600 11px 'Golos Text';padding:3px 9px;border-radius:99px;
-  background:var(--soft);color:var(--mut);white-space:nowrap;display:inline-block;margin-left:auto}
+  background:var(--soft);color:var(--mut);white-space:nowrap;display:inline-block;flex:0 0 auto;
+  border:0;cursor:pointer;font-family:inherit;transition:.15s}
+.due:hover{background:var(--line)}
 .due.warn{background:color-mix(in srgb,#E8930C 16%,transparent);color:#D97706}
 .due.bad{background:color-mix(in srgb,#E5484D 15%,transparent);color:var(--red);animation:alarm 1.6s infinite}
 @keyframes alarm{50%{background:color-mix(in srgb,#E5484D 26%,transparent)}}
 
+/* quick dropdown on card */
+.qdd{position:absolute;z-index:30;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;box-shadow:var(--sh-md);padding:4px;min-width:180px;max-width:240px;
+  animation:mpop .15s}
+.qdd button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;background:transparent;
+  color:var(--ink);font:500 12px 'Golos Text';border-radius:6px;cursor:pointer;text-align:left;transition:.12s;
+  font-family:inherit;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.qdd button:hover{background:var(--soft2)}
+.qdd button.on{background:var(--soft);font-weight:600}
+.qdd .sep{height:1px;background:var(--line2);margin:4px 0}
+
 /* list view */
 .ltab{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
-  overflow-x:auto;animation:rise .4s both;margin-bottom:20px;}
-.lrow{display:grid;grid-template-columns:30px minmax(250px,2.4fr) 112px 132px 112px 158px 168px;gap:10px;
+  overflow-x:auto;animation:rise .4s both}
+.lrow{display:grid;grid-template-columns:minmax(250px,2.4fr) 112px 132px 112px 158px 168px;gap:10px;
   align-items:center;padding:11px 16px;border-bottom:1px solid var(--line2);cursor:pointer;
-  transition:background .15s;min-width:1020px;animation:fade .35s both}
+  transition:background .15s;min-width:980px;animation:fade .35s both}
 .lrow:hover{background:var(--soft2)}
 .lrow:last-child{border-bottom:0}
-.lrow.sel{background:var(--soft2)}
 .lrow.lhead{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.12em;color:var(--mut);
   cursor:default;background:var(--field)}
 .lrow.lhead:hover{background:var(--field)}
 .lrow.done .lt{color:var(--mut);text-decoration:line-through}
 .lmain{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.lmain .pr{margin-top:3px}
 .lt{font:600 13.5px/1.3 'Golos Text';display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ld{font-size:11px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
-.lwho{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut)}
-.lprog{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lwho{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut);min-width:0;overflow:hidden}
+.lprog{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.lcol-sel{position:relative;display:inline-block}
+.lcol-sel select{appearance:none;-webkit-appearance:none;border:1px solid var(--line);border-radius:9px;
+  padding:6px 26px 6px 24px;font:600 11.5px 'Golos Text';cursor:pointer;background:var(--card);color:var(--ink);outline:none;transition:.15s}
+.lcol-sel select:hover{border-color:var(--ink)}
+.lcol-sel .dot{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none}
+.lcol-sel::after{content:'▾';position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  font-size:9px;color:var(--mut);pointer-events:none}
 
-/* projects */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;
-  box-shadow:var(--sh-sm);animation:rise .4s both;cursor:pointer;transition:.2s}
-.pcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
-.ptop{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.ptop .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff}
-.pcard h3{font:700 16px 'Unbounded'}
-.pcard p{color:var(--mut);font-size:12px;line-height:1.5;margin-bottom:14px}
-.pbar{display:flex;align-items:center;gap:10px;font:600 11px 'Golos Text';color:var(--mut)}
-.pnew{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  border:1.5px dashed var(--dash);border-radius:var(--r);color:var(--mut);cursor:pointer;transition:.2s}
-.pnew:hover{background:var(--soft);color:var(--ink)}
+/* my tasks */
+.mhead{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm);padding:18px 22px;margin-bottom:14px;flex-wrap:wrap;animation:rise .4s both}
+.mhead .ava{box-shadow:0 8px 18px -8px rgba(0,0,0,.4)}
+.mhead h3{font:700 16px 'Unbounded'}
+.mhead small{color:var(--mut);font-size:12px;display:block;margin-top:3px}
+.mstats{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+.mstat{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:96px}
+.mstat b{font:700 20px 'Unbounded';display:block}
+.mstat span{font:600 10px 'Golos Text';text-transform:uppercase;letter-spacing:.12em;color:var(--mut)}
+.mgroup{margin-bottom:18px;animation:rise .45s both}
+.mgt{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mgt h4{font:600 11.5px 'Unbounded';letter-spacing:.06em;text-transform:uppercase}
+.mgt .n{font:700 11px 'Golos Text';background:var(--card);border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:var(--mut)}
+
+/* calendar */
+.cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow:hidden;overflow-x:auto;animation:rise .4s both}
+.cal-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cal-head h3{font:700 17px 'Unbounded'}
+.cal-nav{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--card);cursor:pointer;
+  display:grid;place-items:center;color:var(--mut);transition:.15s}
+.cal-nav:hover{border-color:var(--ink);color:var(--ink);transform:scale(1.06)}
+.cal-cnt{font:600 11.5px 'Golos Text';color:var(--mut);background:var(--soft);padding:5px 11px;border-radius:99px}
+.legend{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px;font:500 11px 'Golos Text';color:var(--mut)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);min-width:680px}
+.cal-dow{padding:9px;text-align:center;font:600 10.5px 'Golos Text';letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--line)}
+.cal-dow.we{color:#C58A6B}
+.cal-cell{min-height:106px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:6px;cursor:pointer;transition:background .15s}
+.cal-cell:nth-child(7n){border-right:0}
+.cal-cell:hover{background:var(--soft2)}
+.cal-cell.wk{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.cal-cell.wk:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.cal-cell.out{opacity:.45}
+.cal-cell .dn{font:600 12px 'Golos Text';width:24px;height:24px;display:grid;place-items:center;
+  border-radius:8px;margin-bottom:2px}
+.cal-cell.today .dn{background:var(--accent);color:#fff;box-shadow:0 4px 10px -4px rgba(255,90,45,.7)}
+.ev{display:flex;border:0;border-left:3px solid;cursor:pointer;font:500 10.5px 'Golos Text';
+  padding:3px 6px;border-radius:6px;margin-top:4px;width:100%;text-align:left;
+  overflow:hidden;white-space:nowrap;transition:.12s}
+.ev b{overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ev:hover{transform:translateX(2px);filter:saturate(1.2)}
+.ev.done{opacity:.55}
+.ev.done b{text-decoration:line-through}
+.more{font:600 10px 'Golos Text';color:var(--mut);margin-top:3px;padding-left:2px}
+
+/* analytics */
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  padding:18px 20px;animation:rise .45s both}
+.panel h4{font:600 12px 'Unbounded';text-transform:uppercase;letter-spacing:.08em;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+.arow{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.arow:last-child{margin-bottom:0}
+.arow .al{width:94px;font:600 12px 'Golos Text';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arow .track{height:8px}
+.arow .av{font:700 12px 'Unbounded';width:26px;text-align:right}
+.pnote{font-size:11px;color:var(--mut);margin-top:12px}
+.drow{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.dleg{display:flex;flex-direction:column;gap:9px}
+.dleg-r{display:flex;align-items:center;gap:8px;font:500 12.5px 'Golos Text'}
+.dleg-r b{margin-left:auto;font:700 12px 'Unbounded';padding-left:18px}
+.bars{display:flex;align-items:flex-end;gap:5px;height:120px;padding-top:6px}
+.bars i{flex:1;border-radius:4px 4px 2px 2px;background:var(--green);opacity:.92;
+  transition:height .6s cubic-bezier(.2,.7,.3,1)}
+.bars i.z{background:var(--track)}
+.blabels{display:flex;justify-content:space-between;font:600 10.5px 'Golos Text';color:var(--mut);margin-top:8px}
+
+/* files */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;
+  flex-direction:column;gap:10px;box-shadow:var(--sh-sm);transition:.18s;animation:pop .4s both;cursor:pointer}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+.ftop{display:flex;gap:11px;align-items:center}
+.ftile{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font:700 10px 'Golos Text';color:#fff;letter-spacing:.06em;flex:0 0 auto}
+.fname{font:600 12.5px/1.35 'Golos Text';word-break:break-word}
+.fmeta{font-size:11px;color:var(--mut);margin-top:3px;display:flex;align-items:center;gap:5px}
+.ftags{display:flex;gap:6px;flex-wrap:wrap}
+.ftag{font:600 10px 'Golos Text';padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--mut)}
+.flink{display:inline-flex;align-items:center;gap:6px;font:600 11px 'Golos Text';color:var(--blue);
+  background:color-mix(in srgb,#2E6BFF 12%,transparent);padding:6px 10px;border-radius:8px;cursor:pointer;
+  border:0;transition:.15s;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.flink:hover{background:color-mix(in srgb,#2E6BFF 19%,transparent);transform:translateX(2px)}
+.uprog{display:flex;align-items:center;gap:10px;height:42px;background:var(--card);border:1px solid var(--line);
+  border-radius:11px;padding:0 14px;box-shadow:var(--sh-sm)}
+.uprog .track{width:130px;height:6px}
+.uprog .track i{background:var(--accent)}
+.uprog b{font:700 11px 'Unbounded';width:38px}
+
+/* templates view */
+.tplgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tplcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px;
+  box-shadow:var(--sh-sm);transition:.18s;animation:pop .4s both;cursor:pointer;
+  display:flex;flex-direction:column;gap:10px}
+.tplcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:var(--accent)}
+.tplcard h5{font:600 14px 'Golos Text';margin:0}
+.tplcard p{font:500 12px 'Golos Text';color:var(--mut);line-height:1.4;margin:0}
+.tplcard .tplmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tplcard .tplactions{display:flex;gap:8px;margin-top:auto}
+
+/* feed */
+.feed{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow:hidden;animation:rise .4s both}
+.fday{padding:10px 18px 8px;font:600 10.5px 'Golos Text';letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mut);background:var(--soft2);border-bottom:1px solid var(--line);border-top:1px solid var(--line)}
+.fitem{display:flex;gap:12px;align-items:flex-start;padding:12px 18px;border-bottom:1px solid var(--line2);animation:fade .35s both}
+.fitem:last-child{border-bottom:0}
+.fic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;flex:0 0 auto}
+.fitem p{font-size:13px;line-height:1.45;padding-top:4px;min-width:0;flex:1;word-break:break-word}
+.fitem time{margin-left:auto;font:500 11px 'Golos Text';color:var(--mut);white-space:nowrap;padding-top:6px;flex:0 0 auto}
 
 /* admin */
-.apanel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
-  padding:20px;margin-bottom:20px;animation:rise .45s both}
-.apanel h4{display:flex;align-items:center;gap:8px;font:700 14px 'Unbounded';margin-bottom:16px}
-.arow2{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;transition:.15s}
+.apanel h4{display:flex;align-items:center;gap:8px}
+.arow2{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;transition:.15s;min-width:0}
 .arow2:hover{background:var(--soft2)}
-.aname{font:600 13px 'Golos Text';display:flex;align-items:center;gap:7px}
+.aname{font:600 13px 'Golos Text';display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .asub{font-size:11px;color:var(--mut)}
 .ibtn{border:0;background:transparent;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
-  cursor:pointer;color:var(--mut);transition:.15s}
+  cursor:pointer;color:var(--mut);transition:.15s;flex:0 0 auto}
 .ibtn:hover{background:color-mix(in srgb,#E5484D 14%,transparent);color:var(--red)}
 .rolesel{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:600 11px 'Golos Text';
-  background:var(--card);color:var(--ink);cursor:pointer;outline:none;margin-left:auto}
+  background:var(--card);color:var(--ink);cursor:pointer;outline:none;margin-left:auto;flex:0 0 auto}
 .aadd{display:flex;gap:8px;margin-top:12px}
 .aadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
   font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;min-width:0;color:var(--ink)}
+.aadd input:focus{border-color:var(--ink)}
 .swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .sw{width:26px;height:26px;border-radius:9px;cursor:pointer;border:2.5px solid transparent;transition:.15s}
 .sw:hover{transform:scale(1.1)}
 .sw.on{border-color:var(--ink);transform:scale(1.12)}
 .you{font:600 9.5px 'Golos Text';background:color-mix(in srgb,#0FA36B 16%,transparent);color:var(--green);
-  padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em}
+  padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em;flex:0 0 auto}
+.alogin{display:flex;gap:10px;flex-wrap:wrap}
+.alogin button{display:flex;flex-direction:column;align-items:center;gap:7px;border:1.5px solid var(--line);
+  background:var(--card);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s;
+  font:600 11.5px 'Golos Text';color:var(--mut)}
+.alogin button:hover{border-color:var(--ink);transform:translateY(-2px)}
+.alogin button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--ink)}
+.adata{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px}
+.adata div{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.adata b{font:700 17px 'Unbounded';color:var(--ink);display:block;letter-spacing:0}
+.abtns{display:flex;gap:10px;flex-wrap:wrap}
+.mtext{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.5}
 
 /* lock */
 .lock{max-width:540px;margin:40px auto;text-align:center;background:var(--card);border:1px solid var(--line);
@@ -277,6 +510,7 @@ h1 em{font-style:normal;color:var(--accent)}
   color:var(--red);display:grid;place-items:center;margin:0 auto 16px}
 .lock h3{font:700 18px 'Unbounded';margin-bottom:9px}
 .lock p{color:var(--mut);font-size:13px;line-height:1.6}
+.lockadmins{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
 
 /* modal */
 .overlay{position:fixed;inset:0;background:rgba(10,15,12,.55);display:grid;place-items:center;
@@ -284,12 +518,15 @@ h1 em{font-style:normal;color:var(--accent)}
 .modal{background:var(--card);border-radius:16px;width:min(700px,100%);max-height:92vh;overflow:auto;
   padding:22px 24px;box-shadow:0 34px 70px -24px rgba(0,0,0,.55);position:relative;
   animation:mpop .28s cubic-bezier(.2,.9,.3,1.15)}
+.modal.sm{width:min(460px,100%)}
+@keyframes mpop{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.modal h3{font:700 16px 'Unbounded';margin-bottom:4px}
 .mclose{position:absolute;top:16px;right:16px;border:0;background:var(--soft);width:32px;height:32px;
   border-radius:9px;cursor:pointer;color:var(--mut);display:grid;place-items:center;transition:.15s}
 .mclose:hover{background:var(--ink);color:var(--paper)}
 .f label{display:block;font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;
   color:var(--mut);margin:14px 0 6px}
-.f input[type=text],.f input[type=date],.f textarea,.f select{width:100%;border:1px solid var(--line);
+.f input[type=text],.f textarea,.f select,.f input[type=date]{width:100%;border:1px solid var(--line);
   border-radius:10px;padding:10px 12px;font:500 14px 'Golos Text';color:var(--ink);background:var(--field);
   outline:none;transition:.15s;font-family:inherit}
 .f input:focus,.f textarea:focus,.f select:focus{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
@@ -298,7 +535,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .mcols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
 .chipsel{display:flex;flex-wrap:wrap;gap:6px}
 .chipsel button{border:1.5px solid var(--line);background:var(--card);color:var(--mut);font:600 12px 'Golos Text';
-  padding:7px 13px;border-radius:99px;cursor:pointer;transition:.15s}
+  padding:7px 13px;border-radius:99px;cursor:pointer;transition:.15s;font-family:inherit}
 .chipsel button:hover{border-color:var(--ink);color:var(--ink)}
 .avasel{display:flex;gap:8px;flex-wrap:wrap}
 .avasel button{width:36px;height:36px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;
@@ -306,6 +543,20 @@ h1 em{font-style:normal;color:var(--accent)}
 .avasel button:hover{transform:translateY(-2px)}
 .avasel button.on{border-color:var(--ink);transform:scale(1.1)}
 .mfoot{display:flex;gap:10px;margin-top:22px;align-items:center}
+
+/* task types selector (in modal) */
+.ttbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px;
+  background:var(--field);align-items:center;min-height:42px}
+.ttbox .ttype{max-width:240px}
+.ttbox .ttype button{border:0;background:rgba(255,255,255,.3);border-radius:50%;width:14px;height:14px;
+  display:grid;place-items:center;cursor:pointer;color:#fff;margin-left:4px;transition:.12s;flex:0 0 auto}
+.ttbox .ttype button:hover{background:rgba(0,0,0,.3)}
+.ttadd{display:flex;gap:4px;align-items:center}
+.ttadd input{flex:1;border:0;background:transparent;outline:none;font:500 13px 'Golos Text';
+  color:var(--ink);min-width:110px;padding:3px 4px}
+.ttadd input::placeholder{color:var(--mut)}
+
+/* tagbox (legacy tags) */
 .tagbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px;
   background:var(--field);align-items:center}
 .tagbox input{flex:1;min-width:110px;border:0;background:none;outline:none;font:500 13px 'Golos Text';color:var(--ink)}
@@ -314,6 +565,9 @@ h1 em{font-style:normal;color:var(--accent)}
 .tagchip button{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;
   padding:2px;border-radius:50%;transition:.12s}
 .tagchip button:hover{color:var(--red)}
+.tblock{margin-top:16px;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.trow{display:flex;align-items:center;gap:12px;margin-top:4px;flex-wrap:wrap}
+.ttime{font:600 22px 'Unbounded';font-variant-numeric:tabular-nums;min-width:104px}
 .ck{display:flex;align-items:center;gap:8px;padding:6px 5px;border-radius:8px;transition:background .15s}
 .ck:hover{background:var(--soft2)}
 .ck input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
@@ -325,20 +579,68 @@ h1 em{font-style:normal;color:var(--accent)}
 .ck .rm:hover{color:var(--red);background:color-mix(in srgb,#E5484D 14%,transparent)}
 .ckadd input{width:100%;border:1px dashed var(--dash);border-radius:10px;padding:9px 12px;
   font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;color:var(--ink)}
+.ckadd input:focus{border-color:var(--ink);border-style:solid}
+.cmts{max-height:236px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
+.cmt{display:flex;gap:8px;animation:fade .3s both}
+.cmt .b{background:var(--soft);border-radius:10px;padding:7px 11px;flex:1;min-width:0}
+.cmt .b small{display:block;color:var(--mut);font-size:10.5px;margin-bottom:2px}
+.cmt .b p{font-size:12.5px;line-height:1.45;word-break:break-word}
+.cempty{font-size:12px;color:var(--mut);padding:14px 0}
+.cinput{display:flex;gap:8px;margin-top:10px}
+.cinput input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);color:var(--ink)}
+.cinput input:focus{border-color:var(--ink)}
+.csend{width:38px;height:38px;border-radius:10px;border:0;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;cursor:pointer;transition:.15s;flex:0 0 auto}
+.csend:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
 
-/* dock & toasts */
-.timer-dock{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:12px;
-  align-items:center;background:var(--side);color:var(--side-t);padding:10px 20px;border-radius:99px;
-  box-shadow:var(--sh-md);border:1px solid rgba(255,255,255,0.1);z-index:60;animation:tin .3s}
-.toasts{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:70;pointer-events:none}
-.toast{background:var(--ink);color:var(--paper);font:600 12.5px 'Golos Text';padding:10px 16px;border-radius:12px;
-  box-shadow:var(--sh-md);animation:tin .3s;display:flex;gap:9px;align-items:center;pointer-events:auto}
+/* card settings modal */
+.csrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--line2)}
+.csrow:last-child{border-bottom:0}
+.csrow .csi{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.csrow .csi .ic{width:30px;height:30px;border-radius:8px;background:var(--soft);display:grid;place-items:center;
+  color:var(--ink);flex:0 0 auto}
+.csrow .csi .lb{font:600 13px 'Golos Text'}
+.csrow .csi .sb{font:500 11px 'Golos Text';color:var(--mut);margin-top:2px}
+.sw2{position:relative;width:38px;height:22px;background:var(--line);border-radius:99px;cursor:pointer;
+  transition:.2s;flex:0 0 auto;border:0}
+.sw2.on{background:var(--accent)}
+.sw2::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;
+  border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw2.on::after{left:18px}
+
+/* command palette */
+.cmd{background:var(--card);border-radius:14px;width:min(600px,100%);max-height:70vh;overflow:auto;
+  box-shadow:0 34px 70px -24px rgba(0,0,0,.55);padding:0;animation:mpop .22s}
+.cmd-in{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line2)}
+.cmd-in input{border:0;outline:0;background:transparent;font:500 15px 'Golos Text';color:var(--ink);flex:1}
+.cmd-list{max-height:420px;overflow:auto}
+.cmd-item{display:flex;align-items:center;gap:12px;padding:10px 18px;cursor:pointer;transition:.12s}
+.cmd-item:hover,.cmd-item.hl{background:var(--soft2)}
+.cmd-item .ci-ic{width:28px;height:28px;border-radius:7px;background:var(--soft);display:grid;place-items:center;
+  color:var(--ink);flex:0 0 auto}
+.cmd-item .ci-t{font:600 13px 'Golos Text';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd-item .ci-s{font:500 11px 'Golos Text';color:var(--mut);flex:0 0 auto}
+
+/* toasts */
+.toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+  gap:8px;z-index:60;align-items:center;pointer-events:none}
+.toast{background:#141B17;color:#fff;font:600 12.5px 'Golos Text';padding:10px 16px;border-radius:99px;
+  box-shadow:var(--sh-md);animation:tin .3s;display:flex;gap:9px;align-items:center;pointer-events:auto;max-width:90vw}
+.toast .tdot{width:8px;height:8px;border-radius:50%;background:#3DDC84;flex:0 0 auto}
+.toast.warn .tdot{background:var(--amber)}
+@keyframes tin{from{opacity:0;transform:translateY(14px)}}
+.tact{border:0;background:rgba(255,255,255,.16);color:#fff;font:700 11.5px 'Golos Text';
+  padding:4px 11px;border-radius:99px;cursor:pointer;transition:.15s}
+.tact:hover{background:var(--accent)}
 .nothing{margin-top:16px;padding:54px 20px;text-align:center;color:var(--mut);background:var(--colbg);
   border:1.5px dashed var(--dash);border-radius:var(--r)}
 .nothing b{font:700 16px 'Unbounded';display:block;color:var(--ink);margin-bottom:6px}
 
 @media(max-width:1040px){.side{display:none}.main{padding:20px 16px 40px}}
-@media(max-width:720px){.frow,.frow3,.mcols{grid-template-columns:1fr}}
+@media(max-width:980px){.agrid{grid-template-columns:1fr}.legend{display:none}}
+@media(max-width:720px){.stat{flex:1 1 46%;border-bottom:1px solid var(--line)}.frow,.frow3,.mcols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -354,7 +656,237 @@ const Ctx = createContext(null);
 const useCtx = () => useContext(Ctx);
 const cmix = (c,p) => `color-mix(in srgb, ${c} ${p}%, transparent)`;
 
-/* ================= Иконки (из Код 2 + недостающие из Код 1) ================= */
+/* ================= даты ================= */
+const DAY = 864e5;
+const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = n => { const d=today(); d.setDate(d.getDate()+n); return d; };
+const pdate = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmt = d => new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(d).replace('.','');
+const fmtL = d => new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(d);
+const fmtT = ts => new Intl.DateTimeFormat('ru-RU',{hour:'2-digit',minute:'2-digit'}).format(new Date(ts));
+const daysLeft = s => Math.round((pdate(s)-today())/DAY);
+const fmtDur = s => {
+  s=Math.max(0,Math.floor(s));
+  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
+  return h>0?`${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`:`${m}:${String(ss).padStart(2,'0')}`;
+};
+const elapsed = (t,now) => t.time ? t.time.s + (t.time.run ? Math.floor((now-t.time.run)/1000) : 0) : 0;
+
+/* ================= доски и статусы ================= */
+const BOARD_COLS = {
+  main:[
+    {id:'backlog', t:'Бэклог',           c:'#98A29B'},
+    {id:'progress',t:'В работе',         c:'#2E6BFF'},
+    {id:'review',  t:'На согласовании',  c:'#FF8A00'},
+    {id:'done',    t:'Готово',           c:'#0FA36B'},
+  ],
+  photo:[
+    {id:'p_future',t:'Съёмки на будущее',      c:'#0EA5C6'},
+    {id:'p_shoot', t:'В процессе съёмки',      c:'#F0447E'},
+    {id:'p_queue', t:'В очереди на обработку', c:'#98A29B'},
+    {id:'p_edit',  t:'В обработке',            c:'#FF8A00'},
+    {id:'p_done',  t:'Готово',                 c:'#0FA36B'},
+  ],
+  video:[
+    {id:'v_future',t:'Съёмки на будущее',      c:'#0EA5C6'},
+    {id:'v_shoot', t:'В процессе съёмки',      c:'#F0447E'},
+    {id:'v_queue', t:'В очереди на обработку', c:'#98A29B'},
+    {id:'v_edit',  t:'В обработке',            c:'#FF8A00'},
+    {id:'v_done',  t:'Готово',                 c:'#0FA36B'},
+  ],
+};
+const BOARDS = {
+  main: {title:'Основная', short:'Доска', bc:'#2E6BFF', soft:'#E0E9FF', text:'#1E4FD6'},
+  photo:{title:'Фото',     short:'Фото',  bc:'#F0447E', soft:'#FCE0EB', text:'#A81448'},
+  video:{title:'Видео',    short:'Видео', bc:'#8B5CF6', soft:'#ECE4FD', text:'#6A34E0'},
+};
+const colsOf = b => BOARD_COLS[b||'main']||BOARD_COLS.main;
+const doneCol = b => { const cs=colsOf(b); return cs[cs.length-1].id; };
+const isDone = t => t.col===doneCol(t.board||'main');
+const colMeta = t => colsOf(t.board||'main').find(c=>c.id===t.col)||{t:'?',c:'#98A29B'};
+const DAY_BUCKETS = [
+  {id:'over',    t:'Просрочено', c:'#E5484D'},
+  {id:'today',   t:'Сегодня',    c:'#FF5A2D'},
+  {id:'tomorrow',t:'Завтра',     c:'#E8930C'},
+  {id:'week',    t:'Эта неделя', c:'#2E6BFF'},
+  {id:'later',   t:'Позже',      c:'#98A29B'},
+  {id:'done',    t:'Готово',     c:'#0FA36B'},
+];
+const bucketOf = t => {
+  if(isDone(t)) return 'done';
+  const dl=daysLeft(t.due);
+  if(dl<0) return 'over';
+  if(dl===0) return 'today';
+  if(dl===1) return 'tomorrow';
+  if(dl<=7) return 'week';
+  return 'later';
+};
+
+/* ================= справочники ================= */
+const DEFAULT_CHANNELS = {
+  smm:      {label:'SMM',        c:'#F0447E'},
+  perf:     {label:'Перформанс', c:'#FF8A00'},
+  email:    {label:'Email',      c:'#2E6BFF'},
+  content:  {label:'Контент',    c:'#0FA36B'},
+  design:   {label:'Дизайн',     c:'#8B5CF6'},
+  analytics:{label:'Аналитика',  c:'#0EA5C6'},
+};
+const DEFAULT_MEMBERS = {
+  ak:{name:'Аня Ковалёва', short:'Аня К.',  ini:'АК', c:'#FF5A2D', role:'admin'},
+  ml:{name:'Марк Ли',      short:'Марк Л.', ini:'МЛ', c:'#2E6BFF', role:'member'},
+  sr:{name:'Соня Рай',     short:'Соня Р.', ini:'СР', c:'#0FA36B', role:'member'},
+  tb:{name:'Тимур Бек',    short:'Тимур Б.',ini:'ТБ', c:'#8B5CF6', role:'member'},
+  lv:{name:'Лера Ветер',   short:'Лера В.', ini:'ЛВ', c:'#F0447E', role:'member'},
+};
+/* Проекты */
+const DEFAULT_PROJECTS = {
+  'pr1':{name:'Летняя кампания',   c:'#FF5A2D', goal:'+30% регистраций на вебинар', archived:false},
+  'pr2':{name:'Ребрендинг',        c:'#8B5CF6', goal:'Обновить визуальные гайдлайны', archived:false},
+  'pr3':{name:'Операционка',       c:'#0FA36B', goal:'Поддержка текущих активностей', archived:false},
+  'pr4':{name:'Запуск продукта X', c:'#0EA5C6', goal:'Вывести на рынок в сентябре', archived:false},
+};
+/* Типы задач */
+const DEFAULT_TASK_TYPES = {
+  'creative':  {label:'Креатив',      c:'#F0447E'},
+  'analytics': {label:'Аналитика',    c:'#0EA5C6'},
+  'production':{label:'Продакшн',     c:'#FF8A00'},
+  'admin':     {label:'Админка',      c:'#98A29B'},
+  'research':  {label:'Исследование', c:'#8B5CF6'},
+  'launch':    {label:'Запуск',       c:'#FF5A2D'},
+  'report':    {label:'Отчёт',        c:'#5BA26B'},
+};
+/* Шаблоны */
+const DEFAULT_TEMPLATES = [
+  {id:'tpl1',name:'SMM-пост',desc:'Шаблон поста для соцсетей',
+    data:{board:'main',ch:'smm',pr:'mid',types:['creative'],
+      sub:[{t:'Написать текст',done:false},{t:'Подобрать визуал',done:false},{t:'Согласовать',done:false}],
+      tags:['соцсети']}},
+  {id:'tpl2',name:'Еженедельный отчёт',desc:'Шаблон отчёта по каналам',
+    data:{board:'main',ch:'analytics',pr:'mid',types:['report','analytics'],
+      sub:[{t:'Собрать данные',done:false},{t:'Проанализировать',done:false},{t:'Оформить выводы',done:false}],
+      repeat:'weekly'}},
+  {id:'tpl3',name:'Запуск таргета',desc:'Полный цикл рекламной кампании',
+    data:{board:'main',ch:'perf',pr:'high',types:['launch','analytics'],
+      sub:[{t:'Сегменты аудитории',done:false},{t:'Креативы',done:false},{t:'Настройка в кабинете',done:false},{t:'Запуск и мониторинг',done:false}]}},
+];
+const DEFAULT_SPRINT = {name:'Запуск летней кампании', start:iso(addDays(-8)), end:iso(addDays(6))};
+const DEFAULT_CARD_FIELDS = {
+  channel:true, assignee:true, priority:true, due:true, subtasks:true,
+  comments:true, timer:true, types:true, project:true, desc:true
+};
+const PR = {
+  high:{label:'высокий', arrow:'▲', c:'#E5484D'},
+  mid: {label:'средний', arrow:'●', c:'#E8930C'},
+  low: {label:'низкий',  arrow:'▽', c:'#5BA26B'},
+};
+const PRW = {high:3, mid:2, low:1};
+const REPEAT = {
+  none:    {l:'Без повтора'},
+  daily:   {l:'Каждый день',    short:'день', d:1},
+  weekly:  {l:'Каждую неделю',  short:'нед',  d:7},
+  biweekly:{l:'Раз в 2 недели', short:'2 нед',d:14},
+  monthly: {l:'Каждый месяц',   short:'мес',  m:1},
+};
+const nextDue = (dueISO,kind) => {
+  const r=REPEAT[kind]; if(!r) return dueISO;
+  const nd=pdate(dueISO);
+  const step=()=>{ if(r.m) nd.setMonth(nd.getMonth()+1); else nd.setDate(nd.getDate()+r.d); };
+  step(); while(nd<=today()) step();
+  return iso(nd);
+};
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const DUE_OPTS = [['all','Все даты'],['today','Сегодня'],['soon','Ближайшие 3 дня'],['week','Эта неделя'],['over','Просрочено']];
+
+/* ================= демо-данные ================= */
+let _id = 1;
+const S = (arr,done=0)=>arr.map((t,i)=>({t,done:i<done}));
+const C = (who,h,text)=>({who,ts:Date.now()-h*36e5,text});
+const T = (col,title,desc,ch,who,pr,due,x={}) =>
+  ({id:_id++, board:x.board||'main', col, title, desc, ch, who, pr, due:iso(addDays(due)),
+    sub:x.sub||[], coms:x.coms||[], types:x.types||[], tags:x.tags||[], repeat:x.repeat||'none',
+    time:x.time||null, project:x.project||'pr3', pinned:x.pinned||false, fav:x.fav||false});
+
+const SEED = [
+  /* основная доска */
+  T('backlog','Гайд по оформлению кейсов','Единая сетка, обложки и шаблон цитат для страницы клиентов','design','tb','mid',6,{sub:S(['Сетка и шаблоны','Примеры цитат'],0),types:['creative','production'],tags:['гайд','кейсы'],project:'pr2'}),
+  T('backlog','Семантика для поисковой кампании','Собрать ядро и кластеры под новую категорию','analytics','ml','mid',8,{types:['analytics','research'],tags:['seo'],project:'pr1'}),
+  T('backlog','Подкаст с клиентом: структура','Список вопросов, хронометраж, обложка выпуска','content','sr','low',10,{types:['creative'],tags:['подкаст'],project:'pr4'}),
+  T('backlog','Ретаргетинг: сегменты','Сегменты аудитории и отдельные креативы под каждый','perf','ml','high',4,{sub:S(['Сегменты','Креативы','Офферы'],0),types:['analytics','launch'],tags:['таргет'],project:'pr1'}),
+  T('progress','Рилс к запуску коллекции','3 сцены + титры, до 20 секунд, вертикаль 9:16','smm','lv','high',1,{sub:S(['Сценарий','Раскадровка','Съёмка','Монтаж'],2),coms:[C('lv',5,'Залила черновик, гляньте тайминг'),C('ak',3,'Вторая сцена длинная — сокращаем')],types:['production','creative'],tags:['запуск','видео'],project:'pr1',pinned:true}),
+  T('progress','Email-цепочка к вебинару','4 письма: анонс, польза, напоминание, догон','email','ak','high',2,{sub:S(['Анонс','Польза','Напоминание','Догон','Вёрстка'],3),coms:[C('ml',8,'Тема второго письма: «3 ошибки в рассылках» — ок?'),C('ak',6,'Да, ставлю в план')],types:['creative'],tags:['вебинар','рассылка'],project:'pr1'}),
+  T('progress','Лендинг акции −20%','Первый экран + блок преимуществ, адаптив','design','tb','high',0,{sub:S(['Первый экран','Преимущества','Адаптив'],1),types:['production','creative'],tags:['акция','лендинг'],project:'pr1',fav:true}),
+  T('progress','Дьюти-пост в телеграме','Пост дня по контент-плану, чередование рубрик','smm','ak','mid',0,{repeat:'daily',types:['creative'],tags:['соцсети'],project:'pr3'}),
+  T('progress','Медиаплан на август','Прогноз бюджета по каналам, цели по CPL','perf','ml','mid',3,{coms:[C('ml',26,'Жду лимиты бюджета от финансов')],types:['analytics','report'],tags:['бюджет'],project:'pr1'}),
+  T('review','Креативы таргета: сет A/B','6 статик + 2 видео, форматы сторис и ленты','design','lv','high',1,{coms:[C('lv',12,'Сет А в папке, сет Б доснимаем'),C('lv',2,'Готово, обе версии в файлах')],types:['creative','production'],tags:['креативы','ab-тест'],project:'pr1'}),
+  T('review','Еженедельная сводка по каналам','Короткий отчёт команде по пятницам','analytics','ml','mid',2,{repeat:'weekly',types:['report','analytics'],tags:['отчет'],project:'pr3'}),
+  T('review','Отчёт по CPL за июнь','Сводка по каналам + выводы и план на июль','analytics','tb','low',-1,{coms:[C('tb',30,'Сводка готова, дописываю выводы'),C('ak',24,'Приоритизируй, пожалуйста, — дедлайн был вчера')],types:['report','analytics'],tags:['отчет'],project:'pr1'}),
+  T('done','Анонс вебинара в телеграме','Пост + кружок, посев по партнёрам','smm','ak','mid',-2,{coms:[C('ml',50,'+124 регистрации, отлично зашло')],types:['creative','launch'],tags:['вебинар'],project:'pr1'}),
+  T('done','Пиксель на новом лендинге','Установка, проверка событий, тест конверсий','perf','ml','high',-1,{types:['production','analytics'],tags:['лендинг'],project:'pr1'}),
+  T('done','Иллюстрации для статьи в блог','4 разворота в фирменном стиле','design','sr','mid',-3,{types:['creative','production'],tags:['блог'],project:'pr2'}),
+  /* доска фото */
+  T('p_future','Пакшоты новой линейки','Белый фон + лайфстайл, 18 SKU','design','tb','mid',5,{board:'photo',types:['production'],tags:['каталог'],project:'pr1'}),
+  T('p_future','Имиджи для осенней кампании','Мудборд собран, ждём локации','smm','lv','low',9,{board:'photo',types:['creative','research'],tags:['имидж'],project:'pr1'}),
+  T('p_shoot','Лукбук: съёмка на локации','2 образа уже отсняты, осталось 4','smm','lv','high',1,{board:'photo',coms:[C('lv',4,'Свет выставили, начинаем')],types:['production'],tags:['съемка','лукбук'],project:'pr1'}),
+  T('p_queue','Каталог: пересъёмка 12 артикулов','Брак по цвету на прошлой съёмке','content','sr','mid',2,{board:'photo',types:['production'],tags:['каталог'],project:'pr1'}),
+  T('p_edit','Отбор и ретушь репортажа','≈300 кадров, отдать 40','design','tb','high',0,{board:'photo',sub:S(['Отбор','Цветокор','Ретушь'],1),time:{s:2715,run:null},types:['production'],tags:['репортаж'],project:'pr3'}),
+  T('p_done','Тестовая съёмка с блогером','Материал согласован, исходники в архиве','smm','ak','mid',-1,{board:'photo',types:['production'],tags:['съемка'],project:'pr1'}),
+  /* доска видео */
+  T('v_future','Интервью с основателем','Вопросы готовы, ищем студию','content','sr','mid',7,{board:'video',types:['creative','production'],tags:['интервью'],project:'pr4'}),
+  T('v_future','Бэкстейдж осенней съёмки','Снять параллельно с фотоднём','smm','lv','low',10,{board:'video',types:['production'],tags:['бэкстейдж'],project:'pr1'}),
+  T('v_shoot','Рилс: съёмка бэкстейджа','Вертикаль, без звука, титры потом','smm','lv','high',1,{board:'video',types:['production'],tags:['рилс'],project:'pr1'}),
+  T('v_queue','Обзор продукта: исходники в монтаж','46 минут сырого материала','content','ak','mid',2,{board:'video',types:['production'],tags:['обзор'],project:'pr4'}),
+  T('v_edit','Видео-креатив 15 сек','Финальный монтаж под таргет','perf','ml','high',0,{board:'video',sub:S(['Черновой монтаж','Титры','Цветокор','Экспорт'],2),time:{s:1240,run:Date.now()-1520000},types:['production','creative'],tags:['креативы'],project:'pr1'}),
+  T('v_done','Тизер мастер-класса','Отдан в публикацию','smm','sr','mid',-2,{board:'video',types:['production','launch'],tags:['тизер'],project:'pr1'}),
+];
+const SEED_LOG = [
+  {id:'e1',ts:Date.now()-2*36e5, type:'comment',text:'Лера В. — комментарий в «Креативы таргета: сет A/B»'},
+  {id:'e2',ts:Date.now()-4*36e5, type:'edit',   text:'Изменена «Лендинг акции −20%»'},
+  {id:'e3',ts:Date.now()-7*36e5, type:'done',   text:'«Пиксель на новом лендинге» — готово'},
+  {id:'e4',ts:Date.now()-9*36e5, type:'done',   text:'«Тизер мастер-класса» — готово'},
+  {id:'e5',ts:Date.now()-26*36e5,type:'create', text:'Создана «Лукбук: съёмка на локации»'},
+  {id:'e6',ts:Date.now()-30*36e5,type:'comment',text:'Тимур Б. — комментарий в «Отчёт по CPL за июнь»'},
+  {id:'e7',ts:Date.now()-50*36e5,type:'move',   text:'«Email-цепочка к вебинару» → В работе'},
+  {id:'e8',ts:Date.now()-55*36e5,type:'create', text:'Создана «Ретаргетинг: сегменты»'},
+];
+const SEED_FILES = [
+  {id:'f1',name:'Рилс_коллекция_v2.mp4',     type:'mp4',size:'96 МБ',  who:'lv',ts:Date.now()-2*36e5,   types:['creative','production'],task:5},
+  {id:'f2',name:'Креативы_таргет_AB.zip',    type:'zip',size:'24,6 МБ',who:'lv',ts:Date.now()-6*36e5,   types:['creative'],task:10},
+  {id:'f3',name:'Лендинг_акция_макет.fig',   type:'fig',size:'18,2 МБ',who:'tb',ts:Date.now()-4*36e5,   types:['production'],task:7},
+  {id:'f4',name:'Медиаплан_август.xlsx',     type:'xls',size:'1,1 МБ', who:'ml',ts:Date.now()-8*36e5,   types:['analytics','report'],task:9},
+  {id:'f5',name:'Email_цепочка_тексты.docx', type:'doc',size:'84 КБ',  who:'ak',ts:Date.now()-26*36e5,  types:['creative'],task:6},
+  {id:'f6',name:'Отчет_CPL_июнь.xlsx',       type:'xls',size:'640 КБ', who:'tb',ts:Date.now()-28*36e5,  types:['report','analytics'],task:12},
+  {id:'f7',name:'Брендбук_v3.pdf',           type:'pdf',size:'9,8 МБ', who:'tb',ts:Date.now()-9*DAY,    types:['creative']},
+  {id:'f8',name:'Лукбук_исходники.zip',      type:'zip',size:'2,1 ГБ', who:'lv',ts:Date.now()-3*DAY,    types:['production']},
+];
+const FT = {mp4:{c:'#E5484D',l:'MP4'},zip:{c:'#8B5CF6',l:'ZIP'},fig:{c:'#0FA36B',l:'FIG'},
+            doc:{c:'#2E6BFF',l:'DOC'},xls:{c:'#0EA5C6',l:'XLS'},pdf:{c:'#F0447E',l:'PDF'},img:{c:'#FF8A00',l:'IMG'}};
+
+/* ================= persistence ================= */
+const LS_KEY = 'potok-mk-v3';
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return null;
+    const p = JSON.parse(raw);
+    if(!p || !Array.isArray(p.tasks)) return null;
+    return p;
+  }catch(e){ return null; }
+}
+function normTask(t){
+  const b=BOARDS[t.board]?t.board:'main';
+  let col=t.col;
+  if(!colsOf(b).some(c=>c.id===col)) col=colsOf(b)[0].id;
+  let time=t.time||null;
+  if(time&&time.run){
+    time={s:time.s+Math.min(Math.round((Date.now()-time.run)/1000),7200),run:null};
+  }
+  return {...t,board:b,col,types:t.types||[],tags:t.tags||[],repeat:t.repeat||'none',time,
+    project:t.project||null,pinned:!!t.pinned,fav:!!t.fav};
+}
+
+/* ================= иконки ================= */
 const Icon = ({d,size=17,sw=1.8}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
        strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" style={{flex:'0 0 auto'}}>{d}</svg>
@@ -365,513 +897,2108 @@ const IC = {
   list:<path d="M4 6h16M4 12h16M4 18h16"/>,
   camera:<><path d="M3 8.5a2 2 0 0 1 2-2h2.2l1.6-2h6.4l1.6 2H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5z"/><circle cx="12" cy="13" r="3.4"/></>,
   video:<><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.8 6-3.3v9l-6-3.3"/></>,
-  layers:<><path d="M12.8 2.2a2 2 0 0 0-1.6 0L2.6 6.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 0-1.8z"/><path d="M2 12a1 1 0 0 0 .6.9l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 .6-.9"/><path d="M2 17a1 1 0 0 0 .6.9l8.6 3.9a2 2 0 0 0 1.6 0l8.6-3.9a1 1 0 0 0 .6-.9"/></>,
-  target:<><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>,
+  cal:<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></>,
+  chart:<path d="M5 20v-6M11 20V7M17 20v-9M3 20h18"/>,
+  folder:<path d="M3 7a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>,
+  clock:<><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></>,
   user:<><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.6-3.6 4.2-5.2 7.5-5.2s5.9 1.6 7.5 5.2"/></>,
   shield:<path d="M12 3l7 2.8v5.4c0 4.6-3 8.2-7 9.8-4-1.6-7-5.2-7-9.8V5.8L12 3z"/>,
+  bell:<><path d="M18 9a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M10.3 19a2 2 0 0 0 3.4 0"/></>,
+  sun:<><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></>,
+  moon:<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>,
   search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>,
   plus:<path d="M12 5v14M5 12h14"/>,
   play:<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>,
   pause:<path d="M8.5 5.5v13M15.5 5.5v13" strokeWidth="2.6"/>,
   repeat:<><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></>,
+  chat:<path d="M21 12a8 8 0 0 1-8 8H5l-2 2V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/>,
   trash:<path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/>,
+  pen:<path d="M4 20l1-4L17 4l3 3L8 19l-4 1z"/>,
   arrow:<path d="M4 12h15m-6-6 6 6-6 6"/>,
   check:<path d="m5 13 4 4L19 7"/>,
   x:<path d="M6 6l12 12M18 6 6 18"/>,
+  left:<path d="M14 6l-6 6 6 6"/>,
+  right:<path d="M10 6l6 6-6 6"/>,
+  up:<path d="M12 19V6m-6 7 6-6 6 6"/>,
   redo:<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>,
+  pin:<path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z" fill="currentColor"/>,
+  pinOutline:<path d="M12 17v5M9 3h6l-1 6 3 3H7l3-3-1-6z"/>,
+  star:<path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/>,
+  starFill:<path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="currentColor"/>,
+  cog:<><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></>,
+  copy:<><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></>,
+  flag:<path d="M4 22V4a2 2 0 0 1 2-2h10l-2 4 2 4H6" fill="currentColor"/>,
+  flagOutline:<path d="M4 22V4a2 2 0 0 1 2-2h10l-2 4 2 4H6"/>,
+  target:<><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></>,
+  template:<><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></>,
+  bolt:<path d="M13 2 3 14h9l-1 8 10-12h-9z" fill="currentColor"/>,
+  note:<><path d="M9 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z"/><path d="M15 2v6h6"/></>,
+  chevronDown:<path d="m6 9 6 6 6-6"/>,
+};
+const LOG_META = {
+  create:[IC.plus,'#0FA36B'], move:[IC.arrow,'#2E6BFF'], done:[IC.check,'#0FA36B'],
+  del:[IC.trash,'#E5484D'], comment:[IC.chat,'#8B5CF6'], edit:[IC.pen,'#E8930C'],
+  admin:[IC.shield,'#6C7A70'], repeat:[IC.repeat,'#0EA5C6'], timer:[IC.clock,'#E8930C'],
+  pin:[IC.pin,'#E8930C'], fav:[IC.star,'#FF5A2D'],
 };
 
-/* ================= Даты ================= */
-const DAY = 864e5;
-const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
-const addDays = n => { const d=today(); d.setDate(d.getDate()+n); return d; };
-const pdate = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
-const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const fmt = d => new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(d).replace('.','');
-const daysLeft = s => Math.round((pdate(s)-today())/DAY);
-const fmtDur = s => {
-  s=Math.max(0,Math.floor(s));
-  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;
-  return h>0?`${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`:`${m}:${String(ss).padStart(2,'0')}`;
+/* ================= мелкие компоненты ================= */
+const Avatar = ({id,size=24,onClick}) => {
+  const {members} = useCtx();
+  const m = members[id] || {ini:'?',c:'#98A29B',name:'—'};
+  return <span className="ava" title={m.name}
+    onClick={onClick?e=>{e.stopPropagation();onClick(id);}:undefined}
+    style={{width:size,height:size,background:m.c,fontSize:Math.max(7,Math.round(size*.36))}}>{m.ini}</span>;
 };
-const getElapsed = (t,now) => t.elapsed + (t.startedAt ? Math.floor((now-t.startedAt)/1000) : 0);
-
-/* ================= Справочники из Код 1 ================= */
-const BOARDS = {
-  marketing: { id: 'marketing', label: 'Маркетинг', c: '#9980c7', ic: IC.board },
-  photo:     { id: 'photo', label: 'Фото', c: '#69a393', ic: IC.camera },
-  video:     { id: 'video', label: 'Видео', c: '#c6a165', ic: IC.video }
+function useCountUp(to){
+  const [n,setN]=useState(0); const cur=useRef(0);
+  useEffect(()=>{
+    const from=cur.current; let raf; const t0=performance.now();
+    const step=t=>{const p=Math.min(1,(t-t0)/600), e=1-Math.pow(1-p,3);
+      const v=Math.round(from+(to-from)*e); cur.current=v; setN(v);
+      if(p<1) raf=requestAnimationFrame(step);};
+    raf=requestAnimationFrame(step);
+    return ()=>cancelAnimationFrame(raf);
+  },[to]);
+  return n;
+}
+const Stat = ({lbl,n,sub,c,alert}) => {
+  const v = useCountUp(n);
+  return <div className="stat"><div className="lbl">{lbl}</div>
+    <div className="num" style={{color:c}}>{v}</div>
+    <div className="sub">{alert?'⚠ ':''}{sub}</div></div>;
 };
-const STATUSES = {
-  marketing: [
-    {id:'backlog', label:'Бэклог', c:'#b2a2c7'}, {id:'progress', label:'В работе', c:'#b896d8'},
-    {id:'review', label:'На согласовании', c:'#d4b784'}, {id:'done', label:'Готово', c:'#90bfa8'}
-  ],
-  production: [
-    {id:'planned', label:'Съемки на будущее', c:'#b2a2c7'}, {id:'shooting', label:'В процессе съемки', c:'#b896d8'},
-    {id:'queued', label:'В очереди на обработку', c:'#d4b784'}, {id:'editing', label:'В обработке', c:'#9aaad3'},
-    {id:'done', label:'Готово', c:'#90bfa8'}
-  ]
+const Ring = ({pct,size=58}) => {
+  const r=(size-9)/2, c=2*Math.PI*r;
+  return <svg width={size} height={size}>
+    <circle cx={size/2} cy={size/2} r={r} stroke="var(--track)" strokeWidth="7" fill="none"/>
+    <circle cx={size/2} cy={size/2} r={r} stroke="#0FA36B" strokeWidth="7" fill="none" strokeLinecap="round"
+      strokeDasharray={c} strokeDashoffset={c*(1-pct)} transform={`rotate(-90 ${size/2} ${size/2})`}
+      style={{transition:'stroke-dashoffset .8s ease'}}/>
+    <text x="50%" y="53%" dominantBaseline="middle" textAnchor="middle"
+      style={{font:"700 12px 'Unbounded'",fill:'var(--ink)'}}>{Math.round(pct*100)}%</text>
+  </svg>;
 };
-const getStatuses = b => b === 'marketing' ? STATUSES.marketing : STATUSES.production;
-const doneStatusId = 'done';
-const isDone = t => t.status === doneStatusId;
-
-const PRIORITY = {
-  high: { l: 'Высокий', c: '#E5484D', arrow: '▲' },
-  medium: { l: 'Средний', c: '#E8930C', arrow: '●' },
-  low: { l: 'Низкий', c: '#5BA26B', arrow: '▽' }
-};
-const REPEAT = { none:'Без повтора', daily:'Каждый день', weekdays:'По будням', weekly:'Каждую неделю', monthly:'Каждый месяц' };
-const TASK_TYPES_COLORS = ['#8965ce','#518e85','#c68642','#527ea8','#c2607c','#7b8798'];
-const BUCKETS = [
-  {id:'overdue', t:'Просрочено', c:'#E5484D'}, {id:'today', t:'Сегодня', c:'#FF5A2D'},
-  {id:'tomorrow', t:'Завтра', c:'#E8930C'}, {id:'week', t:'На этой неделе', c:'#2E6BFF'},
-  {id:'later', t:'Позже', c:'#98A29B'}, {id:'none', t:'Без срока', c:'#6C7A70'}, {id:'done', t:'Готово', c:'#0FA36B'}
-];
-const bucketOf = t => {
-  if(isDone(t)) return 'done';
-  if(!t.due) return 'none';
+function Bar({pct,c,h=8}){
+  const[w,setW]=useState(0);
+  useEffect(()=>{const t=setTimeout(()=>setW(pct),80);return()=>clearTimeout(t);},[pct]);
+  return <div className="track" style={{height:h}}><i style={{width:w+'%',background:c,transition:'width .7s cubic-bezier(.2,.7,.3,1)'}}/></div>;
+}
+function Donut({data,size=140,thick=18}){
+  const total = data.reduce((s,d)=>s+d.v,0)||1;
+  const r=(size-thick)/2, c=2*Math.PI*r; let acc=0;
+  return <svg width={size} height={size}>
+    {data.map((d,i)=>{
+      const frac=d.v/total, len=Math.max(frac*c-2,1.5), off=-acc*c; acc+=frac;
+      return <circle key={i} cx={size/2} cy={size/2} r={r} fill="none" stroke={d.c} strokeWidth={thick}
+        strokeDasharray={`${len} ${c}`} strokeDashoffset={off} transform={`rotate(-90 ${size/2} ${size/2})`}
+        style={{transition:'stroke-dasharray .6s'}}/>;
+    })}
+    <text x="50%" y="48%" dominantBaseline="middle" textAnchor="middle" style={{font:"700 20px 'Unbounded'",fill:'var(--ink)'}}>{total}</text>
+    <text x="50%" y="63%" dominantBaseline="middle" textAnchor="middle" style={{font:"500 9px 'Golos Text'",fill:'var(--mut)'}}>открыто</text>
+  </svg>;
+}
+const dueInfo = t => {
+  if(isDone(t)) return {cls:'', txt:'✓ '+fmt(pdate(t.due))};
   const dl = daysLeft(t.due);
-  if(dl < 0) return 'overdue';
-  if(dl === 0) return 'today';
-  if(dl === 1) return 'tomorrow';
-  const eow = (7 - today().getDay()) % 7;
-  if(dl <= eow) return 'week';
-  return 'later';
+  if(dl<0)  return {cls:'bad',  txt:`просрочено ${-dl} д`};
+  if(dl===0)return {cls:'warn', txt:'сегодня'};
+  if(dl===1)return {cls:'warn', txt:'завтра'};
+  return {cls: dl<=2?'warn':'', txt: fmt(pdate(t.due))};
 };
+function TimerChip({t}){
+  const {now,toggleTimer,pomo} = useCtx();
+  const running = t.time&&t.time.run;
+  const s = elapsed(t,now);
+  const isPomo = pomo && pomo.taskId===t.id && pomo.running;
+  return <button className={'tchip'+(running?' run':'')} title={running?'Остановить таймер':'Запустить таймер'}
+    onClick={e=>{e.stopPropagation();toggleTimer(t.id);}}>
+    {running?<span className="rdot"/>:<Icon d={IC.play} size={9}/>}
+    <span>{fmtDur(s)}</span>
+    {isPomo&&<span className="pomobadge">🍅 pomo</span>}
+  </button>;
+}
 
-/* ================= Демо-данные из Код 1 ================= */
-const SEED_PEOPLE = [
-  {id:'anna', name:'Анна Смирнова', job:'Маркетолог', role:'admin', c:'#e3d5f3'},
-  {id:'max', name:'Максим Орлов', job:'Видеограф', role:'member', c:'#ddd7c6'},
-  {id:'maria', name:'Мария Волкова', job:'Фотограф', role:'member', c:'#c7dfd7'},
-  {id:'dasha', name:'Дарья Соколова', job:'SMM', role:'member', c:'#e8ced6'},
-  {id:'ilya', name:'Илья Козлов', job:'Дизайнер', role:'member', c:'#cdd8ec'}
-];
-const SEED_PROJECTS = [
-  {id:'autumn', name:'Осенний запуск', description:'От концепции до контента и рекламы.', color:'#8965ce', owner:'anna', archived:false},
-  {id:'always-on', name:'Контент и соцсети', description:'Регулярные публикации.', color:'#518e85', owner:'dasha', archived:false}
-];
-const SEED_SPRINTS = [{id:'sprint-1', name:'Осенний запуск', start:iso(today()), end:iso(addDays(13))}];
-const SEED_TYPES = [
-  {id:'Кампания', name:'Кампания', color:TASK_TYPES_COLORS[0], archived:false},
-  {id:'Стратегия', name:'Стратегия', color:TASK_TYPES_COLORS[1], archived:false},
-  {id:'Реклама', name:'Реклама', color:TASK_TYPES_COLORS[2], archived:false}
-];
-const SEED_TASKS = [
-  {id:'t1', number:101, title:'Разработать концепцию осенней кампании', board:'marketing', status:'backlog', assignee:'anna', priority:'high', due:iso(today()), tags:['Кампания','Стратегия'], repeat:'none', elapsed:0, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[{id:'c1',text:'Собрать референсы',done:true},{id:'c2',text:'Согласовать',done:false}]},
-  {id:'t2', number:102, title:'Собрать референсы для новой коллекции', board:'photo', status:'planned', assignee:'maria', priority:'medium', due:iso(addDays(1)), tags:['Кампания'], repeat:'none', elapsed:0, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[]},
-  {id:'t3', number:103, title:'Обновить контент-план на сентябрь', board:'marketing', status:'progress', assignee:'dasha', priority:'high', due:iso(today()), tags:[], repeat:'weekly', elapsed:3840, startedAt:null, project:'always-on', sprint:'', checklist:[]},
-  {id:'t4', number:104, title:'Снять новую коллекцию в студии', board:'photo', status:'shooting', assignee:'maria', priority:'high', due:iso(today()), tags:[], repeat:'none', elapsed:4200, startedAt:null, project:'autumn', sprint:'sprint-1', checklist:[]},
-  {id:'t5', number:105, title:'Фотографии команды для сайта', board:'photo', status:'done', assignee:'maria', priority:'medium', due:iso(addDays(-2)), tags:[], repeat:'none', elapsed:7200, startedAt:null, project:'always-on', sprint:'', checklist:[]},
-];
+/* ================= строка задачи ================= */
+function TaskRow({t,onEdit,onMove}){
+  const {channels,members,projects,cardFields} = useCtx();
+  const ch = channels[t.ch] || {label:'—',c:'#98A29B'};
+  const m = members[t.who] || {short:'—'};
+  const bd = BOARDS[t.board||'main'];
+  const due = dueInfo(t);
+  const sd = t.sub.filter(s=>s.done).length;
+  const cm = colMeta(t);
+  const pr = projects[t.project];
+  return <div className={'lrow'+(isDone(t)?' done':'')} onClick={()=>onEdit(t)}>
+    <div className="lmain">
+      <span className="pr" style={{color:PR[t.pr].c}} title={'Приоритет: '+PR[t.pr].label}>{PR[t.pr].arrow}</span>
+      <div style={{minWidth:0,flex:1}}>
+        <span className="lt">
+          {isDone(t)&&<span className="donecheck">✓ </span>}
+          {cardFields.project&&pr&&<span className="bchip" style={{background:cmix(pr.c,18),color:pr.c,marginRight:7}}>{pr.name}</span>}
+          <span className="bchip" style={{background:bd.soft,color:bd.text,marginRight:7}}>{bd.short}</span>
+          {t.title}
+        </span>
+        {cardFields.desc&&t.desc&&<span className="ld">{t.desc}</span>}
+      </div>
+    </div>
+    <div>{cardFields.channel&&<span className="chip" style={{background:cmix(ch.c,15),color:ch.c}}>
+      <span className="dot" style={{background:ch.c}}/>{ch.label}</span>}</div>
+    <div className="lwho">{cardFields.assignee&&<><Avatar id={t.who} size={22}/>{m.short}</>}</div>
+    <div>{cardFields.due&&<span className={`due ${due.cls}`}>{due.txt}</span>}</div>
+    <div className="lprog">
+      {cardFields.subtasks&&t.sub.length>0&&<><div className="track" style={{maxWidth:52}}><i style={{width:`${sd/t.sub.length*100}%`,background:ch.c}}/></div>
+        <span className="subn">{sd}/{t.sub.length}</span></>}
+      {t.repeat!=='none'&&<span className="rchip" title={REPEAT[t.repeat].l} style={{display:'inline-flex',alignItems:'center',gap:4,font:'600 10px Golos Text',color:'#0EA5C6',background:cmix('#0EA5C6',12),padding:'3px 8px',borderRadius:'99px',whiteSpace:'nowrap'}}><Icon d={IC.repeat} size={10} sw={2.2}/>{REPEAT[t.repeat].short}</span>}
+      {cardFields.timer&&<TimerChip t={t}/>}
+    </div>
+    <div className="lcol-sel" onClick={e=>e.stopPropagation()}>
+      <span className="dot" style={{background:cm.c}}/>
+      <select value={t.col} onChange={e=>onMove(t.id,e.target.value)} title="Сменить статус">
+        {colsOf(t.board||'main').map(c=><option key={c.id} value={c.id}>{c.t}</option>)}
+      </select>
+    </div>
+  </div>;
+}
 
-const LS_KEY = 'shtab-mk-prototype-v3';
+/* ================= карточка задачи ================= */
+function TaskCard({t, onEdit, onMove, onPin, onFav, onFieldClick, cardFields, selected, onToggleSelect, onShiftClick}){
+  const {channels,members,projects,taskTypes,now,toggleTimer} = useCtx();
+  const ch = channels[t.ch] || {label:'—',c:'#98A29B'};
+  const pr = PR[t.pr];
+  const due = dueInfo(t);
+  const sd = t.sub.filter(s=>s.done).length;
+  const project = projects[t.project];
 
-/* ================= Компоненты UI ================= */
-const Avatar = ({person, size=24}) => {
-  if(!person) return <span className="ava" style={{width:size,height:size,background:'#e9e4ef',color:'#5e526e'}}><Icon d={IC.user} size={14}/></span>;
-  const ini = person.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
-  return <span className="ava" title={person.name} style={{width:size,height:size,background:person.c,color:'#141B17',fontSize:Math.max(7,Math.round(size*0.36))}}>{ini}</span>;
-};
+  return <article className={
+      'card'+(t.pinned?' pinned':'')+(t.fav?' fav':'')+(selected?' selected':'')}
+    draggable={!selected}
+    onClick={e=>{
+      if(e.shiftKey){e.preventDefault();onShiftClick&&onShiftClick(t.id);return;}
+      onEdit(t);
+    }}
+    onDragStart={e=>{
+      e.dataTransfer.setData('text/plain',String(t.id));
+      e.dataTransfer.effectAllowed='move';
+      e.currentTarget.classList.add('drag');
+    }}
+    onDragEnd={e=>e.currentTarget.classList.remove('drag')}>
 
-function Kanban({tasks, boardId, onEdit, onToggleTimer, now}){
-  const statuses = getStatuses(boardId);
-  const [dragId, setDragId] = useState(null);
-  const [overId, setOverId] = useState(null);
-  
+    <div className="card-top">
+      {cardFields.project&&project&&
+        <button className="chip" style={{background:cmix(project.c,18),color:project.c}}
+          onClick={e=>{e.stopPropagation();onFieldClick('project',t.id,e);}}
+          title="Сменить проект">
+          <span className="dot" style={{background:project.c}}/>
+          <span className="lbl">{project.name}</span>
+        </button>}
+      {cardFields.channel&&
+        <button className="chip" style={{background:cmix(ch.c,15),color:ch.c}}
+          onClick={e=>{e.stopPropagation();onFieldClick('channel',t.id,e);}}
+          title="Сменить канал">
+          <span className="dot" style={{background:ch.c}}/>
+          <span className="lbl">{ch.label}</span>
+        </button>}
+      {cardFields.priority&&
+        <button className="pr" style={{color:pr.c}}
+          onClick={e=>{e.stopPropagation();onFieldClick('priority',t.id,e);}}
+          title="Сменить приоритет">
+          {pr.arrow}<small>{pr.label}</small>
+        </button>}
+      <div className="card-actions">
+        <button className={selected?'on':''} onClick={e=>{e.stopPropagation();onToggleSelect&&onToggleSelect(t.id);}}
+          title="Выделить"><Icon d={IC.check} size={12}/></button>
+        <button className={t.pinned?'pinned-on':''} onClick={e=>{e.stopPropagation();onPin(t.id);}}
+          title={t.pinned?'Открепить':'Закрепить'}>
+          <Icon d={t.pinned?IC.pin:IC.pinOutline} size={12}/>
+        </button>
+        <button className={t.fav?'fav-on':''} onClick={e=>{e.stopPropagation();onFav(t.id);}}
+          title={t.fav?'Убрать из избранного':'В избранное'}>
+          <Icon d={t.fav?IC.starFill:IC.star} size={12}/>
+        </button>
+      </div>
+    </div>
+
+    <h4>{isDone(t)&&<span className="donecheck">✓ </span>}{t.title}</h4>
+    {cardFields.desc&&t.desc&&<p className="desc">{t.desc}</p>}
+
+    {cardFields.types&&t.types&&t.types.length>0&&<div className="ctypes">
+      {t.types.slice(0,3).map(tid=>{
+        const tp=taskTypes[tid]; if(!tp) return null;
+        return <button key={tid} className="ttype" style={{background:tp.c}}
+          onClick={e=>{e.stopPropagation();onFieldClick('types',t.id,e);}}
+          title="Изменить типы">{tp.label}</button>;
+      })}
+      {t.types.length>3&&<button className="ttype" style={{background:'#98A29B'}}
+        onClick={e=>{e.stopPropagation();onFieldClick('types',t.id,e);}}>+{t.types.length-3}</button>}
+    </div>}
+
+    {cardFields.subtasks&&t.sub.length>0&&<div className="subbar">
+      <div className="track"><i style={{width:`${sd/t.sub.length*100}%`,background:ch.c,transition:'width .5s'}}/></div>
+      <span className="subn">{sd}/{t.sub.length}</span>
+    </div>}
+
+    <div className="foot">
+      {cardFields.assignee&&<><Avatar id={t.who} onClick={()=>onFieldClick('assignee',t.id,null)}/>
+        <span className="who">{(members[t.who]||{short:'—'}).short}</span></>}
+      {t.repeat!=='none'&&<span className="ttype" style={{background:'#0EA5C6',fontSize:10,padding:'2px 7px'}} title={REPEAT[t.repeat].l}>
+        <Icon d={IC.repeat} size={10} sw={2.2}/>{REPEAT[t.repeat].short}</span>}
+      {cardFields.comments&&t.coms.length>0&&
+        <button className="com" onClick={e=>{e.stopPropagation();onEdit(t);}}>
+          <Icon d={IC.chat} size={12}/>{t.coms.length}
+        </button>}
+      {cardFields.timer&&<TimerChip t={t}/>}
+      {cardFields.due&&<button className={`due ${due.cls}`} style={{marginLeft:'auto'}}
+        onClick={e=>{e.stopPropagation();onFieldClick('due',t.id,e);}}>{due.txt}</button>}
+    </div>
+  </article>;
+}
+
+/* ================= канбан ================= */
+function Kanban({all,visible,cols,group,hasF,onEdit,onNew,onDropCard,onPin,onFav,onFieldClick,selectedIds,onToggleSelect,onShiftClick}){
+  const {cardFields} = useCtx();
+  const [dragId,setDragId]=useState(null);
+  const [overCol,setOverCol]=useState(null);
   return <div className="board">
-    {statuses.map(st => {
-      const list = tasks.filter(t => t.status === st.id);
-      return <section key={st.id} className={'col' + (overId === st.id ? ' over':'')} style={{borderTopColor: st.c}}
-        onDragOver={e=>{e.preventDefault(); setOverId(st.id);}}
-        onDragLeave={()=>setOverId(null)}
-        onDrop={e=>{e.preventDefault(); const id=e.dataTransfer.getData('text/plain'); if(id) onEdit({...tasks.find(x=>x.id===id), status:st.id}); setOverId(null);}}>
+    {cols.map((c,ci)=>{
+      const list = group==='day' ? visible.filter(t=>bucketOf(t)===c.id) : visible.filter(t=>t.col===c.id);
+      const allN = group==='day' ? all.filter(t=>bucketOf(t)===c.id).length : all.filter(t=>t.col===c.id).length;
+      return <section key={c.id} className={'col'+(overCol===c.id&&dragId!=null?' over':'')}
+          style={{animationDelay:`${ci*70}ms`,borderTopColor:c.c}}
+          onDragOver={e=>{e.preventDefault();e.dataTransfer.dropEffect='move';setOverCol(c.id);setDragId(Number(e.dataTransfer.types.includes('text/plain')?'1':'0'));}}
+          onDragLeave={()=>setOverCol(null)}
+          onDrop={e=>{e.preventDefault();
+            const id=Number(e.dataTransfer.getData('text/plain'));
+            if(id) onDropCard(id,c.id);
+            setOverCol(null);}}>
         <div className="col-head">
-          <span className="col-dot" style={{background:st.c}}/><h3>{st.label}</h3><span className="n">{list.length}</span>
+          <span className="col-dot" style={{background:c.c}}/>
+          <h3>{c.t}</h3>
+          <span className="n">{hasF&&group==='status'?`${list.length}/${allN}`:list.length}</span>
+          {group==='status'&&<button className="col-add" title={'Добавить в «'+c.t+'»'} onClick={()=>onNew(c.id)}><Icon d={IC.plus} size={14} sw={2.2}/></button>}
         </div>
         <div className="col-body">
-          {list.length===0 && <div className="empty">Нет задач</div>}
-          {list.map(t => {
-            const pr = PRIORITY[t.priority];
-            const chkDone = t.checklist.filter(c=>c.done).length;
-            const dueCls = bucketOf(t)==='overdue'?'bad': bucketOf(t)==='today'?'warn':'';
-            const isRun = t.startedAt !== null;
-            return <article key={t.id} className={'card'+(dragId===t.id?' drag':'')} draggable
-              onDragStart={e=>{e.dataTransfer.setData('text/plain',t.id); setDragId(t.id);}} onDragEnd={()=>setDragId(null)}
-              onClick={()=>onEdit(t)}>
-              <div className="ctop">
-                <span className="bchip" style={{background:cmix(BOARDS[t.board].c,15), color:BOARDS[t.board].c}}>{BOARDS[t.board].label}</span>
-                <span className="pr" style={{color:pr.c}} title={pr.l}>{pr.arrow}</span>
-              </div>
-              <h4>{isDone(t)&&<span className="donecheck">✓ </span>}{t.title}</h4>
-              {t.tags.length>0 && <div className="ctags">{t.tags.map(tg=><span key={tg} className="minitag">#{tg}</span>)}</div>}
-              {t.checklist.length>0 && <div className="subbar">
-                <div className="track"><i style={{width: `${chkDone/t.checklist.length*100}%`}}/></div>
-                <span className="subn">{chkDone}/{t.checklist.length}</span>
-              </div>}
-              <div className="foot">
-                {t.repeat!=='none' && <span className="rchip"><Icon d={IC.repeat} size={10} sw={2.2}/>повт</span>}
-                <button className={'tchip'+(isRun?' run':'')} onClick={e=>{e.stopPropagation(); onToggleTimer(t.id);}}>
-                  {isRun ? <span className="pulse" style={{width:6,height:6,marginRight:3,boxShadow:'none'}}/> : <Icon d={IC.play} size={9}/>}
-                  <span>{fmtDur(getElapsed(t,now))}</span>
-                </button>
-                {t.due && <span className={`due ${dueCls}`} style={{marginLeft:'auto'}}>{fmt(pdate(t.due))}</span>}
-              </div>
-            </article>;
-          })}
+          {list.length===0&&<div className="empty">
+            {hasF?'Нет задач по фильтру':'Пока пусто'}
+          </div>}
+          {list.map((t,i)=>(
+            <TaskCard key={t.id} t={t} onEdit={onEdit} onMove={onMove}
+              onPin={onPin} onFav={onFav} onFieldClick={onFieldClick}
+              cardFields={cardFields}
+              selected={selectedIds.includes(t.id)}
+              onToggleSelect={onToggleSelect}
+              onShiftClick={onShiftClick}/>
+          ))}
         </div>
       </section>;
     })}
   </div>;
 }
 
-/* ================= Приложение ================= */
-function App(){
-  const saved = useRef(loadState()).current;
-  const [tasks, setTasks] = useState(saved ? saved.tasks : SEED_TASKS);
-  const [people, setPeople] = useState(saved ? saved.people : SEED_PEOPLE);
-  const [projects, setProjects] = useState(saved ? saved.projects : SEED_PROJECTS);
-  const [taskTypes, setTaskTypes] = useState(saved ? saved.taskTypes : SEED_TYPES);
-  const [sprints, setSprints] = useState(saved ? saved.sprints : SEED_SPRINTS);
-  
-  const [view, setView] = useState('board');
-  const [boardId, setBoardId] = useState('marketing');
-  const [theme, setTheme] = useState('light');
-  const [now, setNow] = useState(Date.now());
-  const [modal, setModal] = useState(null); // null | {type: 'task'|'project'|'admin', data: any}
+/* ================= мои задачи ================= */
+function MineView({tasks,onEdit,onMove,onPin,onFav,onFieldClick,cardFields,selectedIds,onToggleSelect,onShiftClick}){
+  const {members,me} = useCtx();
+  const m = members[me] || {name:'—'};
+  const my = tasks.filter(t=>t.who===me);
+  const byDue = (a,b)=>a.due.localeCompare(b.due);
+  const active = my.filter(t=>!isDone(t));
+  const overdue = active.filter(t=>daysLeft(t.due)<0).length;
+  const hot = active.filter(t=>{const dl=daysLeft(t.due);return dl>=0&&dl<=2;}).length;
+  const done = my.filter(t=>isDone(t)).length;
+  return <>
+    <div className="mhead">
+      <Avatar id={me} size={48}/>
+      <div>
+        <h3>Задачи — {m.name}</h3>
+        <small>Все доски: основная, фото и видео. Сменить пользователя можно в админ-панели.</small>
+      </div>
+      <div className="mstats">
+        <div className="mstat"><b style={{color:'var(--blue)'}}>{active.length}</b><span>активных</span></div>
+        <div className="mstat"><b style={{color:'var(--amber)'}}>{hot}</b><span>горят</span></div>
+        <div className="mstat"><b style={{color:'var(--red)'}}>{overdue}</b><span>просрочено</span></div>
+        <div className="mstat"><b style={{color:'var(--green)'}}>{done}</b><span>готово</span></div>
+      </div>
+    </div>
+    {my.length===0&&<div className="nothing"><b>Пока нет задач</b>Создайте новую и назначьте её себе</div>}
+    {DAY_BUCKETS.map((b,gi)=>{
+      const list=my.filter(t=>bucketOf(t)===b.id).sort(byDue);
+      if(!list.length) return null;
+      return <div key={b.id} className="mgroup" style={{animationDelay:`${gi*60}ms`}}>
+        <div className="mgt"><span className="col-dot" style={{background:b.c}}/><h4>{b.t}</h4><span className="n">{list.length}</span></div>
+        <div className="ltab">{list.map(t=><TaskRow key={t.id} t={t} onEdit={onEdit} onMove={onMove}/>)}</div>
+      </div>;
+    })}
+  </>;
+}
 
-  // Фильтры
-  const [q, setQ] = useState('');
-  const [fProj, setFProj] = useState([]);
-  const [fWho, setFWho] = useState([]);
-  const [fTags, setFTags] = useState([]);
-  const [showDone, setShowDone] = useState(false);
+/* ================= календарь ================= */
+function CalendarView({tasks,onEdit,onNew}){
+  const {channels} = useCtx();
+  const [cur,setCur]=useState(()=>{const d=today();return{y:d.getFullYear(),m:d.getMonth()};});
+  const shift=n=>setCur(c=>{const d=new Date(c.y,c.m+n,1);return{y:d.getFullYear(),m:d.getMonth()};});
+  const first=new Date(cur.y,cur.m,1);
+  const off=(first.getDay()+6)%7;
+  const dim=new Date(cur.y,cur.m+1,0).getDate();
+  const start=new Date(cur.y,cur.m,1-off);
+  const rows=Math.ceil((off+dim)/7);
+  const cells=[]; for(let i=0;i<rows*7;i++){const d=new Date(start);d.setDate(start.getDate()+i);cells.push(d);}
+  const byDay=d=>tasks.filter(t=>t.due===iso(d));
+  const monthN=tasks.filter(t=>{const d=pdate(t.due);return d.getMonth()===cur.m&&d.getFullYear()===cur.y;}).length;
+  return <div className="cal">
+    <div className="cal-head">
+      <button className="cal-nav" onClick={()=>shift(-1)} title="Предыдущий месяц"><Icon d={IC.left} size={15}/></button>
+      <button className="cal-nav" onClick={()=>shift(1)} title="Следующий месяц"><Icon d={IC.right} size={15}/></button>
+      <h3>{MONTHS[cur.m]} {cur.y}</h3>
+      <span className="cal-cnt">{monthN} дедлайн{monthN===1?'':monthN<5?'а':'ов'} в месяце</span>
+      <div className="legend">
+        {Object.values(channels).map(c=><span key={c.label}><span className="dot" style={{background:c.c}}/>{c.label}</span>)}
+      </div>
+    </div>
+    <div className="cal-grid">
+      {DOW.map((d,i)=><div key={d} className={'cal-dow'+(i>=5?' we':'')}>{d}</div>)}
+      {cells.map((d,i)=>{
+        const evs=byDay(d), out=d.getMonth()!==cur.m, isT=iso(d)===iso(today()), wk=i%7>=5;
+        return <div key={i} className={'cal-cell'+(out?' out':'')+(isT?' today':'')+(wk?' wk':'')}
+            title="Клик — новая задача на эту дату" onClick={()=>onNew(iso(d))}>
+          <span className="dn">{d.getDate()}</span>
+          {evs.slice(0,3).map(t=>{const ch=channels[t.ch]||{c:'#98A29B'};
+            return <button key={t.id} className={'ev'+(isDone(t)?' done':'')}
+              style={{background:cmix(ch.c,16),borderLeftColor:ch.c,color:ch.c}} title={t.title}
+              onClick={e=>{e.stopPropagation();onEdit(t);}}><b>{t.title}</b></button>;})}
+          {evs.length>3&&<div className="more">+{evs.length-3} ещё</div>}
+        </div>;
+      })}
+    </div>
+  </div>;
+}
 
-  useEffect(()=>{ document.documentElement.classList.toggle('dark',theme==='dark'); },[theme]);
+/* ================= аналитика ================= */
+function StatsView({tasks}){
+  const {channels,members,projects} = useCtx();
+  const [bf,setBf]=useState('all');
+  const ts = bf==='all'?tasks:tasks.filter(t=>(t.board||'main')===bf);
+  const total=ts.length;
+  const done=ts.filter(t=>isDone(t)).length;
+  const open=ts.filter(t=>!isDone(t));
+  const overdue=open.filter(t=>daysLeft(t.due)<0).length;
+  const byChannel=Object.entries(channels)
+    .map(([k,c])=>({k,c,v:ts.filter(t=>t.ch===k&&!isDone(t)).length})).sort((a,b)=>b.v-a.v);
+  const maxCh=Math.max(...byChannel.map(x=>x.v),1);
+  const byMember=Object.entries(members)
+    .map(([k,m])=>({k,m,open:ts.filter(t=>t.who===k&&!isDone(t)).length})).sort((a,b)=>b.open-a.open);
+  const maxM=Math.max(...byMember.map(x=>x.open),1);
+  const byProject=Object.entries(projects)
+    .filter(([k,p])=>!p.archived)
+    .map(([k,p])=>({k,p,open:ts.filter(t=>t.project===k&&!isDone(t)).length,done:ts.filter(t=>t.project===k&&isDone(t)).length}))
+    .sort((a,b)=>(b.open+b.done)-(a.open+a.done));
+  const maxP=Math.max(...byProject.map(x=>x.open+x.done),1);
+  const pr=[['high','#E5484D','Высокий'],['mid','#E8930C','Средний'],['low','#5BA26B','Низкий']]
+    .map(([k,c,l])=>({l,c,v:open.filter(t=>t.pr===k).length}));
+  const days=[...Array(14)].map((_,i)=>{const d=addDays(i-13);
+    return{d,v:ts.filter(t=>isDone(t)&&t.due===iso(d)).length};});
+  const maxD=Math.max(...days.map(x=>x.v),1);
+  const[on,setOn]=useState(false);
+  useEffect(()=>{const t=setTimeout(()=>setOn(true),80);return()=>clearTimeout(t);},[]);
+  return <>
+    <div className="vtool">
+      <span>Сводка по задачам команды</span>
+      <div className="fchips">
+        {[['all','Все доски'],['main','Основная'],['photo','Фото'],['video','Видео']].map(([v,l])=>
+          <button key={v} className={'fchip'+(bf===v?' on':'')} onClick={()=>setBf(v)}>{l}</button>)}
+      </div>
+    </div>
+    <section className="stats">
+      <Stat lbl="Всего задач" n={total} sub="в выбранном срезе" c="var(--ink)"/>
+      <Stat lbl="Готово" n={done} sub={total?`${Math.round(done/total*100)}% от плана`:'—'} c="var(--green)"/>
+      <Stat lbl="Открыто" n={open.length} sub="требуют работы" c="var(--blue)"/>
+      <Stat lbl="Просрочено" n={overdue} sub={overdue?'разберитесь сегодня':'чисто'} c="var(--red)" alert={overdue>0}/>
+    </section>
+    <div className="agrid">
+      <div className="panel" style={{animationDelay:'60ms'}}>
+        <h4>Открытые задачи по каналам</h4>
+        {byChannel.map(x=>
+          <div className="arow" key={x.k}>
+            <span className="al" style={{color:x.c.c}}>{x.c.label}</span>
+            <Bar pct={x.v/maxCh*100} c={x.c.c}/>
+            <span className="av">{x.v}</span>
+          </div>)}
+      </div>
+      <div className="panel" style={{animationDelay:'120ms'}}>
+        <h4>Нагрузка команды</h4>
+        {byMember.map(x=>
+          <div className="arow" key={x.k}>
+            <Avatar id={x.k} size={22}/>
+            <span className="al">{x.m.short}</span>
+            <Bar pct={x.open/maxM*100} c={x.m.c}/>
+            <span className="av">{x.open}</span>
+          </div>)}
+        <div className="pnote">Открытые задачи на человека · всего готово: {done}</div>
+      </div>
+      <div className="panel" style={{animationDelay:'180ms'}}>
+        <h4>Приоритеты открытых задач</h4>
+        <div className="drow">
+          <Donut data={pr}/>
+          <div className="dleg">
+            {pr.map(p=><div key={p.l} className="dleg-r"><span className="dot" style={{background:p.c}}/>{p.l}<b>{p.v}</b></div>)}
+          </div>
+        </div>
+      </div>
+      <div className="panel" style={{animationDelay:'240ms'}}>
+        <h4>Закрыто по дням · 2 недели</h4>
+        <div className="bars">
+          {days.map((d,i)=><i key={i} className={d.v?'':'z'} title={`${fmt(d.d)} — ${d.v}`}
+            style={{height:on?`${Math.max(6,d.v/maxD*100)}%`:'6%',transitionDelay:`${i*35}ms`}}/>)}
+        </div>
+        <div className="blabels"><span>{fmt(days[0].d)}</span><span>сегодня</span></div>
+      </div>
+      <div className="panel" style={{animationDelay:'300ms',gridColumn:'1/-1'}}>
+        <h4>По проектам</h4>
+        {byProject.map(x=>{
+          const total=x.open+x.done;
+          const pct=total?x.done/total*100:0;
+          return <div className="arow" key={x.k}>
+            <span className="dot" style={{background:x.p.c,width:10,height:10}}/>
+            <span className="al" style={{color:x.p.c}}>{x.p.name}</span>
+            <div className="track" style={{height:8}}>
+              <i style={{width:`${(total/maxP)*100}%`,background:cmix(x.p.c,30),position:'relative'}}>
+                <i style={{position:'absolute',left:0,top:0,height:'100%',width:`${pct}%`,background:x.p.c}}/>
+              </i>
+            </div>
+            <span className="av" style={{minWidth:50,textAlign:'right'}}>{x.open} / {x.done}</span>
+          </div>;
+        })}
+      </div>
+    </div>
+  </>;
+}
+
+/* ================= файлы ================= */
+function FilesView({tasks,onOpenTask,toast}){
+  const {members,taskTypes} = useCtx();
+  const [files,setFiles]=useState(SEED_FILES);
+  const [q,setQ]=useState('');
+  const [g,setG]=useState('all');
+  const [up,setUp]=useState(null);
+  const GROUP={mp4:'video',fig:'design',img:'design',xls:'table',doc:'docs',pdf:'docs',zip:'docs'};
+  const CHIPS=[['all','Все'],['video','Видео'],['design','Макеты'],['table','Таблицы'],['docs','Документы']];
+  const list=files.filter(f=>(g==='all'||GROUP[f.type]===g) &&
+    (!q.trim()||(f.name+' '+(f.types||[]).join(' ')).toLowerCase().includes(q.trim().toLowerCase())));
+  const startUpload=()=>{
+    if(up!==null) return; let p=0; setUp(0);
+    const iv=setInterval(()=>{
+      p+=10+Math.random()*16;
+      if(p>=100){clearInterval(iv);setUp(null);
+        setFiles(f=>[{id:'f'+Date.now(),name:'Баннер_летняя_акция.png',type:'img',size:'2,4 МБ',
+          who:'ak',ts:Date.now(),types:['creative']},...f]);
+        toast('Файл загружен');
+      } else setUp(Math.round(p));
+    },140);
+  };
+  return <>
+    <div className="vtool">
+      <label className="search" style={{width:230}}>
+        <Icon d={IC.search} size={15}/>
+        <input placeholder="Поиск по файлам и типам…" value={q} onChange={e=>setQ(e.target.value)}/>
+        {q&&<button className="x" onClick={()=>setQ('')}><Icon d={IC.x} size={13}/></button>}
+      </label>
+      <div className="seg" style={{height:'auto'}}>
+        {CHIPS.map(([v,l])=><button key={v} className={g===v?'on':''} onClick={()=>setG(v)}>{l}</button>)}
+      </div>
+      <span style={{flex:1}}/>
+      {up===null
+        ? <button className="btn pri" onClick={startUpload}><Icon d={IC.up} size={15} sw={2.2}/>Загрузить файл</button>
+        : <div className="uprog"><div className="track"><i style={{width:up+'%'}}/></div><b>{up}%</b></div>}
+    </div>
+    {list.length===0
+      ? <div className="nothing"><b>Файлы не найдены</b>Измените запрос или фильтр типа</div>
+      : <div className="fgrid">
+        {list.map((f,i)=>{
+          const ft=FT[f.type]||{c:'#98A29B',l:'?'};
+          const task=f.task&&tasks.find(t=>t.id===f.task);
+          return <div key={f.id} className="fcard" style={{animationDelay:`${i*40}ms`}}
+              onClick={()=>toast('Демо-режим: скачивание недоступно')}>
+            <div className="ftop">
+              <span className="ftile" style={{background:ft.c}}>{ft.l}</span>
+              <div style={{minWidth:0,flex:1}}>
+                <div className="fname">{f.name}</div>
+                <div className="fmeta">{f.size} · {fmt(new Date(f.ts))} · {(members[f.who]||{short:'—'}).short}</div>
+              </div>
+            </div>
+            {f.types&&f.types.length>0&&<div className="ftags">{f.types.map(tid=>{
+              const tp=taskTypes[tid]; if(!tp) return null;
+              return <span key={tid} className="ftag" style={{background:cmix(tp.c,18),color:tp.c}}>{tp.label}</span>;
+            })}</div>}
+            {task&&<button className="flink" onClick={e=>{e.stopPropagation();onOpenTask(task);}}>
+              <Icon d={IC.board} size={12}/>Задача: «{task.title.length>26?task.title.slice(0,26)+'…':task.title}»
+            </button>}
+          </div>;
+        })}
+      </div>}
+  </>;
+}
+
+/* ================= шаблоны ================= */
+function TemplatesView({templates,onUse,onDelete,onCreate}){
+  const {taskTypes} = useCtx();
+  return <>
+    <div className="vtool">
+      <span>Сохранённые шаблоны задач — кликните, чтобы создать задачу на основе шаблона</span>
+      <button className="btn pri" onClick={onCreate}><Icon d={IC.plus} size={15} sw={2.2}/>Новый шаблон</button>
+    </div>
+    {templates.length===0
+      ? <div className="nothing"><b>Нет шаблонов</b>Создайте шаблон из любой задачи через меню «Сохранить как шаблон»</div>
+      : <div className="tplgrid">
+        {templates.map(tpl=>(
+          <div key={tpl.id} className="tplcard">
+            <h5>{tpl.name}</h5>
+            <p>{tpl.desc||'Без описания'}</p>
+            <div className="tplmeta">
+              {(tpl.data.types||[]).slice(0,3).map(tid=>{
+                const tp=taskTypes[tid]; if(!tp) return null;
+                return <span key={tid} className="ftag" style={{background:cmix(tp.c,18),color:tp.c}}>{tp.label}</span>;
+              })}
+              {(tpl.data.sub||[]).length>0&&<span className="ftag">Чек-лист: {tpl.data.sub.length}</span>}
+              {tpl.data.repeat&&tpl.data.repeat!=='none'&&<span className="ftag">Повтор: {REPEAT[tpl.data.repeat]?.short}</span>}
+            </div>
+            <div className="tplactions">
+              <button className="btn pri sm" onClick={()=>onUse(tpl)}><Icon d={IC.plus} size={12}/>Использовать</button>
+              <button className="btn danger" onClick={()=>onDelete(tpl.id)}><Icon d={IC.trash} size={12}/>Удалить</button>
+            </div>
+          </div>
+        ))}
+      </div>}
+  </>;
+}
+
+/* ================= избранное ================= */
+function FavoritesView({tasks,onEdit,onMove}){
+  const fav = tasks.filter(t=>t.fav);
+  return <>
+    <div className="vtool">
+      <span>Все задачи, отмеченные звёздочкой — быстрый доступ к важным</span>
+    </div>
+    {fav.length===0
+      ? <div className="nothing"><b>Нет избранных задач</b>Кликните ⭐ на любой карточке, чтобы добавить сюда</div>
+      : <div className="ltab">
+          <div className="lrow lhead">
+            <div>Задача</div><div>Канал</div><div>Исполнитель</div><div>Дедлайн</div><div>Прогресс</div><div>Статус</div>
+          </div>
+          {fav.map(t=><TaskRow key={t.id} t={t} onEdit={onEdit} onMove={onMove}/>)}
+        </div>}
+  </>;
+}
+
+/* ================= история ================= */
+function FeedView({log,onClear}){
+  const dayLabel=k=>{
+    if(k===iso(today())) return 'Сегодня';
+    if(k===iso(addDays(-1))) return 'Вчера';
+    return fmtL(pdate(k));
+  };
+  const items=[]; let lastK='';
+  log.forEach(e=>{const k=iso(new Date(e.ts));
+    if(k!==lastK){items.push({day:true,k,label:dayLabel(k)});lastK=k;}
+    items.push(e);});
+  return <>
+    <div className="vtool">
+      <span>Все события команды: создание, переносы, повторы, комментарии, админ-действия</span>
+      {log.length>0&&<button className="btn ghost" onClick={onClear}>Очистить историю</button>}
+    </div>
+    {log.length===0
+      ? <div className="nothing"><b>История пуста</b>Действия с задачами будут появляться здесь</div>
+      : <div className="feed">
+        {items.map((e,i)=> e.day
+          ? <div key={'d'+e.k} className="fday">{e.label}</div>
+          : <div key={e.id} className="fitem" style={{animationDelay:`${Math.min(i,10)*30}ms`}}>
+              <span className="fic" style={{background:(LOG_META[e.type]||LOG_META.edit)[1]}}>
+                <Icon d={(LOG_META[e.type]||LOG_META.edit)[0]} size={14} sw={2}/>
+              </span>
+              <p>{e.text}</p>
+              <time>{fmtT(e.ts)}</time>
+            </div>)}
+      </div>}
+  </>;
+}
+
+/* ================= админ-панель ================= */
+function AdminView({tasks,setTasks,channels,setChannels,members,setMembers,me,setMe,sprint,setSprint,
+                     projects,setProjects,taskTypes,setTaskTypes,
+                     setLog,setChF,setWhoF,logEv,toast,resetDemo}){
+  const [newM,setNewM]=useState('');
+  const [newCh,setNewCh]=useState('');
+  const [newPr,setNewPr]=useState('');
+  const [newTT,setNewTT]=useState('');
+  const [chColor,setChColor]=useState('#2E6BFF');
+  const [prColor,setPrColor]=useState('#FF5A2D');
+  const [ttColor,setTtColor]=useState('#2E6BFF');
+  const [sp,setSp]=useState({...sprint});
+  const [confirm,setConfirm]=useState(null);
+  const fileRef=useRef(null);
+  const PALETTE=['#FF5A2D','#2E6BFF','#0FA36B','#8B5CF6','#F0447E','#0EA5C6','#E8930C','#5BA26B','#E5484D','#F59E0B'];
+  const SWATCH=['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E','#141B17','#98A29B'];
+
+  const addMember=()=>{
+    const name=newM.trim();
+    if(!name){toast('Введите имя сотрудника');return;}
+    const parts=name.split(/\s+/);
+    const id='u'+Date.now().toString(36);
+    const ini=parts.map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const short=parts.length>1?parts[0]+' '+parts[1][0]+'.':name;
+    const c=PALETTE[Object.keys(members).length%PALETTE.length];
+    setMembers(m=>({...m,[id]:{name,short,ini,c,role:'member'}}));
+    setNewM('');
+    logEv('admin',`Админ: добавлен сотрудник ${name}`);
+    toast(`Сотрудник добавлен: ${name}`);
+  };
+  const setRole=(k,role)=>{
+    setMembers(mm=>({...mm,[k]:{...mm[k],role}}));
+    logEv('admin',`Админ: ${members[k].name} теперь ${role==='admin'?'администратор':'участник'}`);
+    toast(role==='admin'?'Права администратора выданы':'Права понижены до участника');
+  };
+  const doDelMember=(k,target)=>{
+    const nm=members[k].name;
+    setTasks(ts=>target?ts.map(t=>t.who===k?{...t,who:target}:t):ts.filter(t=>t.who!==k));
+    setMembers(mm=>{const c={...mm};delete c[k];return c;});
+    setWhoF(a=>a.filter(x=>x!==k));
+    if(me===k){const rest=Object.keys(members).find(x=>x!==k);setMe(target||rest);}
+    logEv('admin',`Админ: удалён сотрудник ${nm}`+(target?' — задачи переданы':''));
+    toast('Сотрудник удалён');
+  };
+  const askDelMember=k=>{
+    if(Object.keys(members).length<=1){toast('Нельзя удалить последнего сотрудника');return;}
+    const n=tasks.filter(t=>t.who===k).length;
+    const others=Object.entries(members).filter(([id])=>id!==k);
+    if(n===0){doDelMember(k,null);return;}
+    setConfirm({kind:'member',id:k,title:'Удалить сотрудника?',
+      text:`У ${members[k].name} осталось задач: ${n}. Выберите, кому их передать.`,
+      candidates:others,target:others[0][0]});
+  };
+  const addChannel=()=>{
+    const label=newCh.trim();
+    if(!label){toast('Введите название канала');return;}
+    const id='c'+Date.now().toString(36);
+    setChannels(cs=>({...cs,[id]:{label,c:chColor}}));
+    setNewCh('');
+    logEv('admin',`Админ: добавлен канал «${label}»`);
+    toast(`Канал добавлен: ${label}`);
+  };
+  const doDelChannel=(k,target)=>{
+    const label=channels[k].label;
+    setTasks(ts=>target?ts.map(t=>t.ch===k?{...t,ch:target}:t):ts.filter(t=>t.ch!==k));
+    setChannels(cs=>{const c={...cs};delete c[k];return c;});
+    setChF(a=>a.filter(x=>x!==k));
+    logEv('admin',`Админ: удалён канал «${label}»`);
+    toast('Канал удалён');
+  };
+  const askDelChannel=k=>{
+    if(Object.keys(channels).length<=1){toast('Нельзя удалить последний канал');return;}
+    const n=tasks.filter(t=>t.ch===k).length;
+    const others=Object.entries(channels).filter(([id])=>id!==k);
+    if(n===0){doDelChannel(k,null);return;}
+    setConfirm({kind:'channel',id:k,title:'Удалить канал?',
+      text:`В канале «${channels[k].label}» задач: ${n}. Выберите канал для переноса.`,
+      candidates:others,target:others[0][0]});
+  };
+  const addProject=()=>{
+    const name=newPr.trim();
+    if(!name){toast('Введите название проекта');return;}
+    const id='pr'+Date.now().toString(36);
+    setProjects(ps=>({...ps,[id]:{name,c:prColor,goal:'',archived:false}}));
+    setNewPr('');
+    logEv('admin',`Админ: создан проект «${name}»`);
+    toast(`Проект создан: ${name}`);
+  };
+  const delProject=k=>{
+    const n=tasks.filter(t=>t.project===k).length;
+    const name=projects[k].name;
+    setTasks(ts=>ts.map(t=>t.project===k?{...t,project:null}:t));
+    setProjects(ps=>{const c={...ps};delete c[k];return c;});
+    logEv('admin',`Админ: удалён проект «${name}»`);
+    toast(`Проект удалён${n?', задачи отвязаны':''}`);
+  };
+  const toggleArchiveProject=k=>{
+    setProjects(ps=>({...ps,[k]:{...ps[k],archived:!ps[k].archived}}));
+    toast(projects[k].archived?'Проект возвращён в активные':'Проект архивирован');
+  };
+  const addTaskType=()=>{
+    const label=newTT.trim();
+    if(!label){toast('Введите название типа');return;}
+    const id='tt'+Date.now().toString(36);
+    setTaskTypes(tt=>({...tt,[id]:{label,c:ttColor}}));
+    setNewTT('');
+    logEv('admin',`Админ: создан тип задачи «${label}»`);
+    toast(`Тип создан: ${label}`);
+  };
+  const delTaskType=k=>{
+    const label=taskTypes[k].label;
+    setTasks(ts=>ts.map(t=>({...t,types:(t.types||[]).filter(x=>x!==k)})));
+    setTaskTypes(tt=>{const c={...tt};delete c[k];return c;});
+    logEv('admin',`Админ: удалён тип задачи «${label}»`);
+    toast(`Тип «${label}» удалён`);
+  };
+  const saveSprint=()=>{
+    if(!sp.name.trim()){toast('Введите название');return;}
+    if(pdate(sp.start)>pdate(sp.end)){toast('Начало позже конца');return;}
+    setSprint({...sp,name:sp.name.trim()});
+    logEv('admin','Админ: обновлена кампания');
+    toast('Настройки сохранены');
+  };
+  const kb=useMemo(()=>{
+    try{return Math.max(1,Math.round(new Blob([JSON.stringify({tasks,channels,members,sprint,projects,taskTypes})]).size/1024));}
+    catch(e){return 0;}
+  },[tasks,channels,members,sprint,projects,taskTypes]);
+  const doExport=()=>{
+    const data=JSON.stringify({v:3,tasks,channels,members,me,sprint,projects,taskTypes},null,2);
+    const blob=new Blob([data],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='potok-backup-'+iso(today())+'.json';
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    logEv('admin','Админ: экспортирован бэкап данных');
+    toast('Бэкап экспортирован');
+  };
+  const doImport=e=>{
+    const file=e.target.files&&e.target.files[0];
+    e.target.value='';
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const p=JSON.parse(reader.result);
+        if(!p||!Array.isArray(p.tasks)) throw new Error('bad');
+        setTasks(p.tasks.map(normTask));
+        if(p.channels&&Object.keys(p.channels).length) setChannels(p.channels);
+        if(p.members&&Object.keys(p.members).length){
+          setMembers(Object.fromEntries(Object.entries(p.members).map(([k,v])=>[k,{role:'member',...v}])));
+          setMe(p.me&&p.members[p.me]?p.me:Object.keys(p.members)[0]);
+        }
+        if(p.projects) setProjects(p.projects);
+        if(p.taskTypes) setTaskTypes(p.taskTypes);
+        if(p.sprint) setSprint(p.sprint);
+        setLog(()=>Array.isArray(p.log)?p.log:[]);
+        toast('Данные импортированы');
+      }catch(err){toast('Не удалось импортировать файл');}
+    };
+    reader.readAsText(file);
+  };
+  const doConfirm=()=>{
+    if(confirm.kind==='member') doDelMember(confirm.id,confirm.candidates?confirm.target:null);
+    if(confirm.kind==='channel') doDelChannel(confirm.id,confirm.candidates?confirm.target:null);
+    if(confirm.kind==='clear'){setTasks([]);logEv('admin','Админ: очищены все задачи');toast('Все задачи удалены');}
+    setConfirm(null);
+  };
+
+  const activeProjects=Object.entries(projects).filter(([k,p])=>!p.archived);
+  const archivedProjects=Object.entries(projects).filter(([k,p])=>p.archived);
+
+  return <>
+    <div className="agrid">
+      <div className="panel apanel">
+        <h4><Icon d={IC.user} size={14}/>Команда и роли</h4>
+        {Object.entries(members).map(([k,m])=>
+          <div key={k} className="arow2">
+            <Avatar id={k} size={30}/>
+            <div style={{minWidth:0,flex:1}}>
+              <div className="aname">{m.name}{k===me&&<span className="you">вы</span>}</div>
+              <div className="asub">{tasks.filter(t=>t.who===k&&!isDone(t)).length} открытых задач</div>
+            </div>
+            <select className="rolesel" value={m.role||'member'} onChange={e=>setRole(k,e.target.value)} title="Роль">
+              <option value="admin">админ</option>
+              <option value="member">участник</option>
+            </select>
+            <button className="ibtn" title="Удалить" onClick={()=>askDelMember(k)}><Icon d={IC.trash} size={14}/></button>
+          </div>)}
+        <div className="aadd">
+          <input placeholder="Имя Фамилия нового сотрудника…" value={newM}
+            onChange={e=>setNewM(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addMember()}/>
+          <button className="btn pri" style={{height:40}} onClick={addMember}><Icon d={IC.plus} size={14} sw={2.4}/>Добавить</button>
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{animationDelay:'60ms'}}>
+        <h4><Icon d={IC.board} size={14}/>Каналы</h4>
+        {Object.entries(channels).map(([k,c])=>
+          <div key={k} className="arow2">
+            <span className="dot" style={{background:c.c,width:12,height:12}}/>
+            <div style={{minWidth:0,flex:1}}>
+              <div className="aname">{c.label}</div>
+              <div className="asub">{tasks.filter(t=>t.ch===k&&!isDone(t)).length} открытых задач</div>
+            </div>
+            <button className="ibtn" title="Удалить" onClick={()=>askDelChannel(k)}><Icon d={IC.trash} size={14}/></button>
+          </div>)}
+        <div className="aadd">
+          <input placeholder="Название нового канала…" value={newCh}
+            onChange={e=>setNewCh(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addChannel()}/>
+          <button className="btn pri" style={{height:40}} onClick={addChannel}><Icon d={IC.plus} size={14} sw={2.4}/>Добавить</button>
+        </div>
+        <div className="swatches">
+          {SWATCH.map(c=><button key={c} className={'sw'+(chColor===c?' on':'')}
+            style={{background:c}} onClick={()=>setChColor(c)} title={c}/>)}
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{animationDelay:'120ms',gridColumn:'1/-1'}}>
+        <h4><Icon d={IC.target} size={14}/>Проекты</h4>
+        {activeProjects.map(([k,p])=>
+          <div key={k} className="arow2">
+            <span className="dot" style={{background:p.c,width:12,height:12}}/>
+            <div style={{minWidth:0,flex:1}}>
+              <div className="aname">{p.name}</div>
+              <div className="asub">{tasks.filter(t=>t.project===k&&!isDone(t)).length} открытых · {p.goal||'без цели'}</div>
+            </div>
+            <button className="ibtn" title="Архивировать" onClick={()=>toggleArchiveProject(k)}>
+              <Icon d={IC.folder} size={14}/>
+            </button>
+            <button className="ibtn" title="Удалить" onClick={()=>delProject(k)}><Icon d={IC.trash} size={14}/></button>
+          </div>)}
+        {archivedProjects.length>0&&<>
+          <div className="asub" style={{padding:'8px 8px 4px'}}>Архив</div>
+          {archivedProjects.map(([k,p])=>
+            <div key={k} className="arow2" style={{opacity:.6}}>
+              <span className="dot" style={{background:p.c,width:12,height:12}}/>
+              <div style={{minWidth:0,flex:1}}>
+                <div className="aname">{p.name}</div>
+                <div className="asub">в архиве</div>
+              </div>
+              <button className="ibtn" title="Вернуть" onClick={()=>toggleArchiveProject(k)}>
+                <Icon d={IC.redo} size={14}/>
+              </button>
+            </div>)}
+        </>}
+        <div className="aadd">
+          <input placeholder="Название нового проекта…" value={newPr}
+            onChange={e=>setNewPr(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addProject()}/>
+          <button className="btn pri" style={{height:40}} onClick={addProject}><Icon d={IC.plus} size={14} sw={2.4}/>Создать</button>
+        </div>
+        <div className="swatches">
+          {SWATCH.map(c=><button key={c} className={'sw'+(prColor===c?' on':'')}
+            style={{background:c}} onClick={()=>setPrColor(c)} title={c}/>)}
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{animationDelay:'180ms',gridColumn:'1/-1'}}>
+        <h4><Icon d={IC.template} size={14}/>Типы задач</h4>
+        <p className="asub" style={{marginBottom:10}}>Цветные метки для классификации задач. Можно создавать свои типы.</p>
+        <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:12}}>
+          {Object.entries(taskTypes).map(([k,tp])=>
+            <div key={k} className="arow2" style={{padding:0,background:'transparent'}}>
+              <span className="ttype" style={{background:tp.c}}>
+                {tp.label}
+                <button onClick={()=>delTaskType(k)} style={{border:0,background:'rgba(255,255,255,.3)',
+                  borderRadius:'50%',width:14,height:14,display:'grid',placeItems:'center',cursor:'pointer',
+                  color:'#fff',marginLeft:4}} title="Удалить тип">
+                  <Icon d={IC.x} size={9}/>
+                </button>
+              </span>
+            </div>)}
+        </div>
+        <div className="aadd">
+          <input placeholder="Название нового типа…" value={newTT}
+            onChange={e=>setNewTT(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addTaskType()}/>
+          <button className="btn pri" style={{height:40}} onClick={addTaskType}><Icon d={IC.plus} size={14} sw={2.4}/>Создать тип</button>
+        </div>
+        <div className="swatches">
+          {SWATCH.map(c=><button key={c} className={'sw'+(ttColor===c?' on':'')}
+            style={{background:c}} onClick={()=>setTtColor(c)} title={c}/>)}
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{animationDelay:'240ms'}}>
+        <h4><Icon d={IC.cal} size={14}/>Кампания / период</h4>
+        <p className="asub" style={{marginBottom:8}}>Необязательный контекст для команды — название и срок текущей кампании.</p>
+        <div className="f" style={{marginTop:-6}}>
+          <label>Название</label>
+          <input type="text" value={sp.name} onChange={e=>setSp(s=>({...s,name:e.target.value}))}/>
+          <label>Цель кампании</label>
+          <input type="text" placeholder="Например: +30% регистраций" value={sp.goal||''} onChange={e=>setSp(s=>({...s,goal:e.target.value}))}/>
+          <div className="frow">
+            <div><label>Начало</label><input type="date" value={sp.start} onChange={e=>setSp(s=>({...s,start:e.target.value}))}/></div>
+            <div><label>Конец</label><input type="date" value={sp.end} onChange={e=>setSp(s=>({...s,end:e.target.value}))}/></div>
+          </div>
+        </div>
+        <div style={{marginTop:14,display:'flex',alignItems:'center',gap:12}}>
+          <button className="btn pri" style={{height:40}} onClick={saveSprint}>Сохранить</button>
+          <span className="asub">До конца: {Math.max(0,Math.round((pdate(sp.end)-today())/DAY))} дн.</span>
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{animationDelay:'300ms'}}>
+        <h4><Icon d={IC.shield} size={14}/>Войти как</h4>
+        <p className="asub" style={{marginBottom:12}}>«Мои задачи» и комментарии — от имени выбранного сотрудника. Админ-панель доступна только администраторам.</p>
+        <div className="alogin">
+          {Object.entries(members).map(([k,m])=>
+            <button key={k} className={me===k?'on':''} onClick={()=>{
+              setMe(k);
+              logEv('admin',`Админ: вошли как ${m.name}`);
+              toast(`Вы вошли как ${m.name}`);
+            }}>
+              <Avatar id={k} size={34}/>{m.short}{m.role==='admin'?' · админ':''}
+            </button>)}
+        </div>
+      </div>
+
+      <div className="panel apanel" style={{gridColumn:'1/-1',animationDelay:'360ms'}}>
+        <h4><Icon d={IC.folder} size={14}/>Данные</h4>
+        <div className="adata">
+          <div><b>{tasks.length}</b>задач</div>
+          <div><b>{Object.keys(members).length}</b>сотрудников</div>
+          <div><b>{Object.keys(channels).length}</b>каналов</div>
+          <div><b>{Object.keys(projects).length}</b>проектов</div>
+          <div><b>{Object.keys(taskTypes).length}</b>типов</div>
+          <div><b>{kb} КБ</b>в localStorage</div>
+        </div>
+        <div className="abtns">
+          <button className="btn ghost" onClick={doExport}><Icon d={IC.up} size={14}/>Экспорт JSON</button>
+          <button className="btn ghost" onClick={()=>fileRef.current&&fileRef.current.click()}><Icon d={IC.right} size={14}/>Импорт JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json" style={{display:'none'}} onChange={doImport}/>
+          <button className="btn danger" onClick={()=>setConfirm({kind:'clear',title:'Удалить все задачи?',
+            text:`Будет удалено задач: ${tasks.length}. Действие необратимо (без бэкапа).`})}>
+            <Icon d={IC.trash} size={14}/>Очистить задачи
+          </button>
+          <button className="btn danger" onClick={resetDemo}><Icon d={IC.redo} size={14}/>Сбросить демо</button>
+        </div>
+      </div>
+    </div>
+
+    {confirm&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirm(null);}}>
+      <div className="modal" style={{width:'min(460px,100%)'}}>
+        <h3>{confirm.title}</h3>
+        <p className="mtext">{confirm.text}</p>
+        {confirm.candidates&&<div className="f"><label>Передать задачи</label>
+          <select value={confirm.target} onChange={e=>setConfirm(c=>({...c,target:e.target.value}))}>
+            {confirm.candidates.map(([id,x])=><option key={id} value={id}>{x.name||x.label}</option>)}
+          </select></div>}
+        <div className="mfoot">
+          <span style={{flex:1}}/>
+          <button className="btn ghost" onClick={()=>setConfirm(null)}>Отмена</button>
+          <button className="btn danger" onClick={doConfirm}>Удалить</button>
+        </div>
+      </div>
+    </div>}
+  </>;
+}
+
+/* ================= локскрин ================= */
+function LockScreen({login}){
+  const {members,me} = useCtx();
+  const admins = Object.entries(members).filter(([k,m])=>m.role==='admin');
+  return <div className="lock">
+    <div className="lic"><Icon d={IC.shield} size={26}/></div>
+    <h3>Недостаточно прав</h3>
+    <p>Админ-панель доступна только администраторам.<br/>
+       Вы вошли как <b>{(members[me]||{name:'—'}).name}</b> · роль «участник».<br/>
+       Переключитесь на администратора, чтобы продолжить:</p>
+    <div className="lockadmins">
+      {admins.length===0&&<span className="asub">Администраторов нет</span>}
+      {admins.map(([k,m])=><button key={k} className="btn ghost" onClick={()=>login(k)}>
+        <Avatar id={k} size={22}/>{m.short}
+      </button>)}
+    </div>
+  </div>;
+}
+
+/* ================= настройки карточки ================= */
+function CardSettings({cardFields,setCardFields,onClose}){
+  const FIELDS = [
+    ['channel','Канал','Показывать чип канала маркетинга',IC.board],
+    ['assignee','Исполнитель','Аватар и имя ответственного',IC.user],
+    ['priority','Приоритет','Индикатор важности задачи',IC.flagOutline],
+    ['due','Дедлайн','Срок выполнения задачи',IC.cal],
+    ['desc','Описание','Краткий текст задачи',IC.note],
+    ['types','Типы задач','Цветные метки типа',IC.template],
+    ['project','Проект','Привязка к проекту',IC.target],
+    ['subtasks','Чек-лист','Прогресс подзадач',IC.check],
+    ['comments','Комментарии','Счётчик комментариев',IC.chat],
+    ['timer','Таймер','Учёт времени',IC.clock],
+  ];
+  const allOn = FIELDS.every(([k])=>cardFields[k]);
+  const toggleAll=()=>{
+    const next={}; FIELDS.forEach(([k])=>next[k]=!allOn);
+    setCardFields(next);
+  };
+  return <div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}>
+    <div className="modal sm">
+      <button className="mclose" onClick={onClose}><Icon d={IC.x} size={16}/></button>
+      <h3>Вид карточки</h3>
+      <p className="asub" style={{marginBottom:12}}>Выберите, какие поля показывать на карточках задач.</p>
+      <div className="csrow" style={{borderBottom:'1.5px solid var(--line)'}}>
+        <div className="csi">
+          <div className="ic"><Icon d={IC.cog} size={16}/></div>
+          <div><div className="lb">{allOn?'Скрыть все':'Показать все'}</div>
+            <div className="sb">Переключить все поля разом</div></div>
+        </div>
+        <button className={'sw2'+(allOn?' on':'')} onClick={toggleAll}/>
+      </div>
+      {FIELDS.map(([k,lb,sb,ic])=>
+        <div key={k} className="csrow">
+          <div className="csi">
+            <div className="ic"><Icon d={ic} size={14}/></div>
+            <div><div className="lb">{lb}</div><div className="sb">{sb}</div></div>
+          </div>
+          <button className={'sw2'+(cardFields[k]?' on':'')}
+            onClick={()=>setCardFields(f=>({...f,[k]:!f[k]}))}/>
+        </div>)}
+      <div className="mfoot">
+        <span style={{flex:1}}/>
+        <button className="btn pri" onClick={onClose}>Готово</button>
+      </div>
+    </div>
+  </div>;
+}
+
+/* ================= command palette ================= */
+function CommandPalette({tasks,channels,projects,onSelect,onClose}){
+  const [q,setQ]=useState('');
+  const [hl,setHl]=useState(0);
+  const inputRef=useRef(null);
+  useEffect(()=>{inputRef.current&&inputRef.current.focus();},[]);
+  useEffect(()=>{setHl(0);},[q]);
+  const qq=q.trim().toLowerCase();
+  const items=useMemo(()=>{
+    const base=[];
+    tasks.forEach(t=>{
+      const ch=channels[t.ch];
+      const pr=projects[t.project];
+      base.push({kind:'task',id:t.id,label:t.title,
+        sub:`${ch?.label||'—'} · ${pr?.name||'без проекта'} · ${colMeta(t).t}`,
+        color:ch?.c||'#98A29B',icon:IC.board});
+    });
+    Object.entries(channels).forEach(([k,c])=>
+      base.push({kind:'channel',id:k,label:`Канал: ${c.label}`,sub:'Фильтр по каналу',color:c.c,icon:IC.board}));
+    Object.entries(projects).forEach(([k,p])=>!p.archived&&
+      base.push({kind:'project',id:k,label:`Проект: ${p.name}`,sub:'Фильтр по проекту',color:p.c,icon:IC.target}));
+    base.push({kind:'view',id:'mine',label:'Мои задачи',sub:'Перейти',color:'#2E6BFF',icon:IC.user});
+    base.push({kind:'view',id:'cal',label:'Календарь',sub:'Перейти',color:'#2E6BFF',icon:IC.cal});
+    base.push({kind:'view',id:'stats',label:'Аналитика',sub:'Перейти',color:'#2E6BFF',icon:IC.chart});
+    base.push({kind:'view',id:'fav',label:'Избранное',sub:'Перейти',color:'#E8930C',icon:IC.star});
+    base.push({kind:'view',id:'tpl',label:'Шаблоны',sub:'Перейти',color:'#8B5CF6',icon:IC.template});
+    base.push({kind:'action',id:'new',label:'Создать задачу',sub:'Действие',color:'#FF5A2D',icon:IC.plus});
+    if(!qq) return base.slice(0,12);
+    return base.filter(x=>(x.label+' '+x.sub).toLowerCase().includes(qq)).slice(0,15);
+  },[tasks,channels,projects,qq]);
+
+  const handleKey=e=>{
+    if(e.key==='ArrowDown'){e.preventDefault();setHl(h=>Math.min(items.length-1,h+1));}
+    else if(e.key==='ArrowUp'){e.preventDefault();setHl(h=>Math.max(0,h-1));}
+    else if(e.key==='Enter'){e.preventDefault();items[hl]&&onSelect(items[hl]);}
+    else if(e.key==='Escape'){onClose();}
+  };
+  return <div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}} style={{alignItems:'flex-start',paddingTop:'15vh'}}>
+    <div className="cmd" onClick={e=>e.stopPropagation()}>
+      <div className="cmd-in">
+        <Icon d={IC.search} size={16}/>
+        <input ref={inputRef} placeholder="Поиск задач, проектов, каналов…"
+          value={q} onChange={e=>setQ(e.target.value)} onKeyDown={handleKey}/>
+        <span style={{font:'500 10px Golos Text',color:'var(--mut)',padding:'2px 6px',background:'var(--soft)',borderRadius:6}}>ESC</span>
+      </div>
+      <div className="cmd-list">
+        {items.length===0&&<div style={{padding:'20px',textAlign:'center',color:'var(--mut)',fontSize:12.5}}>Ничего не найдено</div>}
+        {items.map((it,i)=>
+          <div key={it.kind+it.id} className={'cmd-item'+(i===hl?' hl':'')}
+            onClick={()=>onSelect(it)} onMouseEnter={()=>setHl(i)}>
+            <div className="ci-ic" style={{color:it.color}}><Icon d={it.icon} size={14}/></div>
+            <span className="ci-t">{it.label}</span>
+            <span className="ci-s">{it.sub}</span>
+          </div>)}
+      </div>
+    </div>
+  </div>;
+}
+
+/* ================= быстрый дропдаун на карточке ================= */
+function QuickDropdown({target,kind,onSelect,onClose,options,currentValue}){
+  const ref=useRef(null);
   useEffect(()=>{
-    try{ localStorage.setItem(LS_KEY, JSON.stringify({tasks, people, projects, taskTypes, sprints})); } catch(e){}
-  }, [tasks, people, projects, taskTypes, sprints]);
+    const h=e=>{if(!ref.current?.contains(e.target))onClose();};
+    document.addEventListener('mousedown',h);
+    return ()=>document.removeEventListener('mousedown',h);
+  },[]);
+  const rect=target?.getBoundingClientRect();
+  if(!rect) return null;
+  return <div ref={ref} className="qdd" style={{
+    position:'fixed',
+    left:Math.min(rect.left,window.innerWidth-260)+'px',
+    top:(rect.bottom+4)+'px'}}>
+    {options.map(o=>
+      <button key={o.value} className={o.value===currentValue?'on':''}
+        onClick={()=>{onSelect(o.value);onClose();}}>
+        {o.color&&<span className="dot" style={{background:o.color}}/>}
+        <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>{o.label}</span>
+      </button>)}
+  </div>;
+}
 
-  // Таймер
-  const anyRunning = useMemo(()=>tasks.some(t=>t.startedAt!==null), [tasks]);
+/* ================= сайдбар ================= */
+function Sidebar({view,setView,tasks,chF,whoF,tagF,onCh,onWho,onTag,tags,tagMode,setTagMode,
+                   resetDemo,sprint,me,scratch,setScratch,projects,favCount,tplCount,selectedIds}){
+  const {channels,members} = useCtx();
+  const myOpen=tasks.filter(t=>t.who===me&&!isDone(t)).length;
+  const pinnedCount=tasks.filter(t=>t.pinned&&!isDone(t)).length;
+  const NAV_MAIN=[['board','Доска',IC.board]];
+  const NAV_PROD=[['photo','Фото',IC.camera],['video','Видео',IC.video]];
+  const NAV_REST=[['mine','Мои задачи',IC.user],['fav','Избранное',IC.star],
+                  ['cal','Календарь',IC.cal],['stats','Аналитика',IC.chart],
+                  ['tpl','Шаблоны',IC.template],['files','Файлы',IC.folder],
+                  ['feed','История',IC.clock],['admin','Админ-панель',IC.shield]];
+  const NavBtn=([id,l,ic,badge])=>
+    <button key={id} className={view===id?'on':''} onClick={()=>setView(id)}>
+      <Icon d={ic}/>{l}
+      {badge>0&&<span className="cnt">{badge}</span>}
+    </button>;
+  const sLeft=Math.max(0,Math.round((pdate(sprint.end)-today())/DAY));
+  return <aside className="side">
+    <div className="brand">
+      <div className="logo">П</div>
+      <div><b>ПОТОК</b><span>marketing desk</span></div>
+    </div>
+    <nav className="nav">
+      {NAV_MAIN.map(x=>NavBtn(x))}
+      <div className="grp">Производство</div>
+      {NAV_PROD.map(x=>NavBtn(x))}
+      <div className="grp">Остальное</div>
+      {NAV_REST.map(x=>{
+        if(x[0]==='fav') return NavBtn([x[0],x[1],x[2],favCount]);
+        if(x[0]==='tpl') return NavBtn([x[0],x[1],x[2],tplCount]);
+        return NavBtn(x);
+      })}
+    </nav>
+    <div className="sb">
+      <h5>Проекты</h5>
+      {Object.entries(projects).filter(([k,p])=>!p.archived).slice(0,6).map(([k,p])=>{
+        const n=tasks.filter(t=>t.project===k&&!isDone(t)).length;
+        return <button key={k} className="srow" onClick={()=>{setView('board');/* фильтр можно расширить */}} title={p.goal||'Без цели'}>
+          <span className="dot" style={{background:p.c}}/>
+          <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>{p.name}</span>
+          <span className="cnt">{n}</span>
+        </button>;})}
+    </div>
+    <div className="sb">
+      <h5>Каналы</h5>
+      {Object.entries(channels).map(([k,c])=>{
+        const n=tasks.filter(t=>t.ch===k&&!isDone(t)).length;
+        return <button key={k} className={'srow'+(chF.includes(k)?' on':'')} onClick={()=>onCh(k)}>
+          <span className="dot" style={{background:c.c}}/>{c.label}<span className="cnt">{n}</span>
+        </button>;})}
+    </div>
+    <div className="sb">
+      <h5>Команда</h5>
+      {Object.entries(members).map(([k,m])=>{
+        const n=tasks.filter(t=>t.who===k&&!isDone(t)).length;
+        return <button key={k} className={'srow'+(whoF.includes(k)?' on':'')} onClick={()=>onWho(k)}>
+          <Avatar id={k} size={22}/>{m.short}<span className="cnt">{n}</span>
+        </button>;})}
+    </div>
+    {tags.length>0&&<div className="sb">
+      <h5>Теги <button className="tmode" onClick={()=>setTagMode(m=>m==='any'?'all':'any')}
+        title="Режим пересечения тегов">{tagMode==='any'?'или':'и'}</button></h5>
+      {tags.slice(0,7).map(([tg,n])=>
+        <button key={tg} className={'srow'+(tagF.includes(tg)?' on':'')} onClick={()=>onTag(tg)}>
+          <span className="thash">#</span>{tg}<span className="cnt">{n}</span>
+        </button>)}
+    </div>}
+    <div className="sprint">
+      <div className="live"><span className="pulse"/>Кампания активна</div>
+      <b>{sprint.name.length>20?sprint.name.slice(0,20)+'…':sprint.name}</b>
+      <small>{fmt(pdate(sprint.start))} — {fmt(pdate(sprint.end))}<br/>{sLeft} дней до конца</small>
+      {sprint.goal&&<div className="sprint-goal">🎯 {sprint.goal}</div>}
+    </div>
+    <div className="scratch">
+      <h5><Icon d={IC.note} size={12}/>Заметки</h5>
+      <textarea placeholder="Быстрые мысли, идеи, список дел…" value={scratch}
+        onChange={e=>setScratch(e.target.value)}/>
+    </div>
+    <button className="reset" onClick={resetDemo}><Icon d={IC.redo} size={13}/>Сбросить демо-данные</button>
+    <div className="hotkeys"><b>N</b> задача · <b>/</b> поиск · <b>Ctrl+K</b> палитра · <b>T</b> тема · <b>1–9</b> разделы</div>
+  </aside>;
+}
+
+/* ================= модалка задачи ================= */
+function TaskModal({init,live,defaultBoard,defaultCol,defaultDue,onClose,onSave,onDelete,onSaveAsTemplate}){
+  const {channels,members,me,now,toggleTimer,resetTimer,projects,taskTypes} = useCtx();
+  const firstCh=Object.keys(channels)[0];
+  const firstWho=Object.keys(members)[0];
+  const firstProject=Object.keys(projects).find(k=>!projects[k].archived)||null;
+  const [f,setF]=useState(()=> init
+    ? {...init, sub:init.sub.map(s=>({...s})), coms:[...init.coms], tags:[...(init.tags||[])],
+        types:[...(init.types||[])]}
+    : {id:null,board:defaultBoard||'main',col:defaultCol||colsOf(defaultBoard||'main')[0].id,
+       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
+       due:defaultDue||iso(addDays(3)),sub:[],coms:[],tags:[],types:[],repeat:'none',
+       time:null,project:firstProject});
+  const [comText,setComText]=useState('');
+  const [tagInput,setTagInput]=useState('');
+  const [ttInput,setTtInput]=useState('');
+  const [ttColor,setTtColor]=useState('#2E6BFF');
+  const set=(k,v)=>setF(s=>({...s,[k]:v}));
+  useEffect(()=>{
+    const h=e=>{if(e.key==='Escape') onClose();};
+    window.addEventListener('keydown',h);
+    return ()=>window.removeEventListener('keydown',h);
+  },[]);
+  const subDone=f.sub.filter(s=>s.done).length;
+  const setSub=(i,patch)=>setF(s=>({...s,sub:s.sub.map((x,j)=>j===i?{...x,...patch}:x)}));
+  const addSub=t=>setF(s=>({...s,sub:[...s.sub,{t,done:false}]}));
+  const addTag=v=>{
+    const tg=v.trim().toLowerCase().replace(/^#/,'');
+    if(!tg||f.tags.includes(tg)) return;
+    setF(s=>({...s,tags:[...s.tags,tg]}));
+  };
+  const toggleType=tid=>{
+    setF(s=>{
+      const types=s.types||[];
+      return {...s,types:types.includes(tid)?types.filter(x=>x!==tid):[...types,tid]};
+    });
+  };
+  const addTaskType=()=>{
+    const label=ttInput.trim();
+    if(!label) return;
+    const id='tt'+Date.now().toString(36);
+    // передадим вверх через onSave, но тут создадим локально и выберем
+    return {id,label,c:ttColor};
+  };
+  const addCom=()=>{
+    if(!comText.trim()) return;
+    setF(s=>({...s,coms:[...s.coms,{who:me,ts:Date.now(),text:comText.trim()}]}));
+    setComText('');
+  };
+  const ok=f.title.trim().length>0;
+  const liveRunning=live&&live.time&&live.time.run;
+
+  const handleAddType=()=>{
+    const label=ttInput.trim();
+    if(!label) return;
+    // попросим у родителя создать тип и вернуть id
+    onSave({kind:'new-type',label,c:ttColor,form:f});
+    setTtInput('');
+  };
+  return <div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget) onClose();}}>
+    <div className="modal">
+      <button className="mclose" onClick={onClose}><Icon d={IC.x} size={16}/></button>
+      <h3>{init?'Редактировать задачу':'Новая задача'}</h3>
+      <div className="f">
+        <label>Название</label>
+        <input type="text" autoFocus placeholder="Что нужно сделать?" value={f.title} onChange={e=>set('title',e.target.value)}/>
+        <label>Описание</label>
+        <textarea rows="2" placeholder="Детали, ссылки, критерии готовности…" value={f.desc} onChange={e=>set('desc',e.target.value)}/>
+        <div className="frow">
+          <div>
+            <label>Доска</label>
+            <div className="seg" style={{height:'auto'}}>
+              {Object.entries(BOARDS).map(([k,b])=>
+                <button key={k} type="button" className={f.board===k?'on':''}
+                  onClick={()=>setF(s=>({...s,board:k,col:colsOf(k)[0].id}))}>{b.title}</button>)}
+            </div>
+          </div>
+          <div>
+            <label>Проект</label>
+            <select value={f.project||''} onChange={e=>set('project',e.target.value||null)}
+              style={{width:'100%',border:'1px solid var(--line)',borderRadius:10,padding:'10px 12px',
+                font:"500 14px 'Golos Text'",color:'var(--ink)',background:'var(--field)',outline:'none'}}>
+              <option value="">— Без проекта —</option>
+              {Object.entries(projects).filter(([k,p])=>!p.archived).map(([k,p])=>
+                <option key={k} value={k}>{p.name}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="frow">
+          <div>
+            <label>Канал</label>
+            <div className="chipsel">
+              {Object.entries(channels).map(([k,c])=>
+                <button key={k} type="button"
+                  style={f.ch===k?{background:cmix(c.c,15),borderColor:c.c,color:c.c}:{}}
+                  onClick={()=>set('ch',k)}>{c.label}</button>)}
+            </div>
+          </div>
+          <div>
+            <label>Исполнитель</label>
+            <div className="avasel">
+              {Object.entries(members).map(([k,m])=>
+                <button key={k} type="button" className={f.who===k?'on':''} style={{background:m.c}}
+                  title={m.name} onClick={()=>set('who',k)}>{m.ini}</button>)}
+            </div>
+          </div>
+        </div>
+        <div className="frow">
+          <div>
+            <label>Типы задач</label>
+            <div className="ttbox">
+              {(f.types||[]).map(tid=>{
+                const tp=taskTypes[tid]; if(!tp) return null;
+                return <span key={tid} className="ttype" style={{background:tp.c}}>
+                  {tp.label}
+                  <button onClick={()=>toggleType(tid)} title="Убрать тип">
+                    <Icon d={IC.x} size={9}/>
+                  </button>
+                </span>;
+              })}
+              <div className="ttadd">
+                <input placeholder="Выбрать или создать…" list="tt-list" value={ttInput}
+                  onChange={e=>setTtInput(e.target.value)}
+                  onKeyDown={e=>{
+                    if(e.key==='Enter'){
+                      e.preventDefault();
+                      const match=Object.entries(taskTypes).find(([k,v])=>v.label.toLowerCase()===ttInput.trim().toLowerCase());
+                      if(match){toggleType(match[0]);setTtInput('');}
+                      else if(ttInput.trim()){handleAddType();}
+                    }
+                  }}/>
+                <datalist id="tt-list">
+                  {Object.entries(taskTypes).map(([k,tp])=><option key={k} value={tp.label}/>)}
+                </datalist>
+              </div>
+            </div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:6}}>
+              {Object.entries(taskTypes).filter(([k])=>!(f.types||[]).includes(k)).map(([k,tp])=>
+                <button key={k} type="button" className="ttype" style={{background:tp.c,opacity:.65}}
+                  onClick={()=>toggleType(k)} title="Добавить тип">{tp.label}</button>)}
+            </div>
+          </div>
+          <div>
+            <label>Теги (дополнительно)</label>
+            <div className="tagbox">
+              {f.tags.map((tg,i)=><span key={tg} className="tagchip">#{tg}
+                <button onClick={()=>setF(s=>({...s,tags:s.tags.filter((_,j)=>j!==i)}))}><Icon d={IC.x} size={10} sw={2.4}/></button>
+              </span>)}
+              <input placeholder="Тег + Enter…" value={tagInput} onChange={e=>setTagInput(e.target.value)}
+                onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();addTag(tagInput);setTagInput('');}}}/>
+            </div>
+          </div>
+        </div>
+        <div className="frow3">
+          <div><label>Дедлайн</label><input type="date" value={f.due} onChange={e=>set('due',e.target.value)}/></div>
+          <div><label>Повтор</label>
+            <select value={f.repeat} onChange={e=>set('repeat',e.target.value)}>
+              {Object.entries(REPEAT).map(([k,r])=><option key={k} value={k}>{r.l}</option>)}
+            </select>
+          </div>
+          <div><label>Статус</label>
+            <select value={f.col} onChange={e=>set('col',e.target.value)}>
+              {colsOf(f.board).map(c=><option key={c.id} value={c.id}>{c.t}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="frow">
+          <div>
+            <label>Приоритет</label>
+            <div className="seg" style={{height:'auto'}}>
+              {[['high','▲ Выс.'],['mid','● Сред.'],['low','▽ Низ.']].map(([v,l])=>
+                <button key={v} type="button" className={f.pr===v?'on':''} onClick={()=>set('pr',v)}>{l}</button>)}
+            </div>
+          </div>
+          {init&&live&&<div>
+            <label>Таймер задачи</label>
+            <div className="trow" style={{marginTop:0}}>
+              <b className="ttime" style={{fontSize:17,minWidth:80}}>{fmtDur(elapsed(live,now))}</b>
+              <button className={'btn sm '+(liveRunning?'ghost':'pri')} onClick={()=>toggleTimer(init.id)}>
+                <Icon d={liveRunning?IC.pause:IC.play} size={11} sw={2.4}/>{liveRunning?'Пауза':'Старт'}
+              </button>
+              <button className="btn sm ghost" onClick={()=>resetTimer(init.id)}>Сброс</button>
+            </div>
+          </div>}
+        </div>
+        <div className="mcols">
+          <div>
+            <label>Чек-лист {f.sub.length>0?`· ${subDone}/${f.sub.length}`:''}</label>
+            {f.sub.map((s,i)=>
+              <div key={i} className={'ck'+(s.done?' done':'')}>
+                <input type="checkbox" checked={s.done} onChange={()=>setSub(i,{done:!s.done})}/>
+                <span>{s.t}</span>
+                <button className="rm" title="Убрать пункт" onClick={()=>setF(s2=>({...s2,sub:s2.sub.filter((_,j)=>j!==i)}))}>
+                  <Icon d={IC.x} size={11}/>
+                </button>
+              </div>)}
+            <div className="ckadd">
+              <input placeholder="Новый пункт и Enter…"
+                onKeyDown={e=>{if(e.key==='Enter'&&e.target.value.trim()){addSub(e.target.value.trim());e.target.value='';}}}/>
+            </div>
+          </div>
+          <div>
+            <label>Комментарии {f.coms.length>0?`· ${f.coms.length}`:''}</label>
+            <div className="cmts">
+              {f.coms.length===0&&<div className="cempty">Пока тихо — напишите первым.</div>}
+              {f.coms.map((c,i)=>
+                <div key={i} className="cmt">
+                  <Avatar id={c.who} size={24}/>
+                  <div className="b">
+                    <small>{(members[c.who]||{short:'—'}).short}{c.who===me?' · вы':''} · {fmtT(c.ts)}</small>
+                    <p>{c.text}</p>
+                  </div>
+                </div>)}
+            </div>
+            <div className="cinput">
+              <input placeholder="Комментарий…" value={comText}
+                onChange={e=>setComText(e.target.value)}
+                onKeyDown={e=>{if(e.key==='Enter') addCom();}}/>
+              <button className="csend" title="Отправить" onClick={addCom}><Icon d={IC.up} size={15} sw={2}/></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mfoot">
+        {init&&<button className="btn danger" onClick={()=>onDelete(init.id)}><Icon d={IC.trash} size={14}/>Удалить</button>}
+        {init&&<button className="btn ghost" onClick={()=>onSaveAsTemplate&&onSaveAsTemplate(init)}
+          title="Сохранить как шаблон"><Icon d={IC.template} size={14}/>Шаблон</button>}
+        <span style={{flex:1}}/>
+        <button className="btn ghost" onClick={onClose}>Отмена</button>
+        <button className="btn pri" disabled={!ok} onClick={()=>onSave(f)}>{init?'Сохранить':'Создать задачу'}</button>
+      </div>
+    </div>
+  </div>;
+}
+
+/* ================= приложение ================= */
+function App(){
+  const saved=useRef(loadState()).current||{};
+  const [view,setView]=useState('board');
+  const [mode,setMode]=useState(saved.ui&&saved.ui.mode||'board');
+  const [group,setGroup]=useState(saved.ui&&saved.ui.group||'status');
+  const [sort,setSort]=useState(saved.ui&&saved.ui.sort||'due-asc');
+  const [theme,setTheme]=useState(saved.theme==='dark'?'dark':'light');
+  const [tasks,setTasks]=useState((saved.tasks||SEED).map(normTask));
+  const [log,setLog]=useState(saved.log||SEED_LOG);
+  const [channels,setChannels]=useState(saved.channels&&Object.keys(saved.channels).length?saved.channels:DEFAULT_CHANNELS);
+  const [members,setMembers]=useState(()=>{
+    const src=saved.members&&Object.keys(saved.members).length?saved.members:DEFAULT_MEMBERS;
+    return Object.fromEntries(Object.entries(src).map(([k,v])=>[k,{role:k==='ak'?'admin':'member',...v}]));
+  });
+  const [me,setMe]=useState(()=>{
+    const src=saved.members&&Object.keys(saved.members).length?saved.members:DEFAULT_MEMBERS;
+    return saved.me&&src[saved.me]?saved.me:Object.keys(src)[0];
+  });
+  const [sprint,setSprint]=useState(saved.sprint||DEFAULT_SPRINT);
+  const [projects,setProjects]=useState(saved.projects&&Object.keys(saved.projects).length?saved.projects:DEFAULT_PROJECTS);
+  const [taskTypes,setTaskTypes]=useState(saved.taskTypes&&Object.keys(saved.taskTypes).length?saved.taskTypes:DEFAULT_TASK_TYPES);
+  const [templates,setTemplates]=useState(saved.templates&&saved.templates.length?saved.templates:DEFAULT_TEMPLATES);
+  const [cardFields,setCardFields]=useState(saved.cardFields||DEFAULT_CARD_FIELDS);
+  const [scratch,setScratch]=useState(saved.scratch||'');
+  const [q,setQ]=useState('');
+  const [chF,setChF]=useState([]);
+  const [whoF,setWhoF]=useState([]);
+  const [tagF,setTagF]=useState([]);
+  const [prjF,setPrjF]=useState([]);
+  const [tagMode,setTagMode]=useState('any');
+  const [prF,setPrF]=useState('all');
+  const [dueF,setDueF]=useState('all');
+  const [modal,setModal]=useState(null);
+  const [toasts,setToasts]=useState([]);
+  const [notifOpen,setNotifOpen]=useState(false);
+  const [now,setNow]=useState(Date.now());
+  const [showCardSettings,setShowCardSettings]=useState(false);
+  const [quickDD,setQuickDD]=useState(null);
+  const [selectedIds,setSelectedIds]=useState([]);
+  const [cmdOpen,setCmdOpen]=useState(false);
+  const [pomo,setPomo]=useState(null);
+  const kRef=useRef(0);
+  const searchRef=useRef(null);
+
+  /* тема и ui */
+  useEffect(()=>{document.documentElement.classList.toggle('dark',theme==='dark');},[theme]);
+  useEffect(()=>{
+    try{localStorage.setItem(LS_KEY,JSON.stringify({
+      tasks,log,channels,members,me,sprint,projects,taskTypes,templates,cardFields,scratch,theme,
+      ui:{mode,group,sort}}));}catch(e){}
+  },[tasks,log,channels,members,me,sprint,projects,taskTypes,templates,cardFields,scratch,theme,mode,group,sort]);
+
+  /* тик таймеров */
+  const anyRunning=useMemo(()=>tasks.some(t=>t.time&&t.time.run)||(pomo&&pomo.running),[tasks,pomo]);
   useEffect(()=>{
     if(!anyRunning) return;
-    const iv = setInterval(()=>setNow(Date.now()), 1000);
+    setNow(Date.now());
+    const iv=setInterval(()=>setNow(Date.now()),1000);
     return ()=>clearInterval(iv);
-  }, [anyRunning]);
+  },[anyRunning]);
 
-  const toggleTimer = id => {
-    setTasks(ts => ts.map(t => {
-      if(t.id === id) {
-        if(t.startedAt) return {...t, elapsed: t.elapsed + Math.floor((Date.now()-t.startedAt)/1000), startedAt: null};
-        return {...t, startedAt: Date.now()};
-      }
-      if(t.startedAt) return {...t, elapsed: t.elapsed + Math.floor((Date.now()-t.startedAt)/1000), startedAt: null};
-      return t;
-    }));
-  };
-
-  const completeTask = t => {
-    let updates = {...t, status: 'done', startedAt: null};
-    if(t.startedAt) updates.elapsed = t.elapsed + Math.floor((Date.now()-t.startedAt)/1000);
-    let newTs = tasks.map(x => x.id === t.id ? updates : x);
-    
-    // Создаем следующий повтор
-    if(t.repeat !== 'none' && t.due) {
-      const nextD = nextDue(t.due, t.repeat);
-      newTs.push({ ...t, id:'t'+Date.now(), number: Math.max(...tasks.map(x=>x.number))+1,
-        status: getStatuses(t.board)[0].id, due: nextD, elapsed: 0, startedAt: null,
-        checklist: t.checklist.map(c=>({...c, done:false}))
-      });
-    }
-    setTasks(newTs);
-    setModal(null);
-  };
-
-  const saveTask = t => {
-    if(t.id) setTasks(ts => ts.map(x => x.id === t.id ? t : x));
-    else setTasks(ts => [...ts, {...t, id:'t'+Date.now(), number: Math.max(...tasks.map(x=>x.number))+1}]);
-    setModal(null);
-  };
-
-  const deleteTask = id => { setTasks(ts => ts.filter(x => x.id !== id)); setModal(null); };
-
-  // AI Tool Registration (как в Код 1)
+  /* pomo tick */
   useEffect(()=>{
-    const mCtx = document.modelContext;
-    if(!mCtx?.registerTool) return;
-    const ac = new AbortController();
-    mCtx.registerTool({
-      name: 'list_marketing_tasks', title: 'Получить задачи', description: 'Возвращает задачи.',
-      execute: () => ({tasks: tasks.map(t=>({id:t.id, title:t.title, board:t.board, status:t.status, due:t.due}))})
-    }, {signal: ac.signal});
-    mCtx.registerTool({
-      name: 'set_marketing_task_status', title: 'Изменить статус', description: 'Изменяет статус задачи.',
-      inputSchema: {type:'object', properties:{taskId:{type:'string'}, status:{type:'string'}}, required:['taskId','status']},
-      execute: async (args) => {
-        setTasks(ts => ts.map(t => t.id===args.taskId ? {...t, status:args.status} : t));
-        return {id: args.taskId, status: args.status};
+    if(!pomo||!pomo.running) return;
+    const check=()=>{
+      const left=pomo.endsAt-Date.now();
+      if(left<=0){
+        setPomo(p=>({...p,running:false}));
+        if(pomo.phase==='work'){
+          toast('🍅 Помидор завершён! Время перерыва.',null,'warn');
+        } else {
+          toast('Перерыв окончен — за работу!',null,'warn');
+        }
       }
-    }, {signal: ac.signal});
-    return () => ac.abort();
-  }, [tasks]);
+    };
+    const iv=setInterval(check,1000);
+    return ()=>clearInterval(iv);
+  },[pomo]);
 
-  function loadState(){
-    try{ const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : null; } catch(e){return null;}
-  }
+  const toggleTimer=id=>{
+    const t=tasks.find(x=>x.id===id); if(!t) return;
+    const wasRunning=t.time&&t.time.run;
+    setTasks(ts=>ts.map(x=>{
+      if(x.id===id){
+        const cur=x.time||{s:0,run:null};
+        if(cur.run) return {...x,time:{s:cur.s+Math.round((Date.now()-cur.run)/1000),run:null}};
+        return {...x,time:{s:cur.s,run:Date.now()}};
+      }
+      if(x.time&&x.time.run) return {...x,time:{s:x.time.s+Math.round((Date.now()-x.time.run)/1000),run:null}};
+      return x;
+    }));
+    if(!wasRunning) toast(`Таймер запущен: «${t.title.length>30?t.title.slice(0,30)+'…':t.title}»`);
+  };
+  const resetTimer=id=>{
+    setTasks(ts=>ts.map(x=>x.id===id?{...x,time:{s:0,run:null}}:x));
+    toast('Таймер сброшен');
+  };
 
-  // Фильтрация
-  const filteredTasks = useMemo(() => tasks.filter(t => {
-    if(view === 'board' && t.board !== boardId) return false;
-    if(view === 'projects' && !t.project) return false;
-    if(!showDone && isDone(t)) return false;
-    if(fProj.length && !fProj.includes(t.project)) return false;
-    if(fWho.length && !fWho.includes(t.assignee)) return false;
-    if(fTags.length && !fTags.some(tg => t.tags.includes(tg))) return false;
-    if(q.trim() && !t.title.toLowerCase().includes(q.trim().toLowerCase())) return false;
+  const ctx=useMemo(()=>({channels,members,me,now,toggleTimer,resetTimer,projects,taskTypes,cardFields}),
+    [channels,members,me,now,tasks,projects,taskTypes,cardFields]);
+
+  const toast=(msg,action,type)=>{
+    const id=Date.now()+Math.random();
+    setToasts(t=>[...t,{id,msg,action,type}]);
+    setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),3400);
+  };
+  const killToast=id=>setToasts(t=>t.filter(x=>x.id!==id));
+  const logEv=(type,text)=>setLog(l=>[{id:'e'+Date.now()+Math.random().toString(16).slice(2),ts:Date.now(),type,text},...l].slice(0,160));
+  const toggle=(val,cur,set)=>set(cur.includes(val)?cur.filter(x=>x!==val):[...cur,val]);
+  const resetF=()=>{setQ('');setChF([]);setWhoF([]);setTagF([]);setPrjF([]);setPrF('all');setDueF('all');};
+  const hasF=!!(q.trim()||chF.length||whoF.length||tagF.length||prjF.length||prF!=='all'||dueF!=='all');
+  const openModal=m=>setModal({...m,k:++kRef.current});
+
+  const warned=useRef(false);
+  useEffect(()=>{
+    if(warned.current) return; warned.current=true;
+    const n=tasks.filter(t=>!isDone(t)&&daysLeft(t.due)<0).length;
+    if(n>0) setTimeout(()=>toast(`Просроченных задач: ${n} — загляните в колокольчик`),800);
+  },[]);
+
+  /* горячие клавиши */
+  useEffect(()=>{
+    const h=e=>{
+      if(e.key==='Escape'){setNotifOpen(false);setCmdOpen(false);setQuickDD(null);return;}
+      const tag=(e.target.tagName||'').toLowerCase();
+      const inInput=tag==='input'||tag==='textarea'||tag==='select';
+      if(e.metaKey||e.ctrlKey){
+        if(e.key==='k'||e.key==='K'||e.key==='л'||e.key==='Л'){e.preventDefault();setCmdOpen(true);return;}
+        return;
+      }
+      if(e.altKey) return;
+      if(modal) return;
+      if(inInput) return;
+      if(e.key==='/'){e.preventDefault();setView('board');setTimeout(()=>searchRef.current&&searchRef.current.focus(),30);}
+      else if(e.key==='n'||e.key==='т') openModal({mode:'new',board:'main'});
+      else if(e.key==='t'||e.key==='е') setTheme(t=>t==='dark'?'light':'dark');
+      else{
+        const v={'1':'board','2':'photo','3':'video','4':'mine','5':'cal','6':'stats','7':'files','8':'feed','9':'admin','0':'fav'}[e.key];
+        if(v) setView(v);
+      }
+    };
+    window.addEventListener('keydown',h);
+    return ()=>window.removeEventListener('keydown',h);
+  },[modal]);
+
+  /* фильтры */
+  const base=useMemo(()=>tasks.filter(t=>{
+    if(chF.length&&!chF.includes(t.ch)) return false;
+    if(whoF.length&&!whoF.includes(t.who)) return false;
+    if(prjF.length&&!prjF.includes(t.project)) return false;
+    if(tagF.length){
+      const tt=t.tags||[];
+      if(tagMode==='all'?!tagF.every(tg=>tt.includes(tg)):!tagF.some(tg=>tt.includes(tg))) return false;
+    }
+    if(prF!=='all'&&t.pr!==prF) return false;
+    if(q.trim()){
+      const s=(t.title+' '+(t.desc||'')+' '+(t.tags||[]).join(' ')).toLowerCase();
+      if(!s.includes(q.trim().toLowerCase())) return false;
+    }
     return true;
-  }), [tasks, view, boardId, fProj, fWho, fTags, q, showDone]);
+  }),[tasks,q,chF,whoF,prjF,tagF,tagMode,prF]);
 
-  const activeTimer = tasks.find(t => t.startedAt !== null);
+  const dueCounts=useMemo(()=>{
+    const cnt={today:0,soon:0,week:0,over:0};
+    base.forEach(t=>{
+      const dl=daysLeft(t.due);
+      if(dl<0&&!isDone(t)) cnt.over++;
+      if(isDone(t)) return;
+      if(dl===0) cnt.today++;
+      if(dl>=0&&dl<=3) cnt.soon++;
+      if(dl>=0&&dl<=7) cnt.week++;
+    });
+    return cnt;
+  },[base]);
+
+  const visible=useMemo(()=>base.filter(t=>{
+    if(dueF==='all') return true;
+    const dl=daysLeft(t.due);
+    if(dueF==='over') return dl<0&&!isDone(t);
+    if(isDone(t)) return false;
+    if(dueF==='today') return dl===0;
+    if(dueF==='soon')  return dl>=0&&dl<=3;
+    if(dueF==='week')  return dl>=0&&dl<=7;
+    return true;
+  }),[base,dueF]);
+
+  const sortFn=useMemo(()=>({
+    'due-asc':(a,b)=>a.due.localeCompare(b.due),
+    'due-desc':(a,b)=>b.due.localeCompare(a.due),
+    'pr':(a,b)=>PRW[b.pr]-PRW[a.pr]||a.due.localeCompare(b.due),
+    'ch':(a,b)=>((channels[a.ch]||{}).label||'').localeCompare((channels[b.ch]||{}).label||'','ru'),
+    'who':(a,b)=>((members[a.who]||{}).short||'').localeCompare((members[b.who]||{}).short||'','ru'),
+    'title':(a,b)=>a.title.localeCompare(b.title,'ru'),
+    'pinned':(a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||a.due.localeCompare(b.due),
+  }[sort]||(()=>0)),[sort,channels,members]);
+
+  const tagList=useMemo(()=>{
+    const map={};
+    tasks.forEach(t=>(t.tags||[]).forEach(tg=>{map[tg]=(map[tg]||0)+1;}));
+    return Object.entries(map).sort((a,b)=>b[1]-a[1]);
+  },[tasks]);
+
+  const favCount=useMemo(()=>tasks.filter(t=>t.fav&&!isDone(t)).length,[tasks]);
+  const tplCount=templates.length;
+
+  /* уведомления */
+  const notif=useMemo(()=>{
+    const open=tasks.filter(t=>!isDone(t));
+    return {
+      over:open.filter(t=>daysLeft(t.due)<0).sort((a,b)=>a.due.localeCompare(b.due)),
+      today:open.filter(t=>daysLeft(t.due)===0),
+      tomorrow:open.filter(t=>daysLeft(t.due)===1),
+    };
+  },[tasks]);
+  const notifCount=notif.over.length+notif.today.length;
+
+  /* действия */
+  const spawnRepeat=t=>{
+    const nd=nextDue(t.due,t.repeat);
+    const nt={...t,id:_id++,col:colsOf(t.board||'main')[0].id,due:nd,time:null,coms:[],
+      sub:(t.sub||[]).map(s=>({...s,done:false})),pinned:false,fav:false};
+    setTasks(ts=>[nt,...ts]);
+    logEv('repeat',`Повтор: «${t.title}» → ${fmt(pdate(nd))}`);
+    toast(`Повторяющаяся задача: следующий срок ${fmt(pdate(nd))}`);
+  };
+  const moveTo=(id,col)=>{
+    const t=tasks.find(x=>x.id===id);
+    if(!t||t.col===col) return;
+    setTasks(ts=>ts.map(x=>x.id===id?{...x,col}:x));
+    const ct=(colsOf(t.board||'main').find(c=>c.id===col)||{t:'?'}).t;
+    if(col===doneCol(t.board||'main')){
+      logEv('done',`«${t.title}» — готово`);
+      toast(`Готово: «${t.title.length>28?t.title.slice(0,28)+'…':t.title}»`);
+      if(t.repeat!=='none') spawnRepeat({...t,col});
+    } else {
+      logEv('move',`«${t.title}» → ${ct}`);
+      toast(`Перенесено в «${ct}»`);
+    }
+  };
+  const dayDrop=(id,bucket)=>{
+    const t=tasks.find(x=>x.id===id); if(!t) return;
+    if(bucket==='done'){moveTo(id,doneCol(t.board||'main'));return;}
+    if(bucket==='over'){toast('Нельзя запланировать в прошлое');return;}
+    const off={today:0,tomorrow:1,week:4,later:10}[bucket];
+    const nd=iso(addDays(off));
+    setTasks(ts=>ts.map(x=>x.id===id?{...x,due:nd}:x));
+    const bl=(DAY_BUCKETS.find(b=>b.id===bucket)||{}).t;
+    logEv('move',`«${t.title}» → ${bl}`);
+    toast(`Дедлайн: ${bl.toLowerCase()}${bucket==='week'||bucket==='later'?' ('+fmt(pdate(nd))+')':''}`);
+  };
+  const togglePin=id=>{
+    const t=tasks.find(x=>x.id===id); if(!t) return;
+    setTasks(ts=>ts.map(x=>x.id===id?{...x,pinned:!x.pinned}:x));
+    logEv('pin',`«${t.title}» ${t.pinned?'откреплена':'закреплена'}`);
+    toast(t.pinned?'Задача откреплена':'Задача закреплена 📌');
+  };
+  const toggleFav=id=>{
+    const t=tasks.find(x=>x.id===id); if(!t) return;
+    setTasks(ts=>ts.map(x=>x.id===id?{...x,fav:!x.fav}:x));
+    logEv('fav',`«${t.title}» ${t.fav?'убрана из избранного':'добавлена в избранное'}`);
+    toast(t.fav?'Убрано из избранного':'Добавлено в избранное ⭐');
+  };
+  const saveTask=f=>{
+    if(f&&f.kind==='new-type'){
+      // создание нового типа задачи из модалки
+      const id='tt'+Date.now().toString(36);
+      setTaskTypes(tt=>({...tt,[id]:{label:f.label,c:f.c}}));
+      // добавить тип в форму
+      setModal(m=>m?{...m,form:{...f.form,types:[...(f.form.types||[]),id]}}:m);
+      toast(`Тип «${f.label}» создан`);
+      return;
+    }
+    if(modal.mode==='edit'){
+      const cur=tasks.find(x=>x.id===f.id);
+      const merged={...f,time:cur?cur.time:null};
+      setTasks(ts=>ts.map(x=>x.id===f.id?merged:x));
+      logEv('edit',`Изменена «${f.title}»`);
+      toast('Изменения сохранены');
+      if(cur&&!isDone(cur)&&isDone(merged)&&merged.repeat!=='none') spawnRepeat(merged);
+    } else {
+      const t={...f,id:_id++};
+      setTasks(ts=>[t,...ts]);
+      logEv('create',`Создана «${t.title}»`);
+      toast('Задача создана');
+    }
+    setModal(null);
+  };
+  const deleteTask=id=>{
+    const t=tasks.find(x=>x.id===id);
+    setTasks(ts=>ts.filter(x=>x.id!==id));
+    setModal(null);
+    logEv('del',`Удалена «${t.title}»`);
+    toast('Задача удалена',{label:'Вернуть',fn:()=>{
+      setTasks(ts=>[t,...ts]);
+      logEv('create',`Восстановлена «${t.title}»`);
+    }});
+  };
+  const saveAsTemplate=t=>{
+    const name=prompt('Название шаблона:',t.title);
+    if(!name) return;
+    const tpl={id:'tpl'+Date.now(),name,desc:t.desc,
+      data:{board:t.board,ch:t.ch,pr:t.pr,types:t.types,tags:t.tags,
+        sub:t.sub.map(s=>({t:s.t,done:false})),repeat:t.repeat,project:t.project}};
+    setTemplates(ts=>[tpl,...ts]);
+    logEv('admin',`Создан шаблон «${name}»`);
+    toast('Шаблон сохранён в библиотеку');
+  };
+  const useTemplate=tpl=>{
+    const t={...tpl.data,id:_id++,title:'Задача из шаблона: '+tpl.name,
+      col:colsOf(tpl.data.board)[0].id,due:iso(addDays(3)),coms:[],time:null,pinned:false,fav:false};
+    setTasks(ts=>[t,...ts]);
+    logEv('create',`Создана из шаблона «${tpl.name}»`);
+    toast('Задача создана из шаблона');
+    openModal({mode:'edit',t});
+  };
+  const delTemplate=id=>{
+    setTemplates(ts=>ts.filter(x=>x.id!==id));
+    toast('Шаблон удалён');
+  };
+  const resetDemo=()=>{
+    try{localStorage.removeItem(LS_KEY);}catch(e){}
+    setTasks(SEED.map(normTask)); setLog(SEED_LOG);
+    setChannels(DEFAULT_CHANNELS); setMembers(DEFAULT_MEMBERS);
+    setProjects(DEFAULT_PROJECTS); setTaskTypes(DEFAULT_TASK_TYPES);
+    setTemplates(DEFAULT_TEMPLATES); setCardFields(DEFAULT_CARD_FIELDS);
+    setScratch('');
+    setMe('ak'); setSprint(DEFAULT_SPRINT);
+    resetF(); setSelectedIds([]);
+    toast('Демо-данные восстановлены');
+  };
+
+  /* быстрые действия на карточке */
+  const handleFieldClick=(field,taskId,e)=>{
+    const target=e?.currentTarget;
+    setQuickDD({field,taskId,target});
+  };
+  const applyQuick=(value)=>{
+    if(!quickDD) return;
+    const {field,taskId}=quickDD;
+    const t=tasks.find(x=>x.id===taskId); if(!t) return;
+    if(field==='channel'){
+      setTasks(ts=>ts.map(x=>x.id===taskId?{...x,ch:value}:x));
+      toast(`Канал: ${channels[value].label}`);
+    } else if(field==='assignee'){
+      setTasks(ts=>ts.map(x=>x.id===taskId?{...x,who:value}:x));
+      toast(`Исполнитель: ${members[value].short}`);
+    } else if(field==='priority'){
+      setTasks(ts=>ts.map(x=>x.id===taskId?{...x,pr:value}:x));
+      toast(`Приоритет: ${PR[value].label}`);
+    } else if(field==='project'){
+      setTasks(ts=>ts.map(x=>x.id===taskId?{...x,project:value||null}:x));
+      toast(value?`Проект: ${projects[value].name}`:'Проект снят');
+    } else if(field==='types'){
+      openModal({mode:'edit',t});
+    } else if(field==='due'){
+      openModal({mode:'edit',t});
+    }
+  };
+
+  const quickOptions=useMemo(()=>{
+    if(!quickDD) return [];
+    const t=tasks.find(x=>x.id===quickDD.taskId);
+    if(quickDD.field==='channel') return Object.entries(channels).map(([k,c])=>({value:k,label:c.label,color:c.c}));
+    if(quickDD.field==='assignee') return Object.entries(members).map(([k,m])=>({value:k,label:m.name,color:m.c}));
+    if(quickDD.field==='priority') return [['high','▲ Высокий'],['mid','● Средний'],['low','▽ Низкий']].map(([v,l])=>({value:v,label:l,color:PR[v].c}));
+    if(quickDD.field==='project') return [{value:null,label:'— Без проекта —',color:'#98A29B'},
+      ...Object.entries(projects).filter(([k,p])=>!p.archived).map(([k,p])=>({value:k,label:p.name,color:p.c}))];
+    return [];
+  },[quickDD,channels,members,projects]);
+
+  /* выделение */
+  const toggleSelect=id=>setSelectedIds(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
+  const shiftSelect=id=>{
+    setSelectedIds(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
+  };
+  const clearSelection=()=>setSelectedIds([]);
+
+  /* command palette */
+  const handleCmdSelect=item=>{
+    setCmdOpen(false);
+    if(item.kind==='task'){
+      const t=tasks.find(x=>x.id===item.id);
+      if(t) openModal({mode:'edit',t});
+    } else if(item.kind==='view'){
+      setView(item.id);
+    } else if(item.kind==='channel'){
+      setChF([item.id]);
+    } else if(item.kind==='project'){
+      setPrjF([item.id]);
+    } else if(item.kind==='action'){
+      if(item.id==='new') openModal({mode:'new',board:'main'});
+    }
+  };
+
+  /* производные для текущей доски */
+  const isBoardView = view==='board'||view==='photo'||view==='video';
+  const bkey = view==='board'?'main':view;
+  const btAll = useMemo(()=>tasks.filter(t=>(t.board||'main')===bkey),[tasks,bkey]);
+  const btVisible = useMemo(()=>visible.filter(t=>(t.board||'main')===bkey),[visible,bkey]);
+  const btSorted = useMemo(()=>{
+    const pinned=btVisible.filter(t=>t.pinned&&!isDone(t));
+    const rest=btVisible.filter(t=>!t.pinned||isDone(t));
+    return [...pinned.sort(sortFn),...rest.sort(sortFn)];
+  },[btVisible,sortFn]);
+  const runningTask = tasks.find(t=>t.time&&t.time.run);
+
+  const VIEW_H={board:'Основная доска', photo:'Доска · Фото', video:'Доска · Видео', mine:'Мои задачи',
+                fav:'Избранное',cal:'Календарь дедлайнов', stats:'Аналитика', files:'Файлы команды',
+                tpl:'Шаблоны задач', feed:'История изменений', admin:'Админ-панель'};
+
+  const NotifRow=({t})=>{
+    const ch=channels[t.ch]||{c:'#98A29B'};
+    return <button className="bp-row" onClick={()=>{openModal({mode:'edit',t});setNotifOpen(false);}}>
+      <span className="dot" style={{background:ch.c}}/>
+      <span className="t">{t.title}</span>
+      <span className="d">{daysLeft(t.due)<0?`${-daysLeft(t.due)} д назад`:'сегодня'}</span>
+    </button>;
+  };
+  const Achip=({children,onX,dot})=>
+    <span className="achip">{dot&&<span className="dot" style={{background:dot,width:7,height:7}}/>}
+      <span className="l">{children}</span>
+      <button onClick={onX}><Icon d={IC.x} size={10} sw={2.6}/></button></span>;
+
+  /* массовые действия */
+  const massMoveTo=col=>{
+    setTasks(ts=>ts.map(x=>selectedIds.includes(x.id)?{...x,col}:x));
+    toast(`Перемещено задач: ${selectedIds.length}`);
+    clearSelection();
+  };
+  const massDelete=()=>{
+    if(!confirm(`Удалить ${selectedIds.length} задач?`)) return;
+    setTasks(ts=>ts.filter(x=>!selectedIds.includes(x.id)));
+    toast(`Удалено задач: ${selectedIds.length}`);
+    clearSelection();
+  };
+  const massPin=()=>{
+    setTasks(ts=>ts.map(x=>selectedIds.includes(x.id)?{...x,pinned:true}:x));
+    toast(`Закреплено: ${selectedIds.length}`);
+    clearSelection();
+  };
 
   return (
-    <div className="app">
-      {/* Сайдбар */}
-      <aside className="side">
-        <div className="brand">
-          <div className="logo">Ш</div>
-          <div><b>ШТАБ</b><span>marketing desk</span></div>
-        </div>
-        <nav className="nav">
-          <button className={view==='all'?'on':''} onClick={()=>setView('all')}><Icon d={IC.list}/>Все задачи</button>
-          <button className={view==='recurring'?'on':''} onClick={()=>setView('recurring')}><Icon d={IC.repeat}/>Повторяющиеся</button>
-          <div className="grp">Доски команды</div>
-          {Object.values(BOARDS).map(b => (
-            <button key={b.id} className={view==='board'&&boardId===b.id?'on':''} onClick={()=>{setView('board'); setBoardId(b.id);}}>
-              <Icon d={b.ic}/>{b.label}
-            </button>
-          ))}
-          <div className="grp">Проекты</div>
-          <button className={view==='projects'?'on':''} onClick={()=>setView('projects')}><Icon d={IC.layers}/>Все проекты</button>
-        </nav>
-        {projects.slice(0,5).map(p => (
-           <div className="sb" key={p.id}>
-             <button className={'srow'+(fProj.includes(p.id)?' on':'')} onClick={()=>{
-               if(fProj.includes(p.id)) setFProj(f.filter(x=>x!==p.id)); else setFProj([...fProj, p.id]);
-             }}><span className="dot" style={{background:p.color}}/>{p.name}</button>
-           </div>
-        ))}
-        <div className="sprint">
-          <div className="live"><span className="pulse"/>Спринт активен</div>
-          <b>{sprints[0].name}</b>
-          <small>{fmt(pdate(sprints[0].start))} — {fmt(pdate(sprints[0].end))}</small>
-        </div>
-      </aside>
+  <Ctx.Provider value={ctx}>
+  <div className="app">
+    <Sidebar view={view} setView={setView} tasks={tasks} chF={chF} whoF={whoF} tagF={tagF}
+      onCh={k=>toggle(k,chF,setChF)} onWho={k=>toggle(k,whoF,setWhoF)} onTag={tg=>toggle(tg,tagF,setTagF)}
+      tags={tagList} tagMode={tagMode} setTagMode={setTagMode}
+      resetDemo={resetDemo} sprint={sprint} me={me}
+      scratch={scratch} setScratch={setScratch}
+      projects={projects} favCount={favCount} tplCount={tplCount}
+      selectedIds={selectedIds}/>
 
-      {/* Основной контент */}
-      <main className="main">
-        <header className="topbar">
-          <div>
-            <span className="kicker"><i/>Штаб · маркетинг</span>
-            <h1>{view==='board' ? BOARDS[boardId].label : view==='projects' ? 'Проекты' : 'Все задачи'}<em>.</em></h1>
-          </div>
-          <div className="tools">
+    <main className="main">
+      <header className="topbar">
+        <div>
+          <span className="kicker"><i/>Поток · команда маркетинга</span>
+          <h1>{VIEW_H[view]}<em>.</em></h1>
+        </div>
+        <div className="tools">
+          {isBoardView&&<>
             <label className="search">
               <Icon d={IC.search} size={15}/>
-              <input placeholder="Поиск…" value={q} onChange={e=>setQ(e.target.value)}/>
-              {q && <button className="x" onClick={()=>setQ('')}><Icon d={IC.x} size={13}/></button>}
+              <input ref={searchRef} placeholder="Поиск…  ( / )" value={q} onChange={e=>setQ(e.target.value)}/>
+              {q&&<button className="x" onClick={()=>setQ('')}><Icon d={IC.x} size={13}/></button>}
             </label>
-            <button className="iconbtn" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')}><Icon d={theme==='dark'?IC.sun:IC.moon} size={16}/></button>
-            <button className="btn pri" onClick={() => setModal({type:'task', data: {
-              board: view==='board'?boardId:'marketing', status: getStatuses(view==='board'?boardId:'marketing')[0].id,
-              title: '', description: '', assignee: '', priority: 'medium', due: iso(today()), repeat: 'none', tags: [], checklist: []
-            }})}><Icon d={IC.plus} size={15} sw={2.4}/>Новая задача</button>
+            <div className="seg">
+              {[['all','Все'],['high','▲ Высокий'],['mid','● Средний'],['low','▽ Низкий']].map(([v,l])=>
+                <button key={v} className={prF===v?'on':''} onClick={()=>setPrF(v)}>{l}</button>)}
+            </div>
+          </>}
+          {runningTask&&<button className="livechip" title="Открыть задачу"
+              onClick={()=>openModal({mode:'edit',t:runningTask})}>
+            <span className="rdot"/><span className="lct">{runningTask.title}</span><b>{fmtDur(elapsed(runningTask,now))}</b>
+          </button>}
+          {selectedIds.length>0&&<div style={{display:'flex',gap:6,alignItems:'center'}}>
+            <span style={{font:'600 12px Golos Text',color:'var(--accent)'}}>Выбрано: {selectedIds.length}</span>
+            <button className="btn xs ghost" onClick={()=>massPin()}><Icon d={IC.pin} size={11}/>Закрепить</button>
+            <select className="sortsel" style={{padding:'6px 10px',fontSize:11}} value=""
+              onChange={e=>{if(e.target.value)massMoveTo(e.target.value);e.target.value='';}}>
+              <option value="">Переместить…</option>
+              {colsOf(bkey).map(c=><option key={c.id} value={c.id}>{c.t}</option>)}
+            </select>
+            <button className="btn xs danger" onClick={massDelete}><Icon d={IC.trash} size={11}/>Удалить</button>
+            <button className="btn xs ghost" onClick={clearSelection}>Снять</button>
+          </div>}
+          <div className="bellwrap">
+            <button className={'iconbtn'+(notifCount>0?' has':'')} title="Уведомления" onClick={()=>setNotifOpen(o=>!o)}>
+              <Icon d={IC.bell} size={17}/>{notifCount>0&&<span className="bbadge">{notifCount}</span>}
+            </button>
+            {notifOpen&&<>
+              <div className="bback" onClick={()=>setNotifOpen(false)}/>
+              <div className="bpanel">
+                <div className="bp-head"><b>Требуют внимания</b>{notifCount>0&&<span>{notifCount}</span>}</div>
+                {notifCount===0&&notif.tomorrow.length===0&&<div className="bp-empty">Всё спокойно — горящих дедлайнов нет 🎉</div>}
+                {notif.over.length>0&&<><div className="bp-sec">Просрочено</div>{notif.over.map(t=><NotifRow key={t.id} t={t}/>)}</>}
+                {notif.today.length>0&&<><div className="bp-sec">Сегодня</div>{notif.today.map(t=><NotifRow key={t.id} t={t}/>)}</>}
+                {notif.tomorrow.length>0&&<><div className="bp-sec">Завтра</div>{notif.tomorrow.map(t=><NotifRow key={t.id} t={t}/>)}</>}
+                {notif.over.length>0&&<button className="bp-all" onClick={()=>{setView('board');setMode('board');setGroup('day');setDueF('over');setNotifOpen(false);}}>
+                  Показать просроченные →</button>}
+              </div>
+            </>}
           </div>
-        </header>
-
-        {/* Панель фильтров */}
-        <div className="fbar">
-          <button className={'achip clear'+(showDone?' on':'')} onClick={()=>setShowDone(!showDone)}>
-            {showDone?'Скрыть готовые':'Показать готовые'}
+          <button className="iconbtn" title="Настройки карточки" onClick={()=>setShowCardSettings(true)}>
+            <Icon d={IC.cog} size={16}/>
           </button>
-          {fProj.map(id => <span className="achip" key={id}><span className="dot" style={{background:projects.find(p=>p.id===id)?.color}}/>{projects.find(p=>p.id===id)?.name} <button onClick={()=>setFProj(f.filter(x=>x!==id))}><Icon d={IC.x} size={10}/></button></span>)}
+          <button className="iconbtn" title="Command Palette (Ctrl+K)" onClick={()=>setCmdOpen(true)}>
+            <Icon d={IC.bolt} size={16}/>
+          </button>
+          <button className="iconbtn" title="Переключить тему (T)" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')}>
+            <Icon d={theme==='dark'?IC.sun:IC.moon} size={16}/>
+          </button>
+          <button className="btn pri" onClick={()=>openModal({mode:'new',board:isBoardView?bkey:'main'})}>
+            <Icon d={IC.plus} size={15} sw={2.4}/>Новая задача
+          </button>
         </div>
+      </header>
 
-        {/* Контент: Доска */}
-        {view === 'board' && (
-          <Kanban tasks={filteredTasks} boardId={boardId} now={now} onToggleTimer={toggleTimer} onEdit={t => setModal({type:'task', data:t})} />
-        )}
+      {hasF&&<div className="fbar">
+        {q.trim()&&<Achip onX={()=>setQ('')}>Поиск: «{q.trim()}»</Achip>}
+        {chF.map(k=><Achip key={k} dot={(channels[k]||{c:'#999'}).c} onX={()=>toggle(k,chF,setChF)}>{(channels[k]||{label:k}).label}</Achip>)}
+        {whoF.map(k=><Achip key={k} dot={(members[k]||{c:'#999'}).c} onX={()=>toggle(k,whoF,setWhoF)}>{(members[k]||{short:k}).short}</Achip>)}
+        {prjF.map(k=><Achip key={k} dot={(projects[k]||{c:'#999'}).c} onX={()=>toggle(k,prjF,setPrjF)}>{(projects[k]||{name:k}).name}</Achip>)}
+        {tagF.map(tg=><Achip key={tg} onX={()=>toggle(tg,tagF,setTagF)}>#{tg}</Achip>)}
+        {tagF.length>1&&<span className="fbar-note">теги: {tagMode==='any'?'любой из':'все сразу'}</span>}
+        {prF!=='all'&&<Achip onX={()=>setPrF('all')}>Приоритет: {PR[prF].label}</Achip>}
+        {dueF!=='all'&&<Achip onX={()=>setDueF('all')}>{(DUE_OPTS.find(d=>d[0]===dueF)||[])[1]}</Achip>}
+        <button className="achip clear" onClick={resetF}>Сбросить всё</button>
+      </div>}
 
-        {/* Контент: Список (Все задачи) */}
-        {(view === 'all' || view === 'recurring') && (
-          <div className="ltab">
-            <div className="lrow lhead">
-              <div style={{width: 30}}></div>
-              <div>Задача</div><div>Доска</div><div>Статус</div><div>Исполнитель</div><div>Срок</div><div>Таймер</div>
-            </div>
-            {filteredTasks.filter(t => view==='recurring' ? t.repeat !== 'none' : true).map(t => {
-              const b = BOARDS[t.board];
-              const st = getStatuses(t.board).find(s=>s.id===t.status);
-              const isRun = t.startedAt !== null;
-              return <div key={t.id} className="lrow" onClick={()=>setModal({type:'task', data:t})}>
-                <div>{isDone(t) ? <span className="donecheck">✓</span> : ''}</div>
-                <div className="lmain">
-                  <span className="pr" style={{color: PRIORITY[t.priority].c}}>{PRIORITY[t.priority].arrow}</span>
-                  <div>
-                    <span className="lt">{t.title}</span>
-                    {t.tags.length>0 && <span className="ld">{t.tags.map(tg=>`#${tg}`).join(' ')}</span>}
+      {isBoardView&&<>
+        <div className="ctrl">
+          <div className="vseg">
+            <button className={mode==='board'?'on':''} onClick={()=>setMode('board')}><Icon d={IC.kanban} size={13}/>Доска</button>
+            <button className={mode==='list'?'on':''} onClick={()=>setMode('list')}><Icon d={IC.list} size={13}/>Список</button>
+          </div>
+          <div className="vseg" title="Группировка колонок">
+            <button className={group==='status'?'on':''} onClick={()=>setGroup('status')}>По статусу</button>
+            <button className={group==='day'?'on':''} onClick={()=>setGroup('day')}>По дням</button>
+          </div>
+          <div className="fchips">
+            {DUE_OPTS.map(([v,l])=>
+              <button key={v} className={'fchip'+(dueF===v?' on':'')} onClick={()=>setDueF(v)}>
+                {l}{v!=='all'&&dueCounts[v]>0&&<b>{dueCounts[v]}</b>}
+              </button>)}
+          </div>
+          <span style={{flex:1}}/>
+          <select className="sortsel" value={sort} onChange={e=>setSort(e.target.value)} title="Сортировка">
+            <option value="pinned">Закреплённые сверху</option>
+            <option value="due-asc">Дедлайн ↑</option>
+            <option value="due-desc">Дедлайн ↓</option>
+            <option value="pr">Приоритет</option>
+            <option value="ch">Канал</option>
+            <option value="who">Исполнитель</option>
+            <option value="title">Название</option>
+          </select>
+        </div>
+        <section className="stats">
+          <Stat lbl="Открыто" n={btAll.filter(t=>!isDone(t)).length} sub={`из ${btAll.length} на доске`} c="var(--blue)"/>
+          <Stat lbl="Горит" n={btAll.filter(t=>!isDone(t)&&daysLeft(t.due)>=0&&daysLeft(t.due)<=2).length} sub="дедлайн ≤ 2 дней" c="var(--amber)"/>
+          <Stat lbl="Просрочено" n={btAll.filter(t=>!isDone(t)&&daysLeft(t.due)<0).length} sub={btAll.filter(t=>!isDone(t)&&daysLeft(t.due)<0).length?'требует внимания':'всё по плану'} c="var(--red)" alert={btAll.filter(t=>!isDone(t)&&daysLeft(t.due)<0).length>0}/>
+          <Stat lbl="Готово" n={btAll.filter(t=>isDone(t)).length} sub="завершено" c="var(--green)"/>
+          <div className="ringbox">
+            <Ring pct={btAll.length?btAll.filter(t=>isDone(t)).length/btAll.length:0}/>
+            <div><b>{BOARDS[bkey].title}</b><small>{group==='day'?'группировка по дням':'группировка по статусу'}</small></div>
+          </div>
+        </section>
+
+        {btVisible.some(t=>t.pinned&&!isDone(t))&&<div className="pinned">
+          <h3><Icon d={IC.pin} size={13}/>Закреплённые</h3>
+          <div className="pinned-grid">
+            {btVisible.filter(t=>t.pinned&&!isDone(t)).map(t=>
+              <TaskCard key={t.id} t={t} onEdit={t2=>openModal({mode:'edit',t:t2})}
+                onPin={togglePin} onFav={toggleFav} onFieldClick={handleFieldClick}
+                cardFields={cardFields} selected={selectedIds.includes(t.id)}
+                onToggleSelect={toggleSelect} onShiftClick={shiftSelect}/>
+            )}
+          </div>
+        </div>}
+
+        {mode==='board'
+          ? <Kanban all={btAll} visible={btSorted.filter(t=>!t.pinned||isDone(t))} group={group} hasF={hasF}
+              cols={group==='day'?DAY_BUCKETS:colsOf(bkey)}
+              onEdit={t=>openModal({mode:'edit',t})}
+              onNew={col=>openModal({mode:'new',board:bkey,col})}
+              onDropCard={(id,cid)=>group==='day'?dayDrop(id,cid):moveTo(id,cid)}
+              onPin={togglePin} onFav={toggleFav} onFieldClick={handleFieldClick}
+              selectedIds={selectedIds} onToggleSelect={toggleSelect} onShiftClick={shiftSelect}/>
+          : btSorted.length>0
+            ? (group==='status'
+              ? <div className="ltab">
+                  <div className="lrow lhead">
+                    <div>Задача</div><div>Канал</div><div>Исполнитель</div><div>Дедлайн</div><div>Прогресс</div><div>Статус</div>
                   </div>
+                  {btSorted.map(t=><TaskRow key={t.id} t={t} onEdit={t2=>openModal({mode:'edit',t:t2})} onMove={moveTo}/>)}
                 </div>
-                <div><span className="bchip" style={{color:b.c}}>{b.label}</span></div>
-                <div><span className="chip" style={{background:cmix(st.c,15), color:st.c}}><span className="dot" style={{background:st.c}}/>{st.label}</span></div>
-                <div className="lwho"><Avatar person={people.find(p=>p.id===t.assignee)} size={22}/> {people.find(p=>p.id===t.assignee)?.name.split(' ')[0]||'Нет'}</div>
-                <div>{t.due ? <span className={`due ${bucketOf(t)==='overdue'?'bad':''}`}>{fmt(pdate(t.due))}</span> : '—'}</div>
-                <div>
-                  <button className={'tchip'+(isRun?' run':'')} onClick={e=>{e.stopPropagation(); toggleTimer(t.id);}}>
-                    {isRun ? <span className="pulse" style={{width:6,height:6,marginRight:3,boxShadow:'none'}}/> : <Icon d={IC.play} size={9}/>}
-                    <span>{fmtDur(getElapsed(t,now))}</span>
-                  </button>
-                </div>
-              </div>;
-            })}
-          </div>
-        )}
+              : DAY_BUCKETS.map((b,gi)=>{
+                  const list=btSorted.filter(t=>bucketOf(t)===b.id);
+                  if(!list.length) return null;
+                  return <div key={b.id} className="mgroup" style={{animationDelay:`${gi*60}ms`}}>
+                    <div className="mgt"><span className="col-dot" style={{background:b.c}}/><h4>{b.t}</h4><span className="n">{list.length}</span></div>
+                    <div className="ltab">{list.map(t=><TaskRow key={t.id} t={t} onEdit={t2=>openModal({mode:'edit',t:t2})} onMove={moveTo}/>)}</div>
+                  </div>;
+                }))
+            : null}
+        {btSorted.length===0&&<div className="nothing"><b>Ничего не нашлось</b>Попробуйте изменить фильтры или поисковый запрос</div>}
+      </>}
 
-        {/* Контент: Проекты */}
-        {view === 'projects' && (
-          <div className="pgrid">
-            {projects.map(p => {
-              const ptasks = tasks.filter(t => t.project === p.id);
-              const pdone = ptasks.filter(isDone).length;
-              const pct = ptasks.length ? Math.round((pdone/ptasks.length)*100) : 0;
-              return <div key={p.id} className="pcard" onClick={()=>{setView('all'); setFProj([p.id]);}}>
-                <div className="ptop"><span className="ic" style={{background:p.color}}><Icon d={IC.layers}/></span><h3>{p.name}</h3></div>
-                <p>{p.description}</p>
-                <div className="pbar"><span>{pct}% выполнено</span><div className="track"><i style={{width:`${pct}%`, background:p.color}}/></div></div>
-              </div>;
-            })}
-          </div>
-        )}
-      </main>
+      {view==='mine'&&<MineView tasks={tasks} onEdit={t=>openModal({mode:'edit',t})} onMove={moveTo}/>}
+      {view==='fav'&&<FavoritesView tasks={tasks} onEdit={t=>openModal({mode:'edit',t})} onMove={moveTo}/>}
+      {view==='cal'&&<CalendarView tasks={tasks}
+        onEdit={t=>openModal({mode:'edit',t})}
+        onNew={d=>openModal({mode:'new',board:'main',due:d})}/>}
+      {view==='stats'&&<StatsView tasks={tasks}/>}
+      {view==='tpl'&&<TemplatesView templates={templates} onUse={useTemplate} onDelete={delTemplate}
+        onCreate={()=>openModal({mode:'new',board:'main'})}/>}
+      {view==='files'&&<FilesView tasks={tasks} onOpenTask={t=>openModal({mode:'edit',t})} toast={toast}/>}
+      {view==='feed'&&<FeedView log={log} onClear={()=>{setLog([]);toast('История очищена');}}/>}
+      {view==='admin'&&((members[me]||{}).role==='admin'
+        ? <AdminView tasks={tasks} setTasks={setTasks} channels={channels} setChannels={setChannels}
+            members={members} setMembers={setMembers} me={me} setMe={setMe} sprint={sprint} setSprint={setSprint}
+            projects={projects} setProjects={setProjects} taskTypes={taskTypes} setTaskTypes={setTaskTypes}
+            setLog={setLog} setChF={setChF} setWhoF={setWhoF} logEv={logEv} toast={toast} resetDemo={resetDemo}/>
+        : <LockScreen login={k=>{setMe(k);logEv('admin',`Админ: вошли как ${members[k].name}`);toast(`Вы вошли как ${members[k].name} (админ)`);}}/>)}
+    </main>
 
-      {/* Плавающий таймер внизу */}
-      {activeTimer && (
-        <div className="timer-dock">
-          <span className="pulse" style={{boxShadow:'none'}}/>
-          <b style={{cursor:'pointer'}} onClick={()=>setModal({type:'task', data:activeTimer})}>{activeTimer.title.slice(0,30)}...</b>
-          <strong style={{fontVariantNumeric:'tabular-nums'}}>{fmtDur(getElapsed(activeTimer, now))}</strong>
-          <button className="iconbtn" onClick={()=>toggleTimer(activeTimer.id)}><Icon d={IC.pause}/></button>
-        </div>
-      )}
+    {modal&&<TaskModal key={modal.k}
+      init={modal.mode==='edit'?modal.t:null}
+      live={modal.mode==='edit'?tasks.find(x=>x.id===modal.t.id):null}
+      defaultBoard={modal.board} defaultCol={modal.col} defaultDue={modal.due}
+      onClose={()=>setModal(null)} onSave={saveTask} onDelete={deleteTask} onSaveAsTemplate={saveAsTemplate}/>}
 
-      {/* Модалка: Задача */}
-      {modal && modal.type === 'task' && (() => {
-        const [f, setF] = useState(modal.data);
-        const set = (k,v) => setF(s=>({...s, [k]:v}));
-        const ok = f.title.trim().length > 0;
-        return <div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget) setModal(null);}}>
-          <div className="modal">
-            <button className="mclose" onClick={()=>setModal(null)}><Icon d={IC.x} size={16}/></button>
-            <h3>{f.id ? 'Детали задачи' : 'Новая задача'}</h3>
-            <div className="f">
-              <label>Название</label>
-              <input type="text" autoFocus value={f.title} onChange={e=>set('title',e.target.value)} placeholder="Что нужно сделать?"/>
-              
-              <div className="frow" style={{marginTop:14}}>
-                <div>
-                  <label>Доска</label>
-                  <select value={f.board} onChange={e=>setF(s=>({...s, board:e.target.value, status:getStatuses(e.target.value)[0].id}))}>
-                    {Object.values(BOARDS).map(b=><option key={b.id} value={b.id}>{b.label}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label>Статус</label>
-                  <select value={f.status} onChange={e=>set('status',e.target.value)}>
-                    {getStatuses(f.board).map(s=><option key={s.id} value={s.id}>{s.label}</option>)}
-                  </select>
-                </div>
-              </div>
+    {showCardSettings&&<CardSettings cardFields={cardFields} setCardFields={setCardFields}
+      onClose={()=>setShowCardSettings(false)}/>}
 
-              <div className="frow3">
-                <div>
-                  <label>Исполнитель</label>
-                  <select value={f.assignee} onChange={e=>set('assignee',e.target.value)}>
-                    <option value="">Не назначен</option>
-                    {people.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label>Приоритет</label>
-                  <select value={f.priority} onChange={e=>set('priority',e.target.value)}>
-                    {Object.entries(PRIORITY).map(([k,p])=><option key={k} value={k}>{p.l}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label>Проект</label>
-                  <select value={f.project} onChange={e=>set('project',e.target.value)}>
-                    <option value="">Без проекта</option>
-                    {projects.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
-                  </select>
-                </div>
-              </div>
+    {cmdOpen&&<CommandPalette tasks={tasks} channels={channels} projects={projects}
+      onSelect={handleCmdSelect} onClose={()=>setCmdOpen(false)}/>}
 
-              <div className="frow">
-                <div>
-                  <label>Срок</label>
-                  <input type="date" value={f.due || ''} onChange={e=>set('due',e.target.value)}/>
-                </div>
-                <div>
-                  <label>Повторение</label>
-                  <select value={f.repeat} onChange={e=>set('repeat',e.target.value)}>
-                    {Object.entries(REPEAT).map(([k,v])=><option key={k} value={k}>{v}</option>)}
-                  </select>
-                </div>
-              </div>
+    {quickDD&&<QuickDropdown target={quickDD.target} kind={quickDD.field}
+      options={quickOptions} currentValue={tasks.find(t=>t.id===quickDD.taskId)?.[quickDD.field]}
+      onSelect={applyQuick} onClose={()=>setQuickDD(null)}/>}
 
-              <label>Типы задачи (Теги)</label>
-              <div className="chipsel">
-                {taskTypes.map(tt => (
-                  <button key={tt.id} type="button" onClick={()=>{
-                    if(f.tags.includes(tt.id)) set('tags', f.tags.filter(x=>x!==tt.id));
-                    else set('tags', [...f.tags, tt.id]);
-                  }} style={f.tags.includes(tt.id) ? {background:cmix(tt.color,15), borderColor:tt.color, color:tt.color} : {}}>
-                    {tt.name}
-                  </button>
-                ))}
-              </div>
-
-              <label>Чек-лист</label>
-              {f.checklist.map((c, i) => (
-                <div key={c.id} className={'ck'+(c.done?' done':'')}>
-                  <input type="checkbox" checked={c.done} onChange={() => set('checklist', f.checklist.map((x,j)=>j===i?{...x, done:!x.done}:x))} />
-                  <span>{c.text}</span>
-                  <button className="rm" type="button" onClick={() => set('checklist', f.checklist.filter((_,j)=>j!==i))}><Icon d={IC.x} size={11}/></button>
-                </div>
-              ))}
-              <div className="ckadd">
-                <input placeholder="Новый пункт и Enter..." onKeyDown={e=>{
-                  if(e.key==='Enter' && e.target.value.trim()){
-                    set('checklist', [...f.checklist, {id:'c'+Date.now(), text:e.target.value.trim(), done:false}]);
-                    e.target.value='';
-                  }
-                }}/>
-              </div>
-
-            </div>
-            <div className="mfoot">
-              {f.id && <button className="btn danger" onClick={()=>deleteTask(f.id)}><Icon d={IC.trash} size={14}/>Удалить</button>}
-              <span style={{flex:1}}/>
-              <button className="btn ghost" onClick={()=>setModal(null)}>Отмена</button>
-              {f.id && !isDone(f) && <button className="btn" style={{background:'var(--green)', color:'#fff'}} onClick={()=>completeTask(f)}><Icon d={IC.check} size={15}/>Завершить</button>}
-              <button className="btn pri" disabled={!ok} onClick={()=>saveTask(f)}>{f.id ? 'Сохранить' : 'Создать'}</button>
-            </div>
-          </div>
-        </div>;
-      })()}
-
+    <div className="toasts">
+      {toasts.map(t=>
+        <div key={t.id} className={'toast'+(t.type==='warn'?' warn':'')}>
+          <span className="tdot"/>{t.msg}
+          {t.action&&<button className="tact" onClick={()=>{t.action.fn();killToast(t.id);}}>{t.action.label}</button>}
+        </div>)}
     </div>
+  </div>
+  </Ctx.Provider>
   );
 }
 
