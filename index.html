@@ -319,6 +319,10 @@ h1 em{font-style:normal;color:var(--accent)}
 .due.bad{background:color-mix(in srgb,#E5484D 15%,transparent);color:var(--red);animation:alarm 1.6s infinite}
 @keyframes alarm{50%{background:color-mix(in srgb,#E5484D 26%,transparent)}}
 
+/* repeat chip in task row */
+.rchip{display:inline-flex;align-items:center;gap:4px;font:600 10px 'Golos Text';color:#0EA5C6;
+  background:color-mix(in srgb,#0EA5C6 12%,transparent);padding:3px 8px;border-radius:99px;white-space:nowrap}
+
 /* quick dropdown on card */
 .qdd{position:absolute;z-index:30;background:var(--card);border:1px solid var(--line);
   border-radius:10px;box-shadow:var(--sh-md);padding:4px;min-width:180px;max-width:240px;
@@ -1007,15 +1011,13 @@ const dueInfo = t => {
   return {cls: dl<=2?'warn':'', txt: fmt(pdate(t.due))};
 };
 function TimerChip({t}){
-  const {now,toggleTimer,pomo} = useCtx();
+  const {now,toggleTimer} = useCtx();
   const running = t.time&&t.time.run;
   const s = elapsed(t,now);
-  const isPomo = pomo && pomo.taskId===t.id && pomo.running;
   return <button className={'tchip'+(running?' run':'')} title={running?'Остановить таймер':'Запустить таймер'}
     onClick={e=>{e.stopPropagation();toggleTimer(t.id);}}>
     {running?<span className="rdot"/>:<Icon d={IC.play} size={9}/>}
     <span>{fmtDur(s)}</span>
-    {isPomo&&<span className="pomobadge">🍅 pomo</span>}
   </button>;
 }
 
@@ -1049,7 +1051,8 @@ function TaskRow({t,onEdit,onMove}){
     <div className="lprog">
       {cardFields.subtasks&&t.sub.length>0&&<><div className="track" style={{maxWidth:52}}><i style={{width:`${sd/t.sub.length*100}%`,background:ch.c}}/></div>
         <span className="subn">{sd}/{t.sub.length}</span></>}
-      {t.repeat!=='none'&&<span className="rchip" title={REPEAT[t.repeat].l} style={{display:'inline-flex',alignItems:'center',gap:4,font:'600 10px Golos Text',color:'#0EA5C6',background:cmix('#0EA5C6',12),padding:'3px 8px',borderRadius:'99px',whiteSpace:'nowrap'}}><Icon d={IC.repeat} size={10} sw={2.2}/>{REPEAT[t.repeat].short}</span>}
+      {t.repeat!=='none'&&<span className="rchip" title={REPEAT[t.repeat].l}>
+        <Icon d={IC.repeat} size={10} sw={2.2}/>{REPEAT[t.repeat].short}</span>}
       {cardFields.timer&&<TimerChip t={t}/>}
     </div>
     <div className="lcol-sel" onClick={e=>e.stopPropagation()}>
@@ -1141,7 +1144,7 @@ function TaskCard({t, onEdit, onMove, onPin, onFav, onFieldClick, cardFields, se
     <div className="foot">
       {cardFields.assignee&&<><Avatar id={t.who} onClick={()=>onFieldClick('assignee',t.id,null)}/>
         <span className="who">{(members[t.who]||{short:'—'}).short}</span></>}
-      {t.repeat!=='none'&&<span className="ttype" style={{background:'#0EA5C6',fontSize:10,padding:'2px 7px'}} title={REPEAT[t.repeat].l}>
+      {t.repeat!=='none'&&<span className="rchip" title={REPEAT[t.repeat].l}>
         <Icon d={IC.repeat} size={10} sw={2.2}/>{REPEAT[t.repeat].short}</span>}
       {cardFields.comments&&t.coms.length>0&&
         <button className="com" onClick={e=>{e.stopPropagation();onEdit(t);}}>
@@ -1165,7 +1168,7 @@ function Kanban({all,visible,cols,group,hasF,onEdit,onNew,onDropCard,onPin,onFav
       const allN = group==='day' ? all.filter(t=>bucketOf(t)===c.id).length : all.filter(t=>t.col===c.id).length;
       return <section key={c.id} className={'col'+(overCol===c.id&&dragId!=null?' over':'')}
           style={{animationDelay:`${ci*70}ms`,borderTopColor:c.c}}
-          onDragOver={e=>{e.preventDefault();e.dataTransfer.dropEffect='move';setOverCol(c.id);setDragId(Number(e.dataTransfer.types.includes('text/plain')?'1':'0'));}}
+          onDragOver={e=>{e.preventDefault();e.dataTransfer.dropEffect='move';setOverCol(c.id);}}
           onDragLeave={()=>setOverCol(null)}
           onDrop={e=>{e.preventDefault();
             const id=Number(e.dataTransfer.getData('text/plain'));
@@ -2150,13 +2153,6 @@ function TaskModal({init,live,defaultBoard,defaultCol,defaultDue,onClose,onSave,
       return {...s,types:types.includes(tid)?types.filter(x=>x!==tid):[...types,tid]};
     });
   };
-  const addTaskType=()=>{
-    const label=ttInput.trim();
-    if(!label) return;
-    const id='tt'+Date.now().toString(36);
-    // передадим вверх через onSave, но тут создадим локально и выберем
-    return {id,label,c:ttColor};
-  };
   const addCom=()=>{
     if(!comText.trim()) return;
     setF(s=>({...s,coms:[...s.coms,{who:me,ts:Date.now(),text:comText.trim()}]}));
@@ -2168,7 +2164,6 @@ function TaskModal({init,live,defaultBoard,defaultCol,defaultDue,onClose,onSave,
   const handleAddType=()=>{
     const label=ttInput.trim();
     if(!label) return;
-    // попросим у родителя создать тип и вернуть id
     onSave({kind:'new-type',label,c:ttColor,form:f});
     setTtInput('');
   };
@@ -2389,7 +2384,6 @@ function App(){
   const [quickDD,setQuickDD]=useState(null);
   const [selectedIds,setSelectedIds]=useState([]);
   const [cmdOpen,setCmdOpen]=useState(false);
-  const [pomo,setPomo]=useState(null);
   const kRef=useRef(0);
   const searchRef=useRef(null);
 
@@ -2402,31 +2396,13 @@ function App(){
   },[tasks,log,channels,members,me,sprint,projects,taskTypes,templates,cardFields,scratch,theme,mode,group,sort]);
 
   /* тик таймеров */
-  const anyRunning=useMemo(()=>tasks.some(t=>t.time&&t.time.run)||(pomo&&pomo.running),[tasks,pomo]);
+  const anyRunning=useMemo(()=>tasks.some(t=>t.time&&t.time.run),[tasks]);
   useEffect(()=>{
     if(!anyRunning) return;
     setNow(Date.now());
     const iv=setInterval(()=>setNow(Date.now()),1000);
     return ()=>clearInterval(iv);
   },[anyRunning]);
-
-  /* pomo tick */
-  useEffect(()=>{
-    if(!pomo||!pomo.running) return;
-    const check=()=>{
-      const left=pomo.endsAt-Date.now();
-      if(left<=0){
-        setPomo(p=>({...p,running:false}));
-        if(pomo.phase==='work'){
-          toast('🍅 Помидор завершён! Время перерыва.',null,'warn');
-        } else {
-          toast('Перерыв окончен — за работу!',null,'warn');
-        }
-      }
-    };
-    const iv=setInterval(check,1000);
-    return ()=>clearInterval(iv);
-  },[pomo]);
 
   const toggleTimer=id=>{
     const t=tasks.find(x=>x.id===id); if(!t) return;
@@ -2613,10 +2589,8 @@ function App(){
   };
   const saveTask=f=>{
     if(f&&f.kind==='new-type'){
-      // создание нового типа задачи из модалки
       const id='tt'+Date.now().toString(36);
       setTaskTypes(tt=>({...tt,[id]:{label:f.label,c:f.c}}));
-      // добавить тип в форму
       setModal(m=>m?{...m,form:{...f.form,types:[...(f.form.types||[]),id]}}:m);
       toast(`Тип «${f.label}» создан`);
       return;
@@ -2658,7 +2632,7 @@ function App(){
   };
   const useTemplate=tpl=>{
     const t={...tpl.data,id:_id++,title:'Задача из шаблона: '+tpl.name,
-      col:colsOf(tpl.data.board)[0].id,due:iso(addDays(3)),coms:[],time:null,pinned:false,fav:false};
+      col:colsOf(tpl.data.board||'main')[0].id,due:iso(addDays(3)),coms:[],time:null,pinned:false,fav:false};
     setTasks(ts=>[t,...ts]);
     logEv('create',`Создана из шаблона «${tpl.name}»`);
     toast('Задача создана из шаблона');
