@@ -1,0 +1,569 @@
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#141B17;--paper:#F1F3ED;--line:#E1E5DA;--line2:#EDF0E6;--mut:#6C7A70;
+  --card:#FFFFFF;--soft:#F1F3ED;--soft2:#F6F8F2;--field:#FAFBF7;--colbg:#E9ECE2;
+  --track:#EEF0E7;--accent:#FF5A2D;--accent-d:#E64A20;
+  --side:#0F1713;--side-t:#DCE7DE;--side-m:#83988B;
+  --blue:#2E6BFF;--green:#0FA36B;--amber:#E8930C;--red:#E5484D;
+  --griddot:rgba(20,27,23,.08);--ring:rgba(20,27,23,.09);
+  --dash:color-mix(in srgb,var(--ink) 22%,transparent);
+  --sh-sm:0 1px 2px rgba(20,27,23,.06),0 1px 1px rgba(20,27,23,.04);
+  --sh-md:0 12px 26px -10px rgba(20,27,23,.22);--r:14px;
+}
+.dark{
+  --ink:#E9EFE7;--paper:#0F1512;--line:#28332B;--line2:#1E2821;--mut:#8CA093;
+  --card:#171F1A;--soft:#212B24;--soft2:#1C2620;--field:#131A15;--colbg:#141C17;
+  --track:#263129;--griddot:rgba(233,239,231,.05);--ring:rgba(233,239,231,.13);
+  --sh-sm:0 1px 2px rgba(0,0,0,.4);--sh-md:0 14px 30px -12px rgba(0,0,0,.6);
+}
+html,body{height:100%}
+body{font:400 14px/1.5 'Golos Text',system-ui,sans-serif;color:var(--ink);
+  background:var(--paper);background-image:radial-gradient(var(--griddot) 1px,transparent 1.3px);
+  background-size:22px 22px;transition:background-color .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(720px 440px at 90% -10%,rgba(255,90,45,.10),transparent 60%),
+  radial-gradient(680px 440px at -8% 112%,rgba(46,107,255,.09),transparent 60%)}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{height:10px;width:10px}
+::-webkit-scrollbar-thumb{background:#CBD2C3;border-radius:99px;border:2px solid var(--paper)}
+.dark ::-webkit-scrollbar-thumb{background:#33413A;border-color:var(--paper)}
+button{font-family:inherit}
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.main{flex:1;min-width:0;padding:26px 30px 44px}
+.side{width:262px;flex:0 0 262px;background:var(--side);color:var(--side-t);
+  padding:22px 14px 18px;display:flex;flex-direction:column;gap:14px;
+  position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:0 8px}
+.logo{width:44px;height:44px;background:var(--accent);border-radius:13px;display:grid;place-items:center;
+  font:900 21px 'Unbounded';color:#fff;transform:rotate(-4deg);
+  box-shadow:0 8px 16px -6px rgba(255,90,45,.6);transition:transform .25s}
+.brand:hover .logo{transform:rotate(4deg) scale(1.05)}
+.brand b{font:700 17px 'Unbounded';letter-spacing:.06em;display:block;color:#fff}
+.brand span{font-size:10px;color:var(--side-m);text-transform:uppercase;letter-spacing:.18em}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;padding:8px 11px;border:0;background:transparent;
+  color:var(--side-m);font:500 13px 'Golos Text';border-radius:9px;cursor:pointer;text-align:left;transition:.18s}
+.nav button:hover{background:rgba(255,255,255,.07);color:var(--side-t);transform:translateX(2px)}
+.nav button.on{background:rgba(255,90,45,.16);color:#fff}
+.nav .grp{font:600 9.5px 'Golos Text';text-transform:uppercase;letter-spacing:.18em;color:var(--side-m);
+  padding:8px 11px 3px;opacity:.8}
+.pulse{width:7px;height:7px;border-radius:50%;background:#3DDC84;margin-left:auto;flex:0 0 auto;
+  box-shadow:0 0 0 0 rgba(61,220,132,.55);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+.sb h5{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.18em;color:var(--side-m);
+  margin:0 8px 8px;display:flex;align-items:center}
+.tmode{margin-left:auto;border:0;background:rgba(255,255,255,.1);color:var(--side-t);font:700 9px 'Golos Text';
+  padding:2px 8px;border-radius:99px;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;transition:.15s}
+.tmode:hover{background:var(--accent)}
+.sb{display:flex;flex-direction:column;gap:1px}
+.srow{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:9px;cursor:pointer;
+  border:1px solid transparent;transition:.15s;color:var(--side-t);font-size:12.5px;background:transparent;
+  width:100%;text-align:left;font-family:inherit}
+.srow:hover{background:rgba(255,255,255,.06)}
+.srow.on{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.thash{color:var(--side-m);font-weight:700;font-size:12px}
+.cnt{margin-left:auto;font:600 10.5px 'Golos Text';background:rgba(255,255,255,.09);
+  padding:2px 8px;border-radius:99px;color:var(--side-t)}
+.sprint{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);
+  border-radius:13px;padding:13px 14px}
+.sprint .live{display:flex;align-items:center;gap:8px;font:600 10.5px 'Golos Text';color:#8FE3B0;
+  text-transform:uppercase;letter-spacing:.14em}
+.sprint b{font:600 13px 'Unbounded';display:block;margin:8px 0 4px;color:#fff}
+.sprint small{color:var(--side-m);font-size:11.5px;line-height:1.5;display:block}
+.sprint-goal{margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;
+  font:500 11px 'Golos Text';color:var(--side-t);line-height:1.4}
+.reset{margin-top:10px;border:0;background:transparent;color:var(--side-m);font:500 11px 'Golos Text';
+  cursor:pointer;padding:7px 10px;border-radius:8px;display:flex;gap:8px;align-items:center;transition:.15s;width:100%}
+.reset:hover{color:#fff;background:rgba(255,255,255,.07)}
+.hotkeys{margin-top:8px;font:500 10px 'Golos Text';color:var(--side-m);padding:0 8px;line-height:2.1}
+.hotkeys b{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;font-weight:600;margin-right:2px;color:var(--side-t)}
+.scratch{margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:11px;padding:10px 12px}
+.scratch h5{margin:0 0 6px;display:flex;align-items:center;gap:6px}
+.scratch textarea{width:100%;min-height:72px;resize:vertical;border:0;background:transparent;
+  font:500 11.5px 'Golos Text';color:var(--side-t);outline:none;line-height:1.45}
+.scratch textarea::placeholder{color:var(--side-m)}
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.kicker{display:inline-flex;gap:9px;align-items:center;font:600 11px 'Golos Text';
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.kicker i{width:20px;height:3px;background:var(--accent);border-radius:2px}
+h1{font:900 clamp(24px,2.8vw,36px)/1.1 'Unbounded';margin-top:9px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:11px;padding:0 12px;height:42px;width:240px;transition:.2s;box-shadow:var(--sh-sm);color:var(--mut)}
+.search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
+.search input{border:0;outline:0;background:none;font:500 13.5px 'Golos Text';width:100%;color:var(--ink)}
+.search .x{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;padding:3px}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;
+  height:42px;align-items:center;box-shadow:var(--sh-sm);flex-wrap:wrap}
+.seg button{border:0;background:transparent;font:600 12px 'Golos Text';color:var(--mut);
+  padding:7px 11px;border-radius:8px;cursor:pointer;transition:.15s;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:700 13.5px 'Golos Text';
+  border-radius:11px;padding:0 18px;height:42px;transition:.18s;white-space:nowrap}
+.btn.pri{background:var(--accent);color:#fff;box-shadow:0 10px 20px -9px rgba(255,90,45,.75)}
+.btn.pri:hover{background:var(--accent-d);transform:translateY(-2px)}
+.btn.pri:disabled{opacity:.45;pointer-events:none}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.danger{background:color-mix(in srgb,#E5484D 13%,transparent);color:var(--red);height:38px;padding:0 14px}
+.btn.danger:hover{background:color-mix(in srgb,#E5484D 20%,transparent)}
+.btn.sm{height:34px;padding:0 13px;font-size:12px;border-radius:9px}
+.btn.xs{height:26px;padding:0 10px;font-size:10.5px;border-radius:7px}
+.vtool{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:16px;color:var(--mut);font-size:12.5px}
+.iconbtn{position:relative;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);
+  background:var(--card);color:var(--mut);display:grid;place-items:center;cursor:pointer;
+  box-shadow:var(--sh-sm);transition:.18s}
+.iconbtn:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
+.iconbtn.has{border-color:color-mix(in srgb,var(--accent) 55%,transparent);color:var(--accent)}
+.livechip{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:11px;
+  border:1px solid color-mix(in srgb,var(--red) 40%,transparent);
+  background:color-mix(in srgb,var(--red) 9%,transparent);color:var(--red);font:700 12px 'Golos Text';
+  cursor:pointer;transition:.15s;max-width:320px}
+.livechip:hover{transform:translateY(-1px)}
+.livechip .lct{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.livechip b{font-variant-numeric:tabular-nums}
+.rdot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:0 0 auto;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.3}}
+.bbadge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#fff;font:700 9.5px 'Golos Text';
+  padding:2px 6px;border-radius:99px;box-shadow:0 3px 8px -2px rgba(255,90,45,.8);animation:bpop .3s}
+@keyframes bpop{from{transform:scale(.4);opacity:0}}
+.bellwrap{position:relative}
+.bback{position:fixed;inset:0;z-index:44;background:transparent}
+.bpanel{position:absolute;right:0;top:calc(100% + 10px);width:336px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh-md);z-index:45;overflow:hidden;animation:mpop .22s}
+.bp-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;
+  border-bottom:1px solid var(--line2);font:600 13px 'Golos Text'}
+.bp-head span{font:700 11px;background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red);
+  padding:2px 9px;border-radius:99px}
+.bp-sec{padding:10px 16px 4px;font:600 10px 'Golos Text';letter-spacing:.15em;text-transform:uppercase;color:var(--mut)}
+.bp-row{display:flex;gap:9px;align-items:center;width:100%;padding:9px 16px;border:0;background:none;
+  cursor:pointer;text-align:left;font-family:inherit;transition:.15s}
+.bp-row:hover{background:var(--soft2)}
+.bp-row .t{flex:1;font:600 12.5px 'Golos Text';color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bp-row .d{font:600 10.5px 'Golos Text';color:var(--mut);white-space:nowrap}
+.bp-empty{padding:24px 16px;text-align:center;color:var(--mut);font-size:12.5px}
+.bp-all{width:100%;border:0;background:var(--soft);padding:12px;font:600 12px 'Golos Text';color:var(--ink);
+  cursor:pointer;border-top:1px solid var(--line2);transition:.15s}
+.bp-all:hover{background:var(--soft2);color:var(--accent)}
+.fbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.achip{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
+  border-radius:99px;padding:6px 7px 6px 12px;font:600 11.5px 'Golos Text';box-shadow:var(--sh-sm);animation:bpop .25s;max-width:280px}
+.achip .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.achip button{border:0;background:var(--soft);border-radius:50%;width:18px;height:18px;display:grid;
+  place-items:center;cursor:pointer;color:var(--mut);transition:.12s;flex:0 0 auto}
+.achip button:hover{background:color-mix(in srgb,#E5484D 16%,transparent);color:var(--red)}
+.achip.clear{background:transparent;border-style:dashed;color:var(--mut);cursor:pointer;padding:6px 13px}
+.achip.clear:hover{color:var(--red);border-color:var(--red)}
+.fbar-note{font:600 10.5px 'Golos Text';color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.vseg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;box-shadow:var(--sh-sm)}
+.vseg button{border:0;background:none;font:600 12px 'Golos Text';padding:8px 13px;border-radius:8px;
+  cursor:pointer;color:var(--mut);display:flex;gap:7px;align-items:center;transition:.15s;white-space:nowrap}
+.vseg button:hover{color:var(--ink)}
+.vseg button.on{background:var(--ink);color:var(--paper)}
+.fchips{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{border:1.5px solid var(--line);background:var(--card);color:var(--mut);font:600 11.5px 'Golos Text';
+  padding:7px 12px;border-radius:99px;cursor:pointer;transition:.15s;display:inline-flex;gap:6px;align-items:center}
+.fchip:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.fchip b{font:700 10px 'Golos Text';background:var(--ring);padding:1px 7px;border-radius:99px;color:inherit}
+.sortsel{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:10px 12px;
+  font:600 12px 'Golos Text';color:var(--ink);cursor:pointer;box-shadow:var(--sh-sm);outline:none}
+.sortsel:focus{border-color:var(--ink)}
+.stats{display:flex;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm);margin-bottom:20px;overflow:hidden;flex-wrap:wrap;animation:rise .45s both}
+.stat{flex:1;padding:15px 20px;border-right:1px solid var(--line);min-width:150px}
+.stat .lbl{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.15em;color:var(--mut)}
+.stat .num{font:700 28px/1.2 'Unbounded';margin-top:3px}
+.stat .sub{font-size:11.5px;color:var(--mut);margin-top:1px}
+.ringbox{display:flex;align-items:center;gap:14px;padding:12px 22px}
+.ringbox b{font:600 12.5px 'Unbounded'}
+.ringbox small{color:var(--mut);font-size:11px;display:block;margin-top:2px}
+.board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:14px}
+.col{flex:1 1 0;min-width:230px;background:var(--colbg);border:1px solid var(--line);border-top:3px solid;
+  border-radius:var(--r);display:flex;flex-direction:column;transition:background .2s;animation:rise .45s both}
+.col.over{outline:2px dashed var(--accent);outline-offset:-3px;background:var(--soft2)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}}
+@keyframes fade{from{opacity:0}}
+.col-head{display:flex;align-items:center;gap:8px;padding:12px 12px 10px}
+.col-dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.col-head h3{font:600 11px 'Unbounded';letter-spacing:.04em;text-transform:uppercase}
+.col-head .n{font:700 11px 'Golos Text';background:var(--card);border:1px solid var(--line);
+  border-radius:99px;padding:2px 9px;color:var(--mut)}
+.col-add{margin-left:auto;border:0;background:transparent;width:26px;height:26px;border-radius:8px;
+  cursor:pointer;color:var(--mut);display:grid;place-items:center;transition:.15s}
+.col-add:hover{background:var(--card);color:var(--accent);transform:scale(1.1)}
+.col-body{display:flex;flex-direction:column;gap:10px;padding:2px 10px 12px;min-height:120px}
+.empty{border:1.5px dashed var(--dash);border-radius:11px;padding:24px 10px;text-align:center;color:var(--mut);font-size:12px}
+.pinned{margin-bottom:20px;background:linear-gradient(180deg,color-mix(in srgb,var(--amber) 8%,transparent),transparent);
+  border:1px solid color-mix(in srgb,var(--amber) 25%,var(--line));border-radius:var(--r);padding:14px 16px;
+  animation:rise .4s both}
+.pinned h3{font:600 11px 'Unbounded';letter-spacing:.08em;text-transform:uppercase;color:var(--amber);
+  display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pinned-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:grab;
+  box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .18s,opacity .18s,border-color .18s;
+  animation:pop .4s both;user-select:none;position:relative;
+  display:flex;flex-direction:column;gap:8px;overflow:hidden;max-width:100%}
+.card.pinned{border-color:color-mix(in srgb,var(--amber) 40%,var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--amber) 25%,transparent),var(--sh-sm)}
+.card.fav{border-color:color-mix(in srgb,#E8930C 40%,var(--line))}
+.card.selected{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+.card.drag{opacity:.4;transform:rotate(2deg) scale(.98);cursor:grabbing}
+.card-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.card-actions{display:flex;gap:2px;margin-left:auto;flex:0 0 auto;opacity:0;transition:.15s}
+.card:hover .card-actions,.card.selected .card-actions{opacity:1}
+.card-actions button{width:24px;height:24px;border:0;background:transparent;color:var(--mut);
+  border-radius:6px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.card-actions button:hover{background:var(--soft);color:var(--ink)}
+.card-actions button.on{color:var(--amber)}
+.card-actions button.pinned-on{color:var(--amber)}
+.card-actions button.fav-on{color:#E8930C}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 10.5px 'Golos Text';letter-spacing:.05em;
+  text-transform:uppercase;padding:3.5px 9px;border-radius:99px;white-space:nowrap;
+  border:0;cursor:pointer;transition:.15s;font-family:inherit;max-width:100%;overflow:hidden}
+.chip .dot{width:7px;height:7px;flex:0 0 auto}
+.chip .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip:hover{filter:brightness(1.1)}
+.bchip{font:700 9px 'Golos Text';letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;
+  white-space:nowrap;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto}
+.pr{font:600 10.5px 'Golos Text';display:inline-flex;gap:5px;align-items:center;white-space:nowrap;
+  border:0;background:transparent;cursor:pointer;padding:3px 7px;border-radius:99px;transition:.15s;
+  font-family:inherit}
+.pr:hover{background:var(--soft)}
+.pr small{color:var(--mut)}
+.card h4{font:600 14px/1.35 'Golos Text';margin:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;min-width:0}
+.donecheck{color:var(--green);font-weight:700}
+.card .desc{font-size:12px;color:var(--mut);line-height:1.45;margin:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;min-width:0}
+.ctypes{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.ttype{font:600 10px 'Golos Text';color:#fff;padding:2.5px 9px;border-radius:99px;
+  white-space:nowrap;display:inline-flex;align-items:center;gap:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+  border:0;cursor:pointer;transition:.15s;font-family:inherit}
+.ttype:hover{filter:brightness(1.15)}
+.subbar{display:flex;align-items:center;gap:8px;min-width:0}
+.track{flex:1;height:4px;background:var(--track);border-radius:99px;overflow:hidden;min-width:0}
+.track i{display:block;height:100%;border-radius:99px}
+.subn{font:600 10.5px 'Golos Text';color:var(--mut);flex:0 0 auto;white-space:nowrap}
+.foot{display:flex;align-items:center;gap:7px;margin-top:2px;min-width:0;flex-wrap:wrap}
+.ava{border-radius:50%;display:inline-grid;place-items:center;font:700 9px 'Golos Text';color:#fff;
+  flex:0 0 auto;border:2px solid rgba(255,255,255,.25);box-shadow:var(--sh-sm);
+  cursor:pointer;transition:.15s}
+.ava:hover{transform:scale(1.1)}
+.who{font-size:11.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px}
+.com{display:inline-flex;gap:4px;align-items:center;font:600 11px 'Golos Text';color:var(--mut);
+  border:0;background:transparent;cursor:pointer;padding:3px 7px;border-radius:99px;transition:.15s;font-family:inherit}
+.com:hover{background:var(--soft);color:var(--ink)}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:600 10.5px 'Golos Text';font-variant-numeric:tabular-nums;
+  border:1px solid var(--line);background:var(--soft);color:var(--mut);padding:3px 8px;border-radius:99px;
+  cursor:pointer;transition:.15s;white-space:nowrap;flex:0 0 auto;font-family:inherit}
+.tchip:hover{border-color:var(--ink);color:var(--ink)}
+.tchip.run{background:color-mix(in srgb,#E5484D 12%,transparent);color:var(--red);
+  border-color:color-mix(in srgb,#E5484D 35%,transparent)}
+.due{font:600 11px 'Golos Text';padding:3px 9px;border-radius:99px;
+  background:var(--soft);color:var(--mut);white-space:nowrap;display:inline-block;flex:0 0 auto;
+  border:0;cursor:pointer;font-family:inherit;transition:.15s}
+.due:hover{background:var(--line)}
+.due.warn{background:color-mix(in srgb,#E8930C 16%,transparent);color:#D97706}
+.due.bad{background:color-mix(in srgb,#E5484D 15%,transparent);color:var(--red);animation:alarm 1.6s infinite}
+@keyframes alarm{50%{background:color-mix(in srgb,#E5484D 26%,transparent)}}
+.rchip{display:inline-flex;align-items:center;gap:4px;font:600 10px 'Golos Text';color:#0EA5C6;
+  background:color-mix(in srgb,#0EA5C6 12%,transparent);padding:3px 8px;border-radius:99px;white-space:nowrap}
+.qdd{position:absolute;z-index:30;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;box-shadow:var(--sh-md);padding:4px;min-width:180px;max-width:240px;
+  animation:mpop .15s}
+.qdd button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;background:transparent;
+  color:var(--ink);font:500 12px 'Golos Text';border-radius:6px;cursor:pointer;text-align:left;transition:.12s;
+  font-family:inherit;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.qdd button:hover{background:var(--soft2)}
+.qdd button.on{background:var(--soft);font-weight:600}
+.qdd .sep{height:1px;background:var(--line2);margin:4px 0}
+.ltab{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow-x:auto;animation:rise .4s both}
+.lrow{display:grid;grid-template-columns:minmax(250px,2.4fr) 112px 132px 112px 158px 168px;gap:10px;
+  align-items:center;padding:11px 16px;border-bottom:1px solid var(--line2);cursor:pointer;
+  transition:background .15s;min-width:980px;animation:fade .35s both}
+.lrow:hover{background:var(--soft2)}
+.lrow:last-child{border-bottom:0}
+.lrow.lhead{font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.12em;color:var(--mut);
+  cursor:default;background:var(--field)}
+.lrow.lhead:hover{background:var(--field)}
+.lrow.done .lt{color:var(--mut);text-decoration:line-through}
+.lmain{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.lmain .pr{margin-top:3px}
+.lt{font:600 13.5px/1.3 'Golos Text';display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ld{font-size:11px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.lwho{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut);min-width:0;overflow:hidden}
+.lprog{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.lcol-sel{position:relative;display:inline-block}
+.lcol-sel select{appearance:none;-webkit-appearance:none;border:1px solid var(--line);border-radius:9px;
+  padding:6px 26px 6px 24px;font:600 11.5px 'Golos Text';cursor:pointer;background:var(--card);color:var(--ink);outline:none;transition:.15s}
+.lcol-sel select:hover{border-color:var(--ink)}
+.lcol-sel .dot{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none}
+.lcol-sel::after{content:'▾';position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  font-size:9px;color:var(--mut);pointer-events:none}
+.mhead{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm);padding:18px 22px;margin-bottom:14px;flex-wrap:wrap;animation:rise .4s both}
+.mhead .ava{box-shadow:0 8px 18px -8px rgba(0,0,0,.4)}
+.mhead h3{font:700 16px 'Unbounded'}
+.mhead small{color:var(--mut);font-size:12px;display:block;margin-top:3px}
+.mstats{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+.mstat{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:96px}
+.mstat b{font:700 20px 'Unbounded';display:block}
+.mstat span{font:600 10px 'Golos Text';text-transform:uppercase;letter-spacing:.12em;color:var(--mut)}
+.mgroup{margin-bottom:18px;animation:rise .45s both}
+.mgt{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mgt h4{font:600 11.5px 'Unbounded';letter-spacing:.06em;text-transform:uppercase}
+.mgt .n{font:700 11px 'Golos Text';background:var(--card);border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:var(--mut)}
+.cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow:hidden;overflow-x:auto;animation:rise .4s both}
+.cal-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cal-head h3{font:700 17px 'Unbounded'}
+.cal-nav{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--card);cursor:pointer;
+  display:grid;place-items:center;color:var(--mut);transition:.15s}
+.cal-nav:hover{border-color:var(--ink);color:var(--ink);transform:scale(1.06)}
+.cal-cnt{font:600 11.5px 'Golos Text';color:var(--mut);background:var(--soft);padding:5px 11px;border-radius:99px}
+.legend{display:flex;gap:12px;margin-left:auto;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px;font:500 11px 'Golos Text';color:var(--mut)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);min-width:680px}
+.cal-dow{padding:9px;text-align:center;font:600 10.5px 'Golos Text';letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--line)}
+.cal-dow.we{color:#C58A6B}
+.cal-cell{min-height:106px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:6px;cursor:pointer;transition:background .15s}
+.cal-cell:nth-child(7n){border-right:0}
+.cal-cell:hover{background:var(--soft2)}
+.cal-cell.wk{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.cal-cell.wk:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.cal-cell.out{opacity:.45}
+.cal-cell .dn{font:600 12px 'Golos Text';width:24px;height:24px;display:grid;place-items:center;
+  border-radius:8px;margin-bottom:2px}
+.cal-cell.today .dn{background:var(--accent);color:#fff;box-shadow:0 4px 10px -4px rgba(255,90,45,.7)}
+.ev{display:flex;border:0;border-left:3px solid;cursor:pointer;font:500 10.5px 'Golos Text';
+  padding:3px 6px;border-radius:6px;margin-top:4px;width:100%;text-align:left;
+  overflow:hidden;white-space:nowrap;transition:.12s}
+.ev b{overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ev:hover{transform:translateX(2px);filter:saturate(1.2)}
+.ev.done{opacity:.55}
+.ev.done b{text-decoration:line-through}
+.more{font:600 10px 'Golos Text';color:var(--mut);margin-top:3px;padding-left:2px}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  padding:18px 20px;animation:rise .45s both}
+.panel h4{font:600 12px 'Unbounded';text-transform:uppercase;letter-spacing:.08em;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+.arow{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.arow:last-child{margin-bottom:0}
+.arow .al{width:94px;font:600 12px 'Golos Text';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arow .track{height:8px}
+.arow .av{font:700 12px 'Unbounded';width:26px;text-align:right}
+.pnote{font-size:11px;color:var(--mut);margin-top:12px}
+.drow{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.dleg{display:flex;flex-direction:column;gap:9px}
+.dleg-r{display:flex;align-items:center;gap:8px;font:500 12.5px 'Golos Text'}
+.dleg-r b{margin-left:auto;font:700 12px 'Unbounded';padding-left:18px}
+.bars{display:flex;align-items:flex-end;gap:5px;height:120px;padding-top:6px}
+.bars i{flex:1;border-radius:4px 4px 2px 2px;background:var(--green);opacity:.92;
+  transition:height .6s cubic-bezier(.2,.7,.3,1)}
+.bars i.z{background:var(--track)}
+.blabels{display:flex;justify-content:space-between;font:600 10.5px 'Golos Text';color:var(--mut);margin-top:8px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;
+  flex-direction:column;gap:10px;box-shadow:var(--sh-sm);transition:.18s;animation:pop .4s both;cursor:pointer}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb,var(--ink) 22%,var(--line))}
+.ftop{display:flex;gap:11px;align-items:center}
+.ftile{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font:700 10px 'Golos Text';color:#fff;letter-spacing:.06em;flex:0 0 auto}
+.fname{font:600 12.5px/1.35 'Golos Text';word-break:break-word}
+.fmeta{font-size:11px;color:var(--mut);margin-top:3px;display:flex;align-items:center;gap:5px}
+.ftags{display:flex;gap:6px;flex-wrap:wrap}
+.ftag{font:600 10px 'Golos Text';padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--mut)}
+.flink{display:inline-flex;align-items:center;gap:6px;font:600 11px 'Golos Text';color:var(--blue);
+  background:color-mix(in srgb,#2E6BFF 12%,transparent);padding:6px 10px;border-radius:8px;cursor:pointer;
+  border:0;transition:.15s;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.flink:hover{background:color-mix(in srgb,#2E6BFF 19%,transparent);transform:translateX(2px)}
+.uprog{display:flex;align-items:center;gap:10px;height:42px;background:var(--card);border:1px solid var(--line);
+  border-radius:11px;padding:0 14px;box-shadow:var(--sh-sm)}
+.uprog .track{width:130px;height:6px}
+.uprog .track i{background:var(--accent)}
+.uprog b{font:700 11px 'Unbounded';width:38px}
+.tplgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tplcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px;
+  box-shadow:var(--sh-sm);transition:.18s;animation:pop .4s both;cursor:pointer;
+  display:flex;flex-direction:column;gap:10px}
+.tplcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:var(--accent)}
+.tplcard h5{font:600 14px 'Golos Text';margin:0}
+.tplcard p{font:500 12px 'Golos Text';color:var(--mut);line-height:1.4;margin:0}
+.tplcard .tplmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tplcard .tplactions{display:flex;gap:8px;margin-top:auto}
+.feed{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
+  overflow:hidden;animation:rise .4s both}
+.fday{padding:10px 18px 8px;font:600 10.5px 'Golos Text';letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mut);background:var(--soft2);border-bottom:1px solid var(--line);border-top:1px solid var(--line)}
+.fitem{display:flex;gap:12px;align-items:flex-start;padding:12px 18px;border-bottom:1px solid var(--line2);animation:fade .35s both}
+.fitem:last-child{border-bottom:0}
+.fic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;flex:0 0 auto}
+.fitem p{font-size:13px;line-height:1.45;padding-top:4px;min-width:0;flex:1;word-break:break-word}
+.fitem time{margin-left:auto;font:500 11px 'Golos Text';color:var(--mut);white-space:nowrap;padding-top:6px;flex:0 0 auto}
+.apanel h4{display:flex;align-items:center;gap:8px}
+.arow2{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;transition:.15s;min-width:0}
+.arow2:hover{background:var(--soft2)}
+.aname{font:600 13px 'Golos Text';display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.asub{font-size:11px;color:var(--mut)}
+.ibtn{border:0;background:transparent;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+  cursor:pointer;color:var(--mut);transition:.15s;flex:0 0 auto}
+.ibtn:hover{background:color-mix(in srgb,#E5484D 14%,transparent);color:var(--red)}
+.rolesel{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font:600 11px 'Golos Text';
+  background:var(--card);color:var(--ink);cursor:pointer;outline:none;margin-left:auto;flex:0 0 auto}
+.aadd{display:flex;gap:8px;margin-top:12px}
+.aadd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;min-width:0;color:var(--ink)}
+.aadd input:focus{border-color:var(--ink)}
+.swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.sw{width:26px;height:26px;border-radius:9px;cursor:pointer;border:2.5px solid transparent;transition:.15s}
+.sw:hover{transform:scale(1.1)}
+.sw.on{border-color:var(--ink);transform:scale(1.12)}
+.you{font:600 9.5px 'Golos Text';background:color-mix(in srgb,#0FA36B 16%,transparent);color:var(--green);
+  padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em;flex:0 0 auto}
+.alogin{display:flex;gap:10px;flex-wrap:wrap}
+.alogin button{display:flex;flex-direction:column;align-items:center;gap:7px;border:1.5px solid var(--line);
+  background:var(--card);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s;
+  font:600 11.5px 'Golos Text';color:var(--mut)}
+.alogin button:hover{border-color:var(--ink);transform:translateY(-2px)}
+.alogin button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--ink)}
+.adata{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px}
+.adata div{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.adata b{font:700 17px 'Unbounded';color:var(--ink);display:block;letter-spacing:0}
+.abtns{display:flex;gap:10px;flex-wrap:wrap}
+.mtext{font-size:13px;color:var(--mut);margin-top:6px;line-height:1.5}
+.lock{max-width:540px;margin:40px auto;text-align:center;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:42px 32px;box-shadow:var(--sh-sm);animation:rise .4s both}
+.lock .lic{width:58px;height:58px;border-radius:16px;background:color-mix(in srgb,var(--red) 13%,transparent);
+  color:var(--red);display:grid;place-items:center;margin:0 auto 16px}
+.lock h3{font:700 18px 'Unbounded';margin-bottom:9px}
+.lock p{color:var(--mut);font-size:13px;line-height:1.6}
+.lockadmins{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.overlay{position:fixed;inset:0;background:rgba(10,15,12,.55);display:grid;place-items:center;
+  z-index:50;padding:20px;animation:fade .2s}
+.modal{background:var(--card);border-radius:16px;width:min(700px,100%);max-height:92vh;overflow:auto;
+  padding:22px 24px;box-shadow:0 34px 70px -24px rgba(0,0,0,.55);position:relative;
+  animation:mpop .28s cubic-bezier(.2,.9,.3,1.15)}
+.modal.sm{width:min(460px,100%)}
+@keyframes mpop{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.modal h3{font:700 16px 'Unbounded';margin-bottom:4px}
+.mclose{position:absolute;top:16px;right:16px;border:0;background:var(--soft);width:32px;height:32px;
+  border-radius:9px;cursor:pointer;color:var(--mut);display:grid;place-items:center;transition:.15s}
+.mclose:hover{background:var(--ink);color:var(--paper)}
+.f label{display:block;font:600 10.5px 'Golos Text';text-transform:uppercase;letter-spacing:.14em;
+  color:var(--mut);margin:14px 0 6px}
+.f input[type=text],.f textarea,.f select,.f input[type=date]{width:100%;border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;font:500 14px 'Golos Text';color:var(--ink);background:var(--field);
+  outline:none;transition:.15s;font-family:inherit}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:var(--ink);box-shadow:0 0 0 3px var(--ring)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.mcols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
+.chipsel{display:flex;flex-wrap:wrap;gap:6px}
+.chipsel button{border:1.5px solid var(--line);background:var(--card);color:var(--mut);font:600 12px 'Golos Text';
+  padding:7px 13px;border-radius:99px;cursor:pointer;transition:.15s;font-family:inherit}
+.chipsel button:hover{border-color:var(--ink);color:var(--ink)}
+.avasel{display:flex;gap:8px;flex-wrap:wrap}
+.avasel button{width:36px;height:36px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;
+  color:#fff;font:700 11px 'Golos Text';transition:.15s}
+.avasel button:hover{transform:translateY(-2px)}
+.avasel button.on{border-color:var(--ink);transform:scale(1.1)}
+.mfoot{display:flex;gap:10px;margin-top:22px;align-items:center}
+.ttbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px;
+  background:var(--field);align-items:center;min-height:42px}
+.ttbox .ttype{max-width:240px}
+.ttbox .ttype button{border:0;background:rgba(255,255,255,.3);border-radius:50%;width:14px;height:14px;
+  display:grid;place-items:center;cursor:pointer;color:#fff;margin-left:4px;transition:.12s;flex:0 0 auto}
+.ttbox .ttype button:hover{background:rgba(0,0,0,.3)}
+.ttadd{display:flex;gap:4px;align-items:center}
+.ttadd input{flex:1;border:0;background:transparent;outline:none;font:500 13px 'Golos Text';
+  color:var(--ink);min-width:110px;padding:3px 4px}
+.ttadd input::placeholder{color:var(--mut)}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px;
+  background:var(--field);align-items:center}
+.tagbox input{flex:1;min-width:110px;border:0;background:none;outline:none;font:500 13px 'Golos Text';color:var(--ink)}
+.tagchip{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:99px;
+  padding:3px 6px 3px 10px;font:600 11px 'Golos Text';color:var(--ink);animation:bpop .25s}
+.tagchip button{border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;
+  padding:2px;border-radius:50%;transition:.12s}
+.tagchip button:hover{color:var(--red)}
+.tblock{margin-top:16px;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.trow{display:flex;align-items:center;gap:12px;margin-top:4px;flex-wrap:wrap}
+.ttime{font:600 22px 'Unbounded';font-variant-numeric:tabular-nums;min-width:104px}
+.ck{display:flex;align-items:center;gap:8px;padding:6px 5px;border-radius:8px;transition:background .15s}
+.ck:hover{background:var(--soft2)}
+.ck input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+.ck span{flex:1;font-size:13px}
+.ck.done span{text-decoration:line-through;color:var(--mut)}
+.ck .rm{opacity:0;border:0;background:none;cursor:pointer;color:var(--mut);display:grid;place-items:center;
+  padding:3px;border-radius:6px;transition:.15s}
+.ck:hover .rm{opacity:1}
+.ck .rm:hover{color:var(--red);background:color-mix(in srgb,#E5484D 14%,transparent)}
+.ckadd input{width:100%;border:1px dashed var(--dash);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);transition:.15s;color:var(--ink)}
+.ckadd input:focus{border-color:var(--ink);border-style:solid}
+.cmts{max-height:236px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
+.cmt{display:flex;gap:8px;animation:fade .3s both}
+.cmt .b{background:var(--soft);border-radius:10px;padding:7px 11px;flex:1;min-width:0}
+.cmt .b small{display:block;color:var(--mut);font-size:10.5px;margin-bottom:2px}
+.cmt .b p{font-size:12.5px;line-height:1.45;word-break:break-word}
+.cempty{font-size:12px;color:var(--mut);padding:14px 0}
+.cinput{display:flex;gap:8px;margin-top:10px}
+.cinput input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font:500 13px 'Golos Text';outline:none;background:var(--field);color:var(--ink)}
+.cinput input:focus{border-color:var(--ink)}
+.csend{width:38px;height:38px;border-radius:10px;border:0;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;cursor:pointer;transition:.15s;flex:0 0 auto}
+.csend:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.csrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--line2)}
+.csrow:last-child{border-bottom:0}
+.csrow .csi{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.csrow .csi .ic{width:30px;height:30px;border-radius:8px;background:var(--soft);display:grid;place-items:center;
+  color:var(--ink);flex:0 0 auto}
+.csrow .csi .lb{font:600 13px 'Golos Text'}
+.csrow .csi .sb{font:500 11px 'Golos Text';color:var(--mut);margin-top:2px}
+.sw2{position:relative;width:38px;height:22px;background:var(--line);border-radius:99px;cursor:pointer;
+  transition:.2s;flex:0 0 auto;border:0}
+.sw2.on{background:var(--accent)}
+.sw2::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;
+  border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw2.on::after{left:18px}
+.cmd{background:var(--card);border-radius:14px;width:min(600px,100%);max-height:70vh;overflow:auto;
+  box-shadow:0 34px 70px -24px rgba(0,0,0,.55);padding:0;animation:mpop .22s}
+.cmd-in{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line2)}
+.cmd-in input{border:0;outline:0;background:transparent;font:500 15px 'Golos Text';color:var(--ink);flex:1}
+.cmd-list{max-height:420px;overflow:auto}
+.cmd-item{display:flex;align-items:center;gap:12px;padding:10px 18px;cursor:pointer;transition:.12s}
+.cmd-item:hover,.cmd-item.hl{background:var(--soft2)}
+.cmd-item .ci-ic{width:28px;height:28px;border-radius:7px;background:var(--soft);display:grid;place-items:center;
+  color:var(--ink);flex:0 0 auto}
+.cmd-item .ci-t{font:600 13px 'Golos Text';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd-item .ci-s{font:500 11px 'Golos Text';color:var(--mut);flex:0 0 auto}
+.toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+  gap:8px;z-index:60;align-items:center;pointer-events:none}
+.toast{background:#141B17;color:#fff;font:600 12.5px 'Golos Text';padding:10px 16px;border-radius:99px;
+  box-shadow:var(--sh-md);animation:tin .3s;display:flex;gap:9px;align-items:center;pointer-events:auto;max-width:90vw}
+.toast .tdot{width:8px;height:8px;border-radius:50%;background:#3DDC84;flex:0 0 auto}
+.toast.warn .tdot{background:var(--amber)}
+@keyframes tin{from{opacity:0;transform:translateY(14px)}}
+.tact{border:0;background:rgba(255,255,255,.16);color:#fff;font:700 11.5px 'Golos Text';
+  padding:4px 11px;border-radius:99px;cursor:pointer;transition:.15s}
+.tact:hover{background:var(--accent)}
+.nothing{margin-top:16px;padding:54px 20px;text-align:center;color:var(--mut);background:var(--colbg);
+  border:1.5px dashed var(--dash);border-radius:var(--r)}
+.nothing b{font:700 16px 'Unbounded';display:block;color:var(--ink);margin-bottom:6px}
+@media(max-width:1040px){.side{display:none}.main{padding:20px 16px 40px}}
+@media(max-width:980px){.agrid{grid-template-columns:1fr}.legend{display:none}}
+@media(max-width:720px){.stat{flex:1 1 46%;border-bottom:1px solid var(--line)}.frow,.frow3,.mcols{grid-template-columns:1fr}}
