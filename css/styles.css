@@ -567,3 +567,14 @@ h1 em{font-style:normal;color:var(--accent)}
 @media(max-width:1040px){.side{display:none}.main{padding:20px 16px 40px}}
 @media(max-width:980px){.agrid{grid-template-columns:1fr}.legend{display:none}}
 @media(max-width:720px){.stat{flex:1 1 46%;border-bottom:1px solid var(--line)}.frow,.frow3,.mcols{grid-template-columns:1fr}}
+/* photos */
+.pstrip{display:flex;gap:4px;align-items:center;min-width:0}
+.pthumb{width:26px;height:26px;border-radius:6px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto}
+.pmore{font:600 10px 'Golos Text';color:var(--mut)}
+.pgrid{display:flex;flex-wrap:wrap;gap:8px}
+.pitem{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.pitem img{width:100%;height:100%;object-fit:cover;display:block}
+.prm{position:absolute;top:3px;right:3px;width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;cursor:pointer}
+.plink{position:absolute;bottom:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center}
+.padd{display:flex;align-items:center;justify-content:center;gap:6px;width:72px;height:72px;border-radius:10px;border:1.5px dashed var(--dash);background:var(--field);color:var(--mut);cursor:pointer;font:600 10px 'Golos Text';transition:.15s}
+.padd:hover{border-color:var(--ink);color:var(--ink)}
