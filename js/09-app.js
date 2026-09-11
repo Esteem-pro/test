@@ -812,7 +812,7 @@ function App(){
           onNew:function(d){openModal({mode:'new',board:'main',due:d});}}),
         view==='stats'&&el(StatsView,{tasks:tasks}),
         view==='tpl'&&el(TemplatesView,{templates:templates,onUse:useTemplate,
-          onDelete:delTemplate,onCreate:function(){openModal({mode:'new',board:'main']);}}),
+          onDelete:delTemplate,onCreate:function(){openModal({mode:'new',board:'main'});}}),
         view==='files'&&el(FilesView,{tasks:tasks,
           onOpenTask:function(t){openModal({mode:'edit',t:t});},toast:toast}),
         view==='feed'&&el(FeedView,{log:log,onClear:function(){setLog([]);toast('История очищена');}}),
