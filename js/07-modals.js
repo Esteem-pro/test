@@ -41,7 +41,7 @@ var CARD_FIELD_LIST=[
   ['comments','Комментарии','Счётчик комментариев',IC.chat],
   ['timer','Таймер','Учёт времени',IC.clock],
   ['photos','Фото','Миниатюры прикреплённых изображений',IC.camera],
-  ['types','Типы','Цветовые метки типов задач',IC.tag]
+  ['types','Тип задачи','Цветовые метки типов задач',IC.tag]
 ];
 function CardSettings(props){
   var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
@@ -292,7 +292,7 @@ function TaskModal(props){
             )
           ),
           el('div',null,
-            el('label',null,'Типы'),
+            el('label',null,'Тип задачи'),
             el('div',{className:'chipsel',style:{flexWrap:'wrap',gap:6}},
               Object.entries(taskTypes).map(function(e){
                 var k=e[0],tp=e[1];
