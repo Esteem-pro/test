@@ -832,7 +832,7 @@ function App(props){
             el('b',null,'Ничего не нашлось'),'Попробуйте изменить фильтры или поисковый запрос')
         ),
 
-        view==='mine'&&el(MineView,{tasks:tasks,
+                view==='mine'&&el(MineView,{tasks:tasks,
           onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
         view==='fav'&&el(FavoritesView,{tasks:tasks,
           onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
@@ -845,20 +845,15 @@ function App(props){
         view==='files'&&el(FilesView,{tasks:tasks,
           onOpenTask:function(t){openModal({mode:'edit',t:t});},toast:toast}),
         view==='feed'&&el(FeedView,{log:log,onClear:function(){setLog([]);toast('История очищена');}}),
-               view==='admin'&&((members[me]||{}).role==='admin'
+        view==='admin'&&((members[me]||{}).role==='admin'
           ? el(AdminView,{tasks:tasks,setTasks:setTasks,channels:channels,setChannels:setChannels,
               members:members,setMembers:setMembers,me:me,setMe:setMe,sprint:sprint,setSprint:setSprint,
               projects:projects,setProjects:setProjects,taskTypes:taskTypes,setTaskTypes:setTaskTypes,
               setChF:setChF,setWhoF:setWhoF,logEv:logEv,toast:toast,resetDemo:resetDemo,
               authUser:authUser,onSignOut:onSignOut})
           : el(LockScreen,{authUser:authUser,onSignOut:onSignOut}))
-          : el(LockScreen,{login:function(k){
-              setMe(k);logEv('admin','Админ: вошли как '+members[k].name);
-              toast('Вы вошли как '+members[k].name+' (админ)');
-            }}))
       ),
 
-      /* модалка задачи */
       modal&&el(TaskModal,{key:modal.k,
         init:modal.mode==='edit'?modal.t:null,
         live:modal.mode==='edit'?(tasks.find(function(x){return x.id===modal.t.id;})||modal.t):null,
