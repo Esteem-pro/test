@@ -21,6 +21,8 @@ var fmtDur = function(s) {
   return h>0?h+':'+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0'):m+':'+String(ss).padStart(2,'0');
 };
 var elapsed = function(t,now) { return t.time ? t.time.s + (t.time.run ? Math.floor((now-t.time.run)/1000) : 0) : 0; };
+var generateId = function() { return Date.now().toString(36) + Math.random().toString(36).substr(2,9); };
+var formatDate = function(ts) { return new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}).format(new Date(ts)); };
 
 // Доски и статусы
 var BOARD_COLS = {
