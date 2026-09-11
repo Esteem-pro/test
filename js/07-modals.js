@@ -4,6 +4,136 @@
 // Все функции доступны глобально (window объект)
 // Импорт не используется в версии без сборщика
 
+// --- React компонент TaskModal ---
+window.TaskModal = function TaskModal(props) {
+    var el = React.createElement;
+    
+    // Получаем данные задачи
+    var task = props.init || props.live;
+    var isEdit = !!props.init;
+    
+    if (!task && !isEdit) return null;
+    
+    return el('div', { className: 'modal-overlay', style: { display: 'flex' } }, [
+        el('div', { id: 'task-modal', className: 'modal-window', style: { display: 'block' } }, [
+            el('div', { className: 'modal-header' }, [
+                el('h2', { id: 'modal-title' }, isEdit ? 'Редактировать задачу' : 'Новая задача'),
+                el('button', { 
+                    className: 'close-modal', 
+                    onClick: props.onClose,
+                    style: { background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }
+                }, '×')
+            ]),
+            el('div', { className: 'modal-body' }, [
+                el('form', { id: 'task-form' }, [
+                    el('div', { className: 'form-row' }, [
+                        el('label', { htmlFor: 'task-title' }, 'Заголовок'),
+                        el('input', { 
+                            type: 'text', 
+                            id: 'task-title', 
+                            defaultValue: task ? task.title : '',
+                            required: true,
+                            placeholder: 'Введите заголовок задачи'
+                        })
+                    ]),
+                    el('div', { className: 'form-row' }, [
+                        el('label', { htmlFor: 'task-description' }, 'Описание'),
+                        el('textarea', { 
+                            id: 'task-description',
+                            defaultValue: task ? (task.description || '') : '',
+                            rows: 3,
+                            placeholder: 'Описание задачи'
+                        })
+                    ]),
+                    el('div', { className: 'form-row' }, [
+                        el('label', { htmlFor: 'task-deadline' }, 'Дедлайн'),
+                        el('input', { 
+                            type: 'date', 
+                            id: 'task-deadline',
+                            defaultValue: task ? (task.due || '') : ''
+                        })
+                    ]),
+                    el('div', { className: 'form-row' }, [
+                        el('label', { htmlFor: 'task-column' }, 'Колонка'),
+                        el('select', { id: 'task-column', defaultValue: task ? (task.columnId || task.col || 'new') : 'new' }, [
+                            el('option', { value: 'new' }, 'Новая'),
+                            el('option', { value: 'inprogress' }, 'В работе'),
+                            el('option', { value: 'review' }, 'На проверке'),
+                            el('option', { value: 'done' }, 'Готово')
+                        ])
+                    ]),
+                    el('div', { className: 'form-row' }, [
+                        el('label', { htmlFor: 'task-type' }, 'Тип'),
+                        el('select', { id: 'task-type', defaultValue: task ? (task.typeId || '') : '' }, [
+                            el('option', { value: '' }, 'Без типа'),
+                            el('option', { value: 'feature' }, 'Фича'),
+                            el('option', { value: 'bug' }, 'Баг'),
+                            el('option', { value: 'task' }, 'Задача')
+                        ])
+                    ])
+                ])
+            ]),
+            el('div', { className: 'modal-footer', style: { display: 'flex', justifyContent: 'space-between', marginTop: '20px' } }, [
+                isEdit ? el('button', {
+                    type: 'button',
+                    id: 'delete-task-btn',
+                    className: 'btn-danger',
+                    onClick: function() {
+                        if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+                            props.onDelete && props.onDelete(task.id);
+                            props.onClose();
+                        }
+                    },
+                    style: { background: '#dc3545', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }
+                }, 'Удалить') : el('span'),
+                el('button', {
+                    type: 'submit',
+                    form: 'task-form',
+                    className: 'btn-primary',
+                    onClick: function(e) {
+                        e.preventDefault();
+                        var title = document.getElementById('task-title').value.trim();
+                        var description = document.getElementById('task-description').value.trim();
+                        var deadline = document.getElementById('task-deadline').value;
+                        var columnId = document.getElementById('task-column').value;
+                        var typeId = document.getElementById('task-type').value || null;
+                        
+                        if (!title) {
+                            alert('Введите заголовок задачи');
+                            return;
+                        }
+                        
+                        var taskData = {
+                            title: title,
+                            description: description,
+                            due: deadline || null,
+                            columnId: columnId === 'new' ? 'new' : columnId,
+                            col: columnId === 'new' ? 'new' : columnId,
+                            typeId: typeId,
+                            updatedAt: Date.now()
+                        };
+                        
+                        if (isEdit && task) {
+                            props.onSave && props.onSave(task.id, Object.assign({}, task, taskData));
+                        } else {
+                            var newId = 't' + Date.now().toString(36);
+                            var newTask = Object.assign({
+                                id: newId,
+                                createdAt: Date.now(),
+                                files: [],
+                                comments: []
+                            }, taskData);
+                            props.onSave && props.onSave(newId, newTask);
+                        }
+                        props.onClose();
+                    },
+                    style: { background: '#007bff', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }
+                }, 'Сохранить')
+            ])
+        ])
+    ]);
+};
+
 // --- Элементы модальных окон ---
 const modalOverlay = document.getElementById('modal-overlay');
 const taskModal = document.getElementById('task-modal');
@@ -64,7 +194,7 @@ window.openCreateModal = function(columnId, defaultType = '') {
 }
 
 // --- Открытие модального окна редактирования задачи ---
-export async function openEditModal(taskId) {
+window.openEditModal = async function(taskId) {
     isEditMode = true;
     currentEditId = taskId;
 
@@ -212,7 +342,7 @@ document.getElementById('delete-task-btn').addEventListener('click', async () =>
 });
 
 // --- Модальное окно настроек ---
-export function openSettingsModal() {
+window.openSettingsModal = function() {
     const settings = getSettings();
     document.getElementById('settings-board-title').value = settings.boardTitle;
     document.getElementById('settings-show-avatars').checked = settings.showAvatars;
@@ -237,7 +367,7 @@ document.getElementById('settings-form').addEventListener('submit', (e) => {
 });
 
 // --- Админ панель (Типы задач) ---
-export function openAdminModal() {
+window.openAdminModal = function() {
     renderTypesList();
     modalOverlay.style.display = 'flex';
     adminModal.style.display = 'block';
@@ -301,7 +431,7 @@ function closeModal() {
 }
 
 // Экспорт функции обновления списка типов (вызывается из app.js при изменении данных)
-export function refreshTypesList() {
+window.refreshTypesList = function() {
     if (adminModal.style.display === 'block') {
         renderTypesList();
     }
