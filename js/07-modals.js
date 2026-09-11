@@ -40,11 +40,12 @@ var CARD_FIELD_LIST=[
   ['project','Проект','Привязка к проекту',IC.target],
   ['subtasks','Чек-лист','Прогресс подзадач',IC.check],
   ['comments','Комментарии','Счётчик комментариев',IC.chat],
-  ['timer','Таймер','Учёт времени',IC.clock]
+  ['timer','Таймер','Учёт времени',IC.clock],
+  ['photos','Фото','Миниатюры прикреплённых изображений',IC.camera]
 ];
 function CardSettings(props){
   var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
-  var allOn=CARD_FIELD_LIST.every(function(e){return cardFields[e[0]];});
+  var allOn=CARD_FIELD_LIST.every(function(e){return cardFields[e[0]]!==false;});
   var toggleAll=function(){
     var next={};
     CARD_FIELD_LIST.forEach(function(e){next[e[0]]=!allOn;});
@@ -67,6 +68,7 @@ function CardSettings(props){
       ),
       CARD_FIELD_LIST.map(function(e){
         var k=e[0],lb=e[1],sb=e[2],ic=e[3];
+        var on=cardFields[k]!==false;
         return el('div',{key:k,className:'csrow'},
           el('div',{className:'csi'},
             el('div',{className:'ic'},el(Icon,{d:ic,size:14})),
@@ -75,8 +77,8 @@ function CardSettings(props){
               el('div',{className:'sb'},sb)
             )
           ),
-          el('button',{className:'sw2'+(cardFields[k]?' on':''),
-            onClick:function(){setCardFields(function(f){var o=Object.assign({},f);o[k]=!f[k];return o;});}})
+          el('button',{className:'sw2'+(on?' on':''),
+            onClick:function(){setCardFields(function(f){var o=Object.assign({},f);o[k]=!on;return o;});}})
         );
       }),
       el('div',{className:'mfoot'},
@@ -171,13 +173,14 @@ function TaskModal(props){
         sub:init.sub.map(function(s){return Object.assign({},s);}),
         coms:init.coms.slice(),
         tags:(init.tags||[]).slice(),
-        types:(init.types||[]).slice()
+        types:(init.types||[]).slice(),
+        attachments:(init.attachments||[]).slice()
       });
     }
     return {id:null,board:defaultBoard||'main',
       col:defaultCol||colsOf(defaultBoard||'main')[0].id,
       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
-      due:defaultDue||iso(addDays(3)),sub:[],coms:[],tags:[],types:[],
+      due:defaultDue||iso(addDays(3)),sub:[],coms:[],tags:[],types:[],attachments:[],
       repeat:'none',time:null,project:firstProject};
   }), f=sF[0], setF=sF[1];
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
@@ -414,6 +417,14 @@ function TaskModal(props){
               el('button',{className:'csend',title:'Отправить',onClick:addCom},el(Icon,{d:IC.up,size:15,sw:2}))
             )
           )
+        ),
+
+        // БЛОК ФОТО
+        el('div',{style:{marginTop:6}},
+          el(PhotoBlock,{
+            attachments:f.attachments||[],
+            onChange:function(next){set('attachments',next);}
+          })
         )
       ),
       el('div',{className:'mfoot'},
