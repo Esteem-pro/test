@@ -292,26 +292,18 @@ function TaskModal(props){
             )
           ),
           el('div',null,
-            el('label',null,'Типы'),
-            el('div',{className:'chipsel',style:{flexWrap:'wrap',gap:6}},
+            el('label',null,'Тип задачи'),
+            el('select',{className:'sel',value:(f.types&&f.types.length>0)?f.types[0]:'',
+              onChange:function(e){
+                var val=e.target.value;
+                if(val===''){set('types',[]);}
+                else{set('types',[val]);}
+              }},
+              el('option',{value:''},'— не выбрано —'),
               Object.entries(taskTypes).map(function(e){
                 var k=e[0],tp=e[1];
-                var isSelected=(f.types||[]).indexOf(k)!==-1;
-                return el('button',{key:k,type:'button',
-                  style:isSelected?{background:tp.c,color:'#fff',borderColor:tp.c}:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0'},
-                  onClick:function(){
-                    var cur=f.types||[];
-                    var idx=cur.indexOf(k);
-                    if(idx===-1){set('types',cur.concat([k]));}
-                    else{set('types',cur.filter(function(x){return x!==k;}));}
-                  }},tp.label);
-              }),
-              el('button',{key:'add',type:'button',title:'Создать новый тип',
-                style:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0',borderStyle:'dashed'},
-                onClick:function(){
-                  var label=prompt('Название нового типа:');
-                  if(label){createType(label);}
-                }},'+')
+                return el('option',{key:k,value:k},tp.label);
+              })
             )
           )
         ),
