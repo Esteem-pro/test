@@ -3,69 +3,27 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ПОТОК — тест</title>
-<style>
-body{font:400 14px 'Golos Text',system-ui,sans-serif;background:#F1F3ED;padding:20px}
-.test-card{background:#fff;border:1px solid #E1E5DA;border-radius:12px;padding:20px;margin:10px 0}
-.test-card h3{font:700 16px sans-serif;margin-bottom:10px}
-.btn{background:#FF5A2D;color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:10px}
-</style>
+<title>ПОТОК — таск-трекер маркетинг-команды</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%23FF5A2D"/><text x="50" y="72" font-size="58" text-anchor="middle" fill="white" font-family="Arial" font-weight="900">П</text></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;900&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <div id="root"></div>
 
+<!-- React и Babel -->
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<script type="text/babel">
-const {useState} = React;
-
-function App(){
-  const [count,setCount] = useState(0);
-  const [tasks,setTasks] = useState([
-    {id:1,title:'Тестовая задача 1',done:false},
-    {id:2,title:'Тестовая задача 2',done:true},
-  ]);
-
-  const addTask = () => {
-    setTasks([...tasks,{id:Date.now(),title:'Новая задача',done:false}]);
-  };
-
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t=>t.id===id?{...t,done:!t.done}:t));
-  };
-
-  return <div>
-    <h1 style={{fontSize:24,marginBottom:20}}>ПОТОК — тест</h1>
-    <p style={{marginBottom:10}}>Если видите этот текст — React работает ✓</p>
-    
-    <div className="test-card">
-      <h3>Счётчик: {count}</h3>
-      <button className="btn" onClick={()=>setCount(count+1)}>Увеличить</button>
-    </div>
-
-    <div className="test-card">
-      <h3>Задачи ({tasks.length})</h3>
-      {tasks.map(t=>
-        <div key={t.id} style={{padding:'8px 0',cursor:'pointer',
-          textDecoration:t.done?'line-through':'none'}}
-          onClick={()=>toggleTask(t.id)}>
-          {t.done?'✓':'○'} {t.title}
-        </div>
-      )}
-      <button className="btn" onClick={addTask}>Добавить</button>
-    </div>
-
-    <div className="test-card">
-      <h3>Диагностика</h3>
-      <p>React: {React.version}</p>
-      <p>Время: {new Date().toLocaleTimeString('ru-RU')}</p>
-    </div>
-  </div>;
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-</script>
+<!-- Наши модули (важен порядок!) -->
+<script type="text/babel" src="js/01-utils.js"></script>
+<script type="text/babel" src="js/02-data.js"></script>
+<script type="text/babel" src="js/03-icons.js"></script>
+<script type="text/babel" src="js/04-components.js"></script>
+<script type="text/babel" src="js/05-views.js"></script>
+<script type="text/babel" src="js/06-app.js"></script>
 </body>
 </html>
