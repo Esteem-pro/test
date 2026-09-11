@@ -1,5 +1,5 @@
 // js/09-app.js
-// Главный компонент приложения + синхронизация с Firebase RTDB
+// Главный компонент приложения + синхронизация с Firebase RTDB + роли
 
 var el = React.createElement;
 
@@ -51,12 +51,10 @@ function App(props){
   var kRef=useRef(0);
   var searchRef=useRef(null);
 
-  /* тема */
   useEffect(function(){
     document.documentElement.classList.toggle('dark',theme==='dark');
   },[theme]);
 
-  /* localStorage */
   useEffect(function(){
     try{
       localStorage.setItem(LS_KEY,JSON.stringify({
@@ -170,6 +168,7 @@ function App(props){
     kRef.current++;
     setModal(Object.assign({},m,{k:kRef.current}));
   };
+
   /* привязка Google-аккаунта к сотруднику */
   useEffect(function(){
     if(!authUser) return;
@@ -198,6 +197,7 @@ function App(props){
     setMe(key);
     logEv('admin','Вход: '+email+(isAdmin?' (админ)':''));
   },[authUser,members]);
+
   var warned=useRef(false);
   useEffect(function(){
     if(warned.current) return;
@@ -551,7 +551,6 @@ function App(props){
   /* ===== РЕНДЕР ===== */
   return el(Ctx.Provider,{value:ctx},
     el('div',{className:'app'},
-      /* сайдбар */
       el('aside',{className:'side'},
         el('div',{className:'brand'},
           el('div',{className:'logo'},'П'),
@@ -631,8 +630,6 @@ function App(props){
           el('b',null,'N'),' задача · ',el('b',null,'/'),' поиск · ',el('b',null,'Ctrl+K'),' палитра · ',
           el('b',null,'T'),' тема · ',el('b',null,'1–9'),' разделы')
       ),
-
-      /* основная часть */
       el('main',{className:'main'},
         el('header',{className:'topbar'},
           el('div',null,
@@ -704,7 +701,6 @@ function App(props){
               el(Icon,{d:IC.plus,size:15,sw:2.4}),'Новая задача')
           )
         ),
-
         hasF&&el('div',{className:'fbar'},
           q.trim()&&el('span',{className:'achip'},el('span',{className:'l'},'Поиск: «'+q.trim()+'»'),
             el('button',{onClick:function(){setQ('');}},el(Icon,{d:IC.x,size:10,sw:2.6}))),
@@ -737,7 +733,6 @@ function App(props){
             el('button',{onClick:function(){setDueF('all');}},el(Icon,{d:IC.x,size:10,sw:2.6}))),
           el('button',{className:'achip clear',onClick:resetF},'Сбросить всё')
         ),
-
         isBoardView&&el(React.Fragment,null,
           el('div',{className:'ctrl'},
             el('div',{className:'vseg'},
@@ -831,8 +826,7 @@ function App(props){
           btSorted.length===0&&el('div',{className:'nothing'},
             el('b',null,'Ничего не нашлось'),'Попробуйте изменить фильтры или поисковый запрос')
         ),
-
-                view==='mine'&&el(MineView,{tasks:tasks,
+        view==='mine'&&el(MineView,{tasks:tasks,
           onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
         view==='fav'&&el(FavoritesView,{tasks:tasks,
           onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
@@ -853,7 +847,6 @@ function App(props){
               authUser:authUser,onSignOut:onSignOut})
           : el(LockScreen,{authUser:authUser,onSignOut:onSignOut}))
       ),
-
       modal&&el(TaskModal,{key:modal.k,
         init:modal.mode==='edit'?modal.t:null,
         live:modal.mode==='edit'?(tasks.find(function(x){return x.id===modal.t.id;})||modal.t):null,
@@ -861,17 +854,13 @@ function App(props){
         onClose:function(){setModal(null);},
         onSave:saveTask,onDelete:deleteTask,onSaveAsTemplate:saveAsTemplate,
         createType:createType}),
-
       showCardSettings&&el(CardSettings,{cardFields:cardFields,setCardFields:setCardFields,
         onClose:function(){setShowCardSettings(false);}}),
-
       cmdOpen&&el(CommandPalette,{tasks:tasks,channels:channels,projects:projects,
         onSelect:handleCmdSelect,onClose:function(){setCmdOpen(false);}}),
-
       quickDD&&el(QuickDropdown,{target:quickDD.target,options:quickOptions,
         currentValue:(tasks.find(function(t){return t.id===quickDD.taskId;})||{})[quickDD.field],
         onSelect:applyQuick,onClose:function(){setQuickDD(null);}}),
-
       el('div',{className:'toasts'},
         toasts.map(function(t){
           return el('div',{key:t.id,className:'toast'+(t.type==='warn'?' warn':'')},
