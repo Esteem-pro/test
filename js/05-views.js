@@ -192,29 +192,20 @@ function FeedView(props){
 function LockScreen(props){
   var ctx=useCtx();
   var members=ctx.members, me=ctx.me;
-  var login=props.login;
-  var admins = Object.entries(members).filter(function(entry){return entry[1].role==='admin';});
-  return React.createElement('div',{className:'lock'},
-    React.createElement('div',{className:'lic'},React.createElement(Icon,{d:IC.shield,size:26})),
-    React.createElement('h3',null,'Недостаточно прав'),
-    React.createElement('p',null,
+  var authUser=props.authUser, onSignOut=props.onSignOut;
+  return el('div',{className:'lock'},
+    el('div',{className:'lic'},el(Icon,{d:IC.shield,size:26})),
+    el('h3',null,'Недостаточно прав'),
+    el('p',null,
       'Админ-панель доступна только администраторам.',
-      React.createElement('br'),
+      el('br'),
       'Вы вошли как ',
-      React.createElement('b',null,(members[me]||{name:'—'}).name),
-      ' · роль «участник».',
-      React.createElement('br'),
-      'Переключитесь на администратора, чтобы продолжить:'
-    ),
-    React.createElement('div',{className:'lockadmins'},
-      admins.length===0&&React.createElement('span',{className:'asub'},'Администраторов нет'),
-      admins.map(function(entry){
-        var k=entry[0], m=entry[1];
-        return React.createElement('button',{key:k,className:'btn ghost',onClick:function(){login(k);}},
-          React.createElement(Avatar,{id:k,size:22}),
-          m.short
-        );
-      })
+      el('b',null,(members[me]||{name:'—'}).name),
+      ' · роль «пользователь».',
+      el('br'),
+      'Попросите администратора выдать вам права в разделе «Команда и роли».'),
+    authUser&&el('div',{className:'lockadmins'},
+      el('button',{className:'btn ghost',onClick:onSignOut},'Выйти из аккаунта')
     )
   );
 }
