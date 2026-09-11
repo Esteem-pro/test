@@ -1,10 +1,11 @@
 // js/07-modals.js
 // Модальные окна: Создание/Редактирование задачи, Настройки, Админка
 
-import { generateId, formatDate } from './01-utils.js';
-import { db, saveTask, deleteTask, saveSettings, getSettings, saveType, deleteType, typesRef } from './02-data.js';
-import { icons } from './03-icons.js';
-import { renderTaskCard } from './04-components.js';
+// Импорт не используется - все функции доступны глобально из предыдущих скриптов
+// import { generateId, formatDate } from './01-utils.js';
+// import { db, saveTask, deleteTask, saveSettings, getSettings, saveType, deleteType, typesRef } from './02-data.js';
+// import { icons } from './03-icons.js';
+// import { renderTaskCard } from './04-components.js';
 
 // --- Элементы модальных окон ---
 const modalOverlay = document.getElementById('modal-overlay');

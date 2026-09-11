@@ -112,4 +112,7 @@ var LOG_META = {
   pin:[IC.pin,'#E8930C'], fav:[IC.star,'#FF5A2D'],
 };
 
+// Глобальный объект icons для использования в modals.js
+var icons = IC;
+
 console.log('✓ 03-icons.js загружен');
