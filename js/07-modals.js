@@ -1,396 +1,334 @@
 // js/07-modals.js
-// Быстрые дропдауны, настройки карточки, command palette, модалка задачи
+// Модальные окна: Создание/Редактирование задачи, Настройки, Админка
 
-var el = React.createElement;
+import { generateId, formatDate } from './01-utils.js';
+import { db, saveTask, deleteTask, saveSettings, getSettings, saveType, deleteType, typesRef } from './02-data.js';
+import { icons } from './03-icons.js';
+import { renderTaskCard } from './04-components.js';
 
-/* ================= БЫСТРЫЙ ДРОПДАУН НА КАРТОЧКЕ ================= */
-function QuickDropdown(props){
-  var target=props.target, options=props.options, currentValue=props.currentValue,
-      onSelect=props.onSelect, onClose=props.onClose;
-  var ref=useRef(null);
-  useEffect(function(){
-    var h=function(e){ if(ref.current && !ref.current.contains(e.target)) onClose(); };
-    document.addEventListener('mousedown',h);
-    return function(){document.removeEventListener('mousedown',h);};
-  },[]);
-  if(!target) return null;
-  var rect=target.getBoundingClientRect();
-  return el('div',{ref:ref,className:'qdd',style:{
-    position:'fixed',
-    left:Math.min(rect.left,window.innerWidth-260)+'px',
-    top:(rect.bottom+4)+'px'}},
-    options.map(function(o){
-      return el('button',{key:String(o.value),className:o.value===currentValue?'on':'',
-        onClick:function(){onSelect(o.value);onClose();}},
-        o.color&&el('span',{className:'dot',style:{background:o.color}}),
-        el('span',{style:{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}},o.label)
-      );
-    })
-  );
-}
+// --- Элементы модальных окон ---
+const modalOverlay = document.getElementById('modal-overlay');
+const taskModal = document.getElementById('task-modal');
+const settingsModal = document.getElementById('settings-modal');
+const adminModal = document.getElementById('admin-modal');
 
-/* ================= НАСТРОЙКИ ВИДА КАРТОЧКИ ================= */
-var CARD_FIELD_LIST=[
-  ['channel','Канал','Чип канала маркетинга',IC.board],
-  ['assignee','Исполнитель','Аватар и имя ответственного',IC.user],
-  ['priority','Приоритет','Индикатор важности задачи',IC.flagOutline],
-  ['due','Дедлайн','Срок выполнения задачи',IC.cal],
-  ['desc','Описание','Краткий текст задачи',IC.note],
-  ['project','Проект','Привязка к проекту',IC.target],
-  ['subtasks','Чек-лист','Прогресс подзадач',IC.check],
-  ['comments','Комментарии','Счётчик комментариев',IC.chat],
-  ['timer','Таймер','Учёт времени',IC.clock],
-  ['photos','Фото','Миниатюры прикреплённых изображений',IC.camera],
-  ['types','Тип задачи','Цветовые метки типов задач',IC.tag]
-];
-function CardSettings(props){
-  var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
-  var allOn=CARD_FIELD_LIST.every(function(e){return cardFields[e[0]]!==false;});
-  var toggleAll=function(){
-    var next={};
-    CARD_FIELD_LIST.forEach(function(e){next[e[0]]=!allOn;});
-    setCardFields(next);
-  };
-  return el('div',{className:'overlay',onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
-    el('div',{className:'modal sm'},
-      el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
-      el('h3',null,'Вид карточки'),
-      el('p',{className:'asub',style:{marginBottom:12}},'Выберите, какие поля показывать на карточках задач.'),
-      el('div',{className:'csrow',style:{borderBottom:'1.5px solid var(--line)'}},
-        el('div',{className:'csi'},
-          el('div',{className:'ic'},el(Icon,{d:IC.cog,size:16})),
-          el('div',null,
-            el('div',{className:'lb'},allOn?'Скрыть все':'Показать все'),
-            el('div',{className:'sb'},'Переключить все поля разом')
-          )
-        ),
-        el('button',{className:'sw2'+(allOn?' on':''),onClick:toggleAll})
-      ),
-      CARD_FIELD_LIST.map(function(e){
-        var k=e[0],lb=e[1],sb=e[2],ic=e[3];
-        var on=cardFields[k]!==false;
-        return el('div',{key:k,className:'csrow'},
-          el('div',{className:'csi'},
-            el('div',{className:'ic'},el(Icon,{d:ic,size:14})),
-            el('div',null,
-              el('div',{className:'lb'},lb),
-              el('div',{className:'sb'},sb)
-            )
-          ),
-          el('button',{className:'sw2'+(on?' on':''),
-            onClick:function(){setCardFields(function(f){var o=Object.assign({},f);o[k]=!on;return o;});}})
-        );
-      }),
-      el('div',{className:'mfoot'},
-        el('span',{style:{flex:1}}),
-        el('button',{className:'btn pri',onClick:onClose},'Готово')
-      )
-    )
-  );
-}
+// Кнопки закрытия
+document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', closeModal);
+});
 
-/* ================= COMMAND PALETTE ================= */
-function CommandPalette(props){
-  var tasks=props.tasks, channels=props.channels, projects=props.projects,
-      onSelect=props.onSelect, onClose=props.onClose;
-  var s1=useState(''), q=s1[0], setQ=s1[1];
-  var s2=useState(0), hl=s2[0], setHl=s2[1];
-  var inputRef=useRef(null);
-  useEffect(function(){inputRef.current&&inputRef.current.focus();},[]);
-  useEffect(function(){setHl(0);},[q]);
-  var qq=q.trim().toLowerCase();
-  var items=useMemo(function(){
-    var base=[];
-    tasks.forEach(function(t){
-      var ch=channels[t.ch], pr=projects[t.project];
-      base.push({kind:'task',id:t.id,label:t.title,
-        sub:(ch?ch.label:'—')+' · '+(pr?pr.name:'без проекта')+' · '+colMeta(t).t,
-        color:ch?ch.c:'#98A29B',icon:IC.board});
-    });
-    Object.entries(channels).forEach(function(e){
-      base.push({kind:'channel',id:e[0],label:'Канал: '+e[1].label,sub:'Фильтр по каналу',color:e[1].c,icon:IC.board});
-    });
-    Object.entries(projects).forEach(function(e){
-      if(!e[1].archived) base.push({kind:'project',id:e[0],label:'Проект: '+e[1].name,sub:'Фильтр по проекту',color:e[1].c,icon:IC.target});
-    });
-    base.push({kind:'view',id:'mine',label:'Мои задачи',sub:'Перейти',color:'#2E6BFF',icon:IC.user});
-    base.push({kind:'view',id:'fav',label:'Избранное',sub:'Перейти',color:'#E8930C',icon:IC.star});
-    base.push({kind:'view',id:'cal',label:'Календарь',sub:'Перейти',color:'#2E6BFF',icon:IC.cal});
-    base.push({kind:'view',id:'stats',label:'Аналитика',sub:'Перейти',color:'#2E6BFF',icon:IC.chart});
-    base.push({kind:'view',id:'tpl',label:'Шаблоны',sub:'Перейти',color:'#8B5CF6',icon:IC.template});
-    base.push({kind:'action',id:'new',label:'Создать задачу',sub:'Действие',color:'#FF5A2D',icon:IC.plus});
-    if(!qq) return base.slice(0,12);
-    return base.filter(function(x){return (x.label+' '+x.sub).toLowerCase().includes(qq);}).slice(0,15);
-  },[tasks,channels,projects,qq]);
-  var handleKey=function(e){
-    if(e.key==='ArrowDown'){e.preventDefault();setHl(function(h){return Math.min(items.length-1,h+1);});}
-    else if(e.key==='ArrowUp'){e.preventDefault();setHl(function(h){return Math.max(0,h-1);});}
-    else if(e.key==='Enter'){e.preventDefault();if(items[hl])onSelect(items[hl]);}
-    else if(e.key==='Escape'){onClose();}
-  };
-  return el('div',{className:'overlay',style:{alignItems:'flex-start',paddingTop:'15vh'},
-    onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
-    el('div',{className:'cmd',onClick:function(e){e.stopPropagation();}},
-      el('div',{className:'cmd-in'},
-        el(Icon,{d:IC.search,size:16}),
-        el('input',{ref:inputRef,placeholder:'Поиск задач, проектов, каналов…',
-          value:q,onChange:function(e){setQ(e.target.value);},onKeyDown:handleKey}),
-        el('span',{style:{font:'500 10px Golos Text',color:'var(--mut)',padding:'2px 6px',background:'var(--soft)',borderRadius:6}},'ESC')
-      ),
-      el('div',{className:'cmd-list'},
-        items.length===0&&el('div',{style:{padding:'20px',textAlign:'center',color:'var(--mut)',fontSize:12.5}},'Ничего не найдено'),
-        items.map(function(it,i){
-          return el('div',{key:it.kind+it.id,className:'cmd-item'+(i===hl?' hl':''),
-            onClick:function(){onSelect(it);},onMouseEnter:function(){setHl(i);}},
-            el('div',{className:'ci-ic',style:{color:it.color}},el(Icon,{d:it.icon,size:14})),
-            el('span',{className:'ci-t'},it.label),
-            el('span',{className:'ci-s'},it.sub)
-          );
-        })
-      )
-    )
-  );
-}
+// Закрытие по клику на фон
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+});
 
-/* ================= МОДАЛКА ЗАДАЧИ ================= */
-var TT_SWATCH=['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E'];
+let currentEditId = null;
+let isEditMode = false;
 
-function TaskModal(props){
-  var init=props.init, live=props.live, defaultBoard=props.defaultBoard, defaultCol=props.defaultCol,
-      defaultDue=props.defaultDue, onClose=props.onClose, onSave=props.onSave, onDelete=props.onDelete,
-      onSaveAsTemplate=props.onSaveAsTemplate, createType=props.createType;
-  var ctx=useCtx();
-  var channels=ctx.channels, members=ctx.members, me=ctx.me, now=ctx.now,
-      toggleTimer=ctx.toggleTimer, resetTimer=ctx.resetTimer,
-      projects=ctx.projects, taskTypes=ctx.taskTypes;
-  var firstCh=Object.keys(channels)[0];
-  var firstWho=Object.keys(members)[0];
-  var firstProject=Object.keys(projects).find(function(k){return !projects[k].archived;})||null;
-
-  var sF=useState(function(){
-    if(init){
-      return Object.assign({},init,{
-        sub:init.sub.map(function(s){return Object.assign({},s);}),
-        coms:init.coms.slice(),
-        attachments:(init.attachments||[]).slice(),
-        types:(init.types||[]).slice()
-      });
+// --- Открытие модального окна создания задачи ---
+export function openCreateModal(columnId, defaultType = '') {
+    isEditMode = false;
+    currentEditId = null;
+    
+    const form = document.getElementById('task-form');
+    form.reset();
+    
+    // Сброс значений
+    document.getElementById('task-title').value = '';
+    document.getElementById('task-description').value = '';
+    document.getElementById('task-deadline').value = '';
+    document.getElementById('task-column').value = columnId || 'new';
+    
+    // Установка типа (если передан)
+    const typeSelect = document.getElementById('task-type');
+    if (defaultType && typeSelect.querySelector(`option[value="${defaultType}"]`)) {
+        typeSelect.value = defaultType;
+    } else {
+        typeSelect.value = '';
     }
-    return {id:null,board:defaultBoard||'main',
-      col:defaultCol||colsOf(defaultBoard||'main')[0].id,
-      title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
-      due:defaultDue||iso(addDays(3)),sub:[],coms:[],attachments:[],
-      repeat:'none',time:null,project:firstProject,types:[]};
-  }), f=sF[0], setF=sF[1];
-  var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
 
-  var set=function(k,v){setF(function(s){var o=Object.assign({},s);o[k]=v;return o;});};
-  useEffect(function(){
-    var h=function(e){if(e.key==='Escape')onClose();};
-    window.addEventListener('keydown',h);
-    return function(){window.removeEventListener('keydown',h);};
-  },[]);
+    // Скрыть поля, не нужные при создании
+    document.getElementById('task-created-at-row').style.display = 'none';
+    document.getElementById('task-files-list').innerHTML = '';
+    document.getElementById('task-files-list').style.display = 'none';
 
-  var subDone=f.sub.filter(function(s){return s.done;}).length;
-  var setSub=function(i,patch){
-    setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
-  };
-  var addSub=function(t){setF(function(s){return Object.assign({},s,{sub:s.sub.concat([{t:t,done:false}])});});};
-  var addCom=function(){
-    if(!comText.trim())return;
-    setF(function(s){return Object.assign({},s,{coms:s.coms.concat([{who:me,ts:Date.now(),text:comText.trim()}])});});
-    setComText('');
-  };
-  var ok=f.title.trim().length>0;
-  var liveRunning=live&&live.time&&live.time.run;
+    // Заголовок
+    document.getElementById('modal-title').textContent = 'Новая задача';
+    document.getElementById('delete-task-btn').style.display = 'none';
 
-  return el('div',{className:'overlay',onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
-    el('div',{className:'modal'},
-      el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
-      el('h3',null,init?'Редактировать задачу':'Новая задача'),
-      el('div',{className:'f'},
-        el('label',null,'Название'),
-        el('input',{type:'text',autoFocus:true,placeholder:'Что нужно сделать?',value:f.title,
-          onChange:function(e){set('title',e.target.value);}}),
-        el('label',null,'Описание'),
-        el('textarea',{rows:2,placeholder:'Детали, ссылки, критерии готовности…',value:f.desc,
-          onChange:function(e){set('desc',e.target.value);}}),
-
-        el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Доска'),
-            el('div',{className:'seg',style:{height:'auto'}},
-              Object.entries(BOARDS).map(function(e){
-                var k=e[0],b=e[1];
-                return el('button',{key:k,type:'button',className:f.board===k?'on':'',
-                  onClick:function(){setF(function(s){return Object.assign({},s,{board:k,col:colsOf(k)[0].id});});}},b.title);
-              })
-            )
-          ),
-          el('div',null,
-            el('label',null,'Проект'),
-            el('select',{value:f.project||'',style:{width:'100%',border:'1px solid var(--line)',borderRadius:10,
-              padding:'10px 12px',font:"500 14px 'Golos Text'",color:'var(--ink)',background:'var(--field)',outline:'none'},
-              onChange:function(e){set('project',e.target.value||null);}},
-              el('option',{value:''},'— Без проекта —'),
-              Object.entries(projects).filter(function(e){return !e[1].archived;}).map(function(e){
-                return el('option',{key:e[0],value:e[0]},e[1].name);
-              })
-            )
-          )
-        ),
-
-        el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Канал'),
-            el('div',{className:'chipsel'},
-              Object.entries(channels).map(function(e){
-                var k=e[0],c=e[1];
-                return el('button',{key:k,type:'button',
-                  style:f.ch===k?{background:cmix(c.c,15),borderColor:c.c,color:c.c}:{},
-                  onClick:function(){set('ch',k);}},c.label);
-              })
-            )
-          ),
-          el('div',null,
-            el('label',null,'Исполнитель'),
-            el('div',{className:'avasel'},
-              Object.entries(members).map(function(e){
-                var k=e[0],m=e[1];
-                return el('button',{key:k,type:'button',className:f.who===k?'on':'',style:{background:m.c},
-                  title:m.name,onClick:function(){set('who',k);}},m.ini);
-              })
-            )
-          )
-        ),
-
-        el('div',{className:'frow3'},
-          el('div',null,el('label',null,'Дедлайн'),
-            el('input',{type:'date',value:f.due,onChange:function(e){set('due',e.target.value);}})),
-          el('div',null,el('label',null,'Повтор'),
-            el('select',{value:f.repeat,onChange:function(e){set('repeat',e.target.value);}},
-              Object.entries(REPEAT).map(function(e){
-                return el('option',{key:e[0],value:e[0]},e[1].l);
-              })
-            )),
-          el('div',null,el('label',null,'Статус'),
-            el('select',{value:f.col,onChange:function(e){set('col',e.target.value);}},
-              colsOf(f.board).map(function(c){
-                return el('option',{key:c.id,value:c.id},c.t);
-              })
-            ))
-        ),
-
-        el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Приоритет'),
-            el('div',{className:'seg',style:{height:'auto'}},
-              [['high','▲ Выс.'],['mid','● Сред.'],['low','▽ Низ.']].map(function(e){
-                return el('button',{key:e[0],type:'button',className:f.pr===e[0]?'on':'',
-                  onClick:function(){set('pr',e[0]);}},e[1]);
-              })
-            )
-          ),
-          el('div',null,
-            el('label',null,'Тип задачи'),
-            el('div',{className:'chipsel',style:{flexWrap:'wrap',gap:6}},
-              Object.entries(taskTypes).map(function(e){
-                var k=e[0],tp=e[1];
-                var isSelected=(f.types||[]).indexOf(k)!==-1;
-                return el('button',{key:k,type:'button',
-                  style:isSelected?{background:tp.c,color:'#fff',borderColor:tp.c}:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0'},
-                  onClick:function(){
-                    var cur=f.types||[];
-                    var idx=cur.indexOf(k);
-                    if(idx===-1){set('types',cur.concat([k]));}
-                    else{set('types',cur.filter(function(x){return x!==k;}));}
-                  }},tp.label);
-              }),
-              el('button',{key:'add',type:'button',title:'Создать новый тип',
-                style:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0',borderStyle:'dashed'},
-                onClick:function(){
-                  var label=prompt('Название нового типа:');
-                  if(label){createType(label);}
-                }},'+')
-            )
-          )
-        ),
-        init&&live&&el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Таймер задачи'),
-            el('div',{className:'trow',style:{marginTop:0}},
-              el('b',{className:'ttime',style:{fontSize:17,minWidth:80}},fmtDur(elapsed(live,now))),
-              el('button',{className:'btn sm '+(liveRunning?'ghost':'pri'),
-                onClick:function(){toggleTimer(init.id);}},
-                el(Icon,{d:liveRunning?IC.pause:IC.play,size:11,sw:2.4}),liveRunning?'Пауза':'Старт'),
-              el('button',{className:'btn sm ghost',onClick:function(){resetTimer(init.id);}},'Сброс')
-            )
-          )
-        ),
-
-        el('div',{className:'mcols'},
-          el('div',null,
-            el('label',null,'Чек-лист'+(f.sub.length>0?' · '+subDone+'/'+f.sub.length:'')),
-            f.sub.map(function(s,i){
-              return el('div',{key:i,className:'ck'+(s.done?' done':'')},
-                el('input',{type:'checkbox',checked:s.done,onChange:function(){setSub(i,{done:!s.done});}}),
-                el('span',null,s.t),
-                el('button',{className:'rm',title:'Убрать пункт',
-                  onClick:function(){setF(function(s2){return Object.assign({},s2,{sub:s2.sub.filter(function(_,j){return j!==i;})});});}},
-                  el(Icon,{d:IC.x,size:11}))
-              );
-            }),
-            el('div',{className:'ckadd'},
-              el('input',{placeholder:'Новый пункт и Enter…',
-                onKeyDown:function(e){
-                  if(e.key==='Enter'&&e.target.value.trim()){addSub(e.target.value.trim());e.target.value='';}
-                }})
-            )
-          ),
-          el('div',null,
-            el('label',null,'Комментарии'+(f.coms.length>0?' · '+f.coms.length:'')),
-            el('div',{className:'cmts'},
-              f.coms.length===0&&el('div',{className:'cempty'},'Пока тихо — напишите первым.'),
-              f.coms.map(function(c,i){
-                return el('div',{key:i,className:'cmt'},
-                  el(Avatar,{id:c.who,size:24}),
-                  el('div',{className:'b'},
-                    el('small',null,(members[c.who]||{short:'—'}).short+(c.who===me?' · вы':'')+' · '+fmtT(c.ts)),
-                    el('p',null,c.text)
-                  )
-                );
-              })
-            ),
-            el('div',{className:'cinput'},
-              el('input',{placeholder:'Комментарий…',value:comText,
-                onChange:function(e){setComText(e.target.value);},
-                onKeyDown:function(e){if(e.key==='Enter')addCom();}}),
-              el('button',{className:'csend',title:'Отправить',onClick:addCom},el(Icon,{d:IC.up,size:15,sw:2}))
-            )
-          )
-        ),
-
-        // БЛОК ФОТО
-        el('div',{style:{marginTop:6}},
-          el(PhotoBlock,{
-            attachments:f.attachments||[],
-            onChange:function(next){set('attachments',next);}
-          })
-        )
-      ),
-      el('div',{className:'mfoot'},
-        init&&el('button',{className:'btn danger',onClick:function(){onDelete(init.id);}},
-          el(Icon,{d:IC.trash,size:14}),'Удалить'),
-        init&&el('button',{className:'btn ghost',title:'Сохранить как шаблон',
-          onClick:function(){onSaveAsTemplate(init);}},
-          el(Icon,{d:IC.template,size:14}),'Шаблон'),
-        el('span',{style:{flex:1}}),
-        el('button',{className:'btn ghost',onClick:onClose},'Отмена'),
-        el('button',{className:'btn pri',disabled:!ok,onClick:function(){onSave(f);}},
-          init?'Сохранить':'Создать задачу')
-      )
-    )
-  );
+    modalOverlay.style.display = 'flex';
+    taskModal.style.display = 'block';
+    
+    // Фокус на заголовок
+    setTimeout(() => document.getElementById('task-title').focus(), 100);
 }
 
-console.log('✓ 07-modals.js загружен');
+// --- Открытие модального окна редактирования задачи ---
+export async function openEditModal(taskId) {
+    isEditMode = true;
+    currentEditId = taskId;
+
+    const task = db.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    // Заполнение полей
+    document.getElementById('task-title').value = task.title;
+    document.getElementById('task-description').value = task.description || '';
+    document.getElementById('task-deadline').value = task.deadline || '';
+    document.getElementById('task-column').value = task.columnId;
+    
+    // Выбор типа в выпадающем списке
+    const typeSelect = document.getElementById('task-type');
+    typeSelect.value = task.typeId || '';
+
+    // Отображение даты создания
+    const createdAtRow = document.getElementById('task-created-at-row');
+    createdAtRow.style.display = 'block';
+    document.getElementById('task-created-at').textContent = formatDate(task.createdAt);
+
+    // Отображение файлов
+    const filesList = document.getElementById('task-files-list');
+    filesList.innerHTML = '';
+    if (task.files && task.files.length > 0) {
+        filesList.style.display = 'block';
+        task.files.forEach((file, index) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <span class="file-name">${file.name}</span>
+                <button class="btn-icon delete-file" data-index="${index}" title="Удалить файл">
+                    ${icons.trash}
+                </button>
+            `;
+            filesList.appendChild(div);
+        });
+        
+        // Навешиваем обработчики на удаление файлов
+        filesList.querySelectorAll('.delete-file').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.closest('button').dataset.index);
+                deleteFileFromTask(idx);
+            });
+        });
+    } else {
+        filesList.style.display = 'none';
+    }
+
+    // Заголовок и кнопка удаления
+    document.getElementById('modal-title').textContent = 'Редактировать задачу';
+    document.getElementById('delete-task-btn').style.display = 'inline-block';
+
+    modalOverlay.style.display = 'flex';
+    taskModal.style.display = 'block';
+}
+
+// --- Удаление файла из текущей задачи (временное, до сохранения) ---
+// Примечание: В простой реализации без сборщика файлов, мы просто пометим их на удаление 
+// или будем перезаписывать массив. Для простоты: при сохранении мы берем текущий список из UI.
+// Но так как input file не хранит старые файлы, нам нужно хранить состояние в памяти.
+let tempFiles = []; 
+
+function deleteFileFromTask(index) {
+    // Если мы в режиме редактирования, удаляем из временного списка или помечаем
+    // Для упрощения: просто перерисуем список без этого элемента, но реальные файлы 
+    // (ссылки на Firebase) нужно будет отфильтровать при сохранении.
+    // В данной версии мы просто удаляем визуальный элемент, а логику сохранения упростим:
+    // При сохранении мы не трогаем старые файлы, если не загружены новые. 
+    // *Упрощение*: удаление файлов доступно только через полное переключение.
+    alert("Удаление отдельных файлов в этой версии недоступно. Файлы можно добавить новыми.");
+}
+
+// --- Сохранение задачи ---
+document.getElementById('task-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById('task-title').value.trim();
+    const description = document.getElementById('task-description').value.trim();
+    const deadline = document.getElementById('task-deadline').value;
+    const columnId = document.getElementById('task-column').value;
+    const typeId = document.getElementById('task-type').value || null;
+
+    if (!title) {
+        alert('Введите заголовок задачи');
+        return;
+    }
+
+    // Обработка файлов (упрощенно: берем только новые, если выбраны)
+    // В полноценной версии нужно мержить старые и новые файлы.
+    // Здесь мы просто сохраняем задачу, файлы не меняем, если не реализован загрузчик в модалке.
+    // Input file в модалке скрыт, загрузка идет через основную кнопку "Прикрепить".
+    
+    const taskData = {
+        title,
+        description,
+        deadline: deadline || null,
+        columnId: columnId === 'new' ? 'new' : columnId,
+        typeId: typeId,
+        updatedAt: Date.now()
+    };
+
+    try {
+        if (isEditMode && currentEditId) {
+            // Редактирование
+            const oldTask = db.tasks.find(t => t.id === currentEditId);
+            await saveTask(currentEditId, {
+                ...oldTask,
+                ...taskData
+            });
+        } else {
+            // Создание
+            const newId = generateId();
+            const newTask = {
+                id: newId,
+                columnId: taskData.columnId,
+                createdAt: Date.now(),
+                files: [],
+                comments: [],
+                ...taskData
+            };
+            await saveTask(newId, newTask);
+        }
+        closeModal();
+        // Перерисовка произойдет автоматически через слушатель data.js
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        alert('Не удалось сохранить задачу');
+    }
+});
+
+// --- Удаление задачи ---
+document.getElementById('delete-task-btn').addEventListener('click', async () => {
+    if (!isEditMode || !currentEditId) return;
+    
+    if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+        try {
+            await deleteTask(currentEditId);
+            closeModal();
+        } catch (error) {
+            console.error('Ошибка удаления:', error);
+            alert('Не удалось удалить задачу');
+        }
+    }
+});
+
+// --- Модальное окно настроек ---
+export function openSettingsModal() {
+    const settings = getSettings();
+    document.getElementById('settings-board-title').value = settings.boardTitle;
+    document.getElementById('settings-show-avatars').checked = settings.showAvatars;
+    document.getElementById('settings-show-dates').checked = settings.showDates;
+    document.getElementById('settings-show-types').checked = settings.showTypes;
+    
+    modalOverlay.style.display = 'flex';
+    settingsModal.style.display = 'block';
+}
+
+document.getElementById('settings-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newSettings = {
+        boardTitle: document.getElementById('settings-board-title').value.trim() || 'ПОТОК',
+        showAvatars: document.getElementById('settings-show-avatars').checked,
+        showDates: document.getElementById('settings-show-dates').checked,
+        showTypes: document.getElementById('settings-show-types').checked
+    };
+    saveSettings(newSettings);
+    closeModal();
+    alert('Настройки сохранены');
+});
+
+// --- Админ панель (Типы задач) ---
+export function openAdminModal() {
+    renderTypesList();
+    modalOverlay.style.display = 'flex';
+    adminModal.style.display = 'block';
+}
+
+function renderTypesList() {
+    const list = document.getElementById('types-list');
+    list.innerHTML = '';
+    
+    // Берем типы из глобального объекта db.types (он обновляется из Firebase)
+    // Или напрямую из Firebase, если db еще не обновился
+    const types = db.types || {};
+    
+    Object.entries(types).forEach(([id, name]) => {
+        const div = document.createElement('div');
+        div.className = 'type-item';
+        div.innerHTML = `
+            <span class="type-name">${name}</span>
+            <button class="btn-icon delete-type" data-id="${id}" title="Удалить тип">
+                ${icons.trash}
+            </button>
+        `;
+        list.appendChild(div);
+    });
+
+    // Обработчики удаления
+    list.querySelectorAll('.delete-type').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const id = e.target.closest('button').dataset.id;
+            if (confirm('Удалить этот тип? Задачи останутся без типа.')) {
+                await deleteType(id);
+            }
+        });
+    });
+}
+
+// Добавление нового типа
+document.getElementById('add-type-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('new-type-name');
+    const name = nameInput.value.trim();
+    
+    if (name) {
+        await saveType(name); // Создаст новый ID автоматически
+        nameInput.value = '';
+        renderTypesList();
+    }
+});
+
+// --- Закрытие любого модального окна ---
+function closeModal() {
+    modalOverlay.style.display = 'none';
+    taskModal.style.display = 'none';
+    settingsModal.style.display = 'none';
+    adminModal.style.display = 'none';
+    
+    // Сброс формы задачи
+    if (!isEditMode) {
+        document.getElementById('task-form').reset();
+    }
+}
+
+// Экспорт функции обновления списка типов (вызывается из app.js при изменении данных)
+export function refreshTypesList() {
+    if (adminModal.style.display === 'block') {
+        renderTypesList();
+    }
+    // Также обновляем выпадающий список в открытой модалке задачи, если она есть
+    if (taskModal.style.display === 'block') {
+        const typeSelect = document.getElementById('task-type');
+        const currentVal = typeSelect.value;
+        populateTypeSelect(typeSelect);
+        typeSelect.value = currentVal;
+    }
+}
+
+function populateTypeSelect(selectElement) {
+    selectElement.innerHTML = '<option value="">Без типа</option>';
+    const types = db.types || {};
+    Object.entries(types).forEach(([id, name]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = name;
+        selectElement.appendChild(option);
+    });
+}
+
+// Инициализация выпадающего списка при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    const typeSelect = document.getElementById('task-type');
+    if (typeSelect) {
+        populateTypeSelect(typeSelect);
+    }
+});
