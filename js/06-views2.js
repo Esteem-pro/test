@@ -323,6 +323,7 @@ function AdminView(props){
   var sS=useState(Object.assign({},sprint)),sp=sS[0],setSp=sS[1];
   var sCf=useState(null),confirm=sCf[0],setConfirm=sCf[1];
   var fileRef=useRef(null);
+  var authUser=props.authUser, onSignOut=props.onSignOut;
   var SWATCH=['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E','#141B17','#98A29B'];
   var PALETTE=['#FF5A2D','#2E6BFF','#0FA36B','#8B5CF6','#F0447E','#0EA5C6','#E8930C','#5BA26B','#E5484D','#F59E0B'];
 
@@ -613,20 +614,19 @@ function AdminView(props){
           el('span',{className:'asub'},'До конца: '+Math.max(0,Math.round((pdate(sp.end)-today())/DAY))+' дн.')
         )
       ),
-      // Войти как
+            // Аккаунт
       el('div',{className:'panel apanel',style:{animationDelay:'300ms'}},
-        el('h4',null,el(Icon,{d:IC.shield,size:14}),'Войти как'),
-        el('p',{className:'asub',style:{marginBottom:12}},'«Мои задачи» и комментарии — от имени выбранного сотрудника.'),
-        el('div',{className:'alogin'},
-          Object.entries(members).map(function(e){
-            var k=e[0],m=e[1];
-            return el('button',{key:k,className:me===k?'on':'',onClick:function(){
-              setMe(k); logEv('admin','Админ: вошли как '+m.name); toast('Вы вошли как '+m.name);
-            }},
-              el(Avatar,{id:k,size:34}),
-              m.short+(m.role==='admin'?' · админ':'')
-            );
-          })
+        el('h4',null,el(Icon,{d:IC.shield,size:14}),'Аккаунт и доступ'),
+        el('p',{className:'asub',style:{marginBottom:12}},'Вход — через Google-аккаунт. Роли меняются в списке «Команда и роли» выше.'),
+        authUser&&el('div',{className:'arow2'},
+          authUser.photoURL
+            ? el('img',{src:authUser.photoURL,alt:'',style:{width:30,height:30,borderRadius:'50%'}})
+            : el(Avatar,{id:me,size:30}),
+          el('div',{style:{minWidth:0,flex:1}},
+            el('div',{className:'aname'},authUser.displayName||authUser.email),
+            el('div',{className:'asub'},authUser.email+' · роль: '+(((members[me]||{}).role==='admin')?'администратор':'пользователь'))
+          ),
+          el('button',{className:'btn ghost sm',onClick:onSignOut},'Выйти')
         )
       ),
       // Данные
