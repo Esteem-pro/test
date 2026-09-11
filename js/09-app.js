@@ -327,7 +327,9 @@ function App(){
     logEv('fav','«'+t.title+'» '+(t.fav?'убрана из избранного':'добавлена в избранное'));
     toast(t.fav?'Убрано из избранного':'Добавлено в избранное ⭐');
   };
-  var createType=function(label,c){
+  var createType=function(label){
+    var colors=['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E'];
+    var c=colors[Math.floor(Math.random()*colors.length)];
     var id='tt'+Date.now().toString(36);
     setTaskTypes(function(tt){var o=Object.assign({},tt);o[id]={label:label,c:c};return o;});
     logEv('admin','Создан тип задачи «'+label+'»');
