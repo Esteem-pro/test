@@ -172,14 +172,15 @@ function TaskModal(props){
       return Object.assign({},init,{
         sub:init.sub.map(function(s){return Object.assign({},s);}),
         coms:init.coms.slice(),
-        attachments:(init.attachments||[]).slice()
+        attachments:(init.attachments||[]).slice(),
+        types:(init.types||[]).slice()
       });
     }
     return {id:null,board:defaultBoard||'main',
       col:defaultCol||colsOf(defaultBoard||'main')[0].id,
       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
       due:defaultDue||iso(addDays(3)),sub:[],coms:[],attachments:[],
-      repeat:'none',time:null,project:firstProject};
+      repeat:'none',time:null,project:firstProject,types:[]};
   }), f=sF[0], setF=sF[1];
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
 
@@ -290,7 +291,32 @@ function TaskModal(props){
               })
             )
           ),
-          init&&live&&el('div',null,
+          el('div',null,
+            el('label',null,'Типы'),
+            el('div',{className:'chipsel',style:{flexWrap:'wrap',gap:6}},
+              Object.entries(taskTypes).map(function(e){
+                var k=e[0],tp=e[1];
+                var isSelected=(f.types||[]).indexOf(k)!==-1;
+                return el('button',{key:k,type:'button',
+                  style:isSelected?{background:tp.c,color:'#fff',borderColor:tp.c}:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0'},
+                  onClick:function(){
+                    var cur=f.types||[];
+                    var idx=cur.indexOf(k);
+                    if(idx===-1){set('types',cur.concat([k]));}
+                    else{set('types',cur.filter(function(x){return x!==k;}));}
+                  }},tp.label);
+              }),
+              el('button',{key:'add',type:'button',title:'Создать новый тип',
+                style:{background:'#F5F5F7',color:'#666',borderColor:'#E0E0E0',borderStyle:'dashed'},
+                onClick:function(){
+                  var label=prompt('Название нового типа:');
+                  if(label){createType(label);}
+                }},'+')
+            )
+          )
+        ),
+        init&&live&&el('div',{className:'frow'},
+          el('div',null,
             el('label',null,'Таймер задачи'),
             el('div',{className:'trow',style:{marginTop:0}},
               el('b',{className:'ttime',style:{fontSize:17,minWidth:80}},fmtDur(elapsed(live,now))),
