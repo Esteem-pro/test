@@ -3,7 +3,9 @@
 
 var el = React.createElement;
 
-function App(){
+function App(props){
+  var authUser=props.authUser||null;
+  var onSignOut=props.onSignOut||function(){};
   var saved = useRef(loadState()).current || {};
 
   var r1=useState('board'),view=r1[0],setView=r1[1];
@@ -168,7 +170,34 @@ function App(){
     kRef.current++;
     setModal(Object.assign({},m,{k:kRef.current}));
   };
-
+  /* привязка Google-аккаунта к сотруднику */
+  useEffect(function(){
+    if(!authUser) return;
+    var email=(authUser.email||'').toLowerCase();
+    var entry=Object.entries(members).find(function(e){
+      return e[1].uid===authUser.uid || (e[1].email&&e[1].email.toLowerCase()===email);
+    });
+    if(entry){
+      if(me!==entry[0]) setMe(entry[0]);
+      return;
+    }
+    var hasAdmin=Object.values(members).some(function(m){return m.role==='admin';});
+    var isAdmin=!hasAdmin||(window.ADMIN_EMAILS||[]).some(function(a){return a.toLowerCase()===email;});
+    var key='u'+authUser.uid.replace(/[^a-zA-Z0-9]/g,'').slice(0,8);
+    var parts=(authUser.displayName||authUser.email||'?').split(/\s+/);
+    var ini=parts.map(function(w){return w[0];}).slice(0,2).join('').toUpperCase()||'?';
+    var short=parts.length>1?parts[0]+' '+parts[1][0]+'.':(parts[0]||'?');
+    setMembers(function(m){
+      var o=Object.assign({},m);
+      o[key]={name:authUser.displayName||email,short:short,ini:ini,
+        c:MEMBER_PALETTE[Object.keys(m).length%MEMBER_PALETTE.length],
+        role:isAdmin?'admin':'member',uid:authUser.uid,email:authUser.email,
+        photo:authUser.photoURL||null};
+      return o;
+    });
+    setMe(key);
+    logEv('admin','Вход: '+email+(isAdmin?' (админ)':''));
+  },[authUser,members]);
   var warned=useRef(false);
   useEffect(function(){
     if(warned.current) return;
@@ -816,11 +845,13 @@ function App(){
         view==='files'&&el(FilesView,{tasks:tasks,
           onOpenTask:function(t){openModal({mode:'edit',t:t});},toast:toast}),
         view==='feed'&&el(FeedView,{log:log,onClear:function(){setLog([]);toast('История очищена');}}),
-        view==='admin'&&((members[me]||{}).role==='admin'
+               view==='admin'&&((members[me]||{}).role==='admin'
           ? el(AdminView,{tasks:tasks,setTasks:setTasks,channels:channels,setChannels:setChannels,
               members:members,setMembers:setMembers,me:me,setMe:setMe,sprint:sprint,setSprint:setSprint,
               projects:projects,setProjects:setProjects,taskTypes:taskTypes,setTaskTypes:setTaskTypes,
-              setChF:setChF,setWhoF:setWhoF,logEv:logEv,toast:toast,resetDemo:resetDemo})
+              setChF:setChF,setWhoF:setWhoF,logEv:logEv,toast:toast,resetDemo:resetDemo,
+              authUser:authUser,onSignOut:onSignOut})
+          : el(LockScreen,{authUser:authUser,onSignOut:onSignOut}))
           : el(LockScreen,{login:function(k){
               setMe(k);logEv('admin','Админ: вошли как '+members[k].name);
               toast('Вы вошли как '+members[k].name+' (админ)');
@@ -857,5 +888,4 @@ function App(){
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(el(App));
-console.log('✓ 09-app.js загружен. Приложение запущено.');
+console.log('✓ 09-app.js загружен');
