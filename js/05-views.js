@@ -210,4 +210,43 @@ function LockScreen(props){
   );
 }
 
+// Настройки карточки
+function CardSettings(props){
+  var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
+  return el('div',{className:'modal-overlay',style:{display:'flex'}},
+    el('div',{className:'modal-window',style:{display:'block',maxWidth:'500px'}},
+      el('div',{className:'modal-header'},
+        el('h2',null,'Настройки карточки'),
+        el('button',{className:'close-modal',onClick:onClose},'×')
+      ),
+      el('div',{className:'modal-body'},
+        el('p',null,'Выберите поля, которые будут отображаться на карточке задачи:'),
+        el('div',{className:'form-row'},
+          Object.keys(cardFields).map(function(key){
+            var field=cardFields[key];
+            return el('label',{key:key,className:'checkbox-label',style:{display:'block',marginBottom:'8px'}},
+              el('input',{
+                type:'checkbox',
+                checked:field.visible,
+                onChange:function(e){
+                  var updated={};
+                  Object.keys(cardFields).forEach(function(k){
+                    updated[k]=k===key?{name:cardFields[k].name,visible:e.target.checked}:cardFields[k];
+                  });
+                  setCardFields(updated);
+                }
+              }),
+              ' ',
+              field.name
+            );
+          })
+        )
+      ),
+      el('div',{className:'modal-footer'},
+        el('button',{className:'btn-primary',onClick:onClose},'Готово')
+      )
+    )
+  );
+}
+
 console.log('✓ 05-views.js загружен');
