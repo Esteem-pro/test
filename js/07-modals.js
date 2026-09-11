@@ -36,7 +36,6 @@ var CARD_FIELD_LIST=[
   ['priority','Приоритет','Индикатор важности задачи',IC.flagOutline],
   ['due','Дедлайн','Срок выполнения задачи',IC.cal],
   ['desc','Описание','Краткий текст задачи',IC.note],
-  ['types','Типы задач','Цветные метки типа',IC.template],
   ['project','Проект','Привязка к проекту',IC.target],
   ['subtasks','Чек-лист','Прогресс подзадач',IC.check],
   ['comments','Комментарии','Счётчик комментариев',IC.chat],
@@ -172,19 +171,16 @@ function TaskModal(props){
       return Object.assign({},init,{
         sub:init.sub.map(function(s){return Object.assign({},s);}),
         coms:init.coms.slice(),
-        types:(init.types||[]).slice(),
         attachments:(init.attachments||[]).slice()
       });
     }
     return {id:null,board:defaultBoard||'main',
       col:defaultCol||colsOf(defaultBoard||'main')[0].id,
       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
-      due:defaultDue||iso(addDays(3)),sub:[],coms:[],types:[],attachments:[],
+      due:defaultDue||iso(addDays(3)),sub:[],coms:[],attachments:[],
       repeat:'none',time:null,project:firstProject};
   }), f=sF[0], setF=sF[1];
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
-  var sTT=useState(''), ttInput=sTT[0], setTtInput=sTT[1];
-  var sTTC=useState('#2E6BFF'), ttColor=sTTC[0], setTtColor=sTTC[1];
 
   var set=function(k,v){setF(function(s){var o=Object.assign({},s);o[k]=v;return o;});};
   useEffect(function(){
@@ -198,19 +194,6 @@ function TaskModal(props){
     setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
   };
   var addSub=function(t){setF(function(s){return Object.assign({},s,{sub:s.sub.concat([{t:t,done:false}])});});};
-  var toggleType=function(tid){
-    setF(function(s){
-      var types=s.types||[];
-      return Object.assign({},s,{types:types.includes(tid)?types.filter(function(x){return x!==tid;}):types.concat([tid])});
-    });
-  };
-  var submitType=function(){
-    var label=ttInput.trim(); if(!label)return;
-    var match=Object.entries(taskTypes).find(function(e){return e[1].label.toLowerCase()===label.toLowerCase();});
-    if(match) toggleType(match[0]);
-    else if(createType) toggleType(createType(label,ttColor));
-    setTtInput('');
-  };
   var addCom=function(){
     if(!comText.trim())return;
     setF(function(s){return Object.assign({},s,{coms:s.coms.concat([{who:me,ts:Date.now(),text:comText.trim()}])});});
@@ -274,44 +257,6 @@ function TaskModal(props){
                 var k=e[0],m=e[1];
                 return el('button',{key:k,type:'button',className:f.who===k?'on':'',style:{background:m.c},
                   title:m.name,onClick:function(){set('who',k);}},m.ini);
-              })
-            )
-          )
-        ),
-
-        el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Типы задач'),
-            el('div',{className:'ttbox'},
-              (f.types||[]).map(function(tid){
-                var tp=taskTypes[tid]; if(!tp) return null;
-                return el('span',{key:tid,className:'ttype',style:{background:tp.c}},
-                  tp.label,
-                  el('button',{onClick:function(){toggleType(tid);},title:'Убрать тип'},el(Icon,{d:IC.x,size:9}))
-                );
-              }),
-              el('div',{className:'ttadd'},
-                el('input',{placeholder:'Выбрать или создать…',list:'tt-list',value:ttInput,
-                  onChange:function(e){setTtInput(e.target.value);},
-                  onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();submitType();}}}),
-                el('datalist',{id:'tt-list'},
-                  Object.entries(taskTypes).map(function(e){
-                    return el('option',{key:e[0],value:e[1].label});
-                  })
-                )
-              )
-            ),
-            el('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginTop:6}},
-              Object.entries(taskTypes).filter(function(e){return !(f.types||[]).includes(e[0]);}).map(function(e){
-                var k=e[0],tp=e[1];
-                return el('button',{key:k,type:'button',className:'ttype',style:{background:tp.c,opacity:.65},
-                  onClick:function(){toggleType(k);},title:'Добавить тип'},tp.label);
-              })
-            ),
-            el('div',{className:'swatches'},
-              TT_SWATCH.map(function(c){
-                return el('button',{key:c,type:'button',className:'sw'+(ttColor===c?' on':''),
-                  style:{background:c},title:c,onClick:function(){setTtColor(c);}});
               })
             )
           )

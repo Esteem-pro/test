@@ -561,15 +561,6 @@ function App(){
               el('span',{className:'cnt'},tasks.filter(function(t){return t.who===k&&!isDone(t);}).length));
           })
         ),
-        tagList.length>0&&el('div',{className:'sb'},
-          el('h5',null,'Теги ',el('button',{className:'tmode',title:'Режим пересечения тегов',
-            onClick:function(){setTagMode(function(m){return m==='any'?'all':'any';});}},tagMode==='any'?'или':'и')),
-          tagList.slice(0,7).map(function(e){
-            var tg=e[0],n=e[1];
-            return el('button',{key:tg,className:'srow'+(tagF.includes(tg)?' on':''),onClick:function(){toggle(tg,tagF,setTagF);}},
-              el('span',{className:'thash'},'#'),tg,el('span',{className:'cnt'},n));
-          })
-        ),
         el('div',{className:'sprint'},
           el('div',{className:'live'},el('span',{className:'pulse'}),'Кампания активна'),
           el('b',null,sprint.name.length>20?sprint.name.slice(0,20)+'…':sprint.name),
@@ -683,11 +674,6 @@ function App(){
               el('span',{className:'l'},(projects[k]||{name:k}).name),
               el('button',{onClick:function(){toggle(k,prjF,setPrjF);}},el(Icon,{d:IC.x,size:10,sw:2.6})));
           }),
-          tagF.map(function(tg){
-            return el('span',{key:tg,className:'achip'},el('span',{className:'l'},'#'+tg),
-              el('button',{onClick:function(){toggle(tg,tagF,setTagF);}},el(Icon,{d:IC.x,size:10,sw:2.6})));
-          }),
-          tagF.length>1&&el('span',{className:'fbar-note'},'теги: '+(tagMode==='any'?'любой из':'все сразу')),
           prF!=='all'&&el('span',{className:'achip'},el('span',{className:'l'},'Приоритет: '+PR[prF].label),
             el('button',{onClick:function(){setPrF('all');}},el(Icon,{d:IC.x,size:10,sw:2.6}))),
           dueF!=='all'&&el('span',{className:'achip'},el('span',{className:'l'},(DUE_OPTS.find(function(d){return d[0]===dueF;})||[])[1]),
