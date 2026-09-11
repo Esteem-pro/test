@@ -13,19 +13,24 @@
 <body>
 <div id="root"></div>
 
-<!-- React и Babel -->
+<!-- Firebase (нужен только если заполнен FIREBASE_CONFIG, но подключаем заранее) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<!-- React -->
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<!-- Наши модули (важен порядок!) -->
-<script type="text/babel" src="js/01-utils.js"></script>
-<script type="text/babel" src="js/02-data.js"></script>
-<script type="text/babel" src="js/03-icons.js"></script>
-<script type="text/babel" src="js/04-components.js"></script>
-<script type="text/babel" src="js/05-views.js"></script>
-<script type="text/babel" src="js/06-views2.js"></script>
-<script type="text/babel" src="js/07-modals.js"></script> 
-<script type="text/babel" src="js/06-app.js"></script>
+<!-- Наши файлы, строго по порядку -->
+<script src="js/00-config.js"></script>
+<script src="js/01-utils.js"></script>
+<script src="js/02-data.js"></script>
+<script src="js/03-icons.js"></script>
+<script src="js/04-components.js"></script>
+<script src="js/05-views.js"></script>
+<script src="js/06-views2.js"></script>
+<script src="js/07-modals.js"></script>
+<script src="js/08-upload.js"></script>
+<script src="js/06-app.js"></script>
 </body>
 </html>
