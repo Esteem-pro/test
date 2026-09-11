@@ -40,7 +40,8 @@ var CARD_FIELD_LIST=[
   ['subtasks','Чек-лист','Прогресс подзадач',IC.check],
   ['comments','Комментарии','Счётчик комментариев',IC.chat],
   ['timer','Таймер','Учёт времени',IC.clock],
-  ['photos','Фото','Миниатюры прикреплённых изображений',IC.camera]
+  ['photos','Фото','Миниатюры прикреплённых изображений',IC.camera],
+  ['types','Типы','Цветовые метки типов задач',IC.tag]
 ];
 function CardSettings(props){
   var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
