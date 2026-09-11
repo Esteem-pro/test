@@ -172,7 +172,6 @@ function TaskModal(props){
       return Object.assign({},init,{
         sub:init.sub.map(function(s){return Object.assign({},s);}),
         coms:init.coms.slice(),
-        tags:(init.tags||[]).slice(),
         types:(init.types||[]).slice(),
         attachments:(init.attachments||[]).slice()
       });
@@ -180,11 +179,10 @@ function TaskModal(props){
     return {id:null,board:defaultBoard||'main',
       col:defaultCol||colsOf(defaultBoard||'main')[0].id,
       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
-      due:defaultDue||iso(addDays(3)),sub:[],coms:[],tags:[],types:[],attachments:[],
+      due:defaultDue||iso(addDays(3)),sub:[],coms:[],types:[],attachments:[],
       repeat:'none',time:null,project:firstProject};
   }), f=sF[0], setF=sF[1];
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
-  var sTag=useState(''), tagInput=sTag[0], setTagInput=sTag[1];
   var sTT=useState(''), ttInput=sTT[0], setTtInput=sTT[1];
   var sTTC=useState('#2E6BFF'), ttColor=sTTC[0], setTtColor=sTTC[1];
 
@@ -200,11 +198,6 @@ function TaskModal(props){
     setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
   };
   var addSub=function(t){setF(function(s){return Object.assign({},s,{sub:s.sub.concat([{t:t,done:false}])});});};
-  var addTag=function(v){
-    var tg=v.trim().toLowerCase().replace(/^#/,'');
-    if(!tg||f.tags.includes(tg))return;
-    setF(function(s){return Object.assign({},s,{tags:s.tags.concat([tg])});});
-  };
   var toggleType=function(tid){
     setF(function(s){
       var types=s.types||[];
@@ -320,20 +313,6 @@ function TaskModal(props){
                 return el('button',{key:c,type:'button',className:'sw'+(ttColor===c?' on':''),
                   style:{background:c},title:c,onClick:function(){setTtColor(c);}});
               })
-            )
-          ),
-          el('div',null,
-            el('label',null,'Теги (дополнительно)'),
-            el('div',{className:'tagbox'},
-              f.tags.map(function(tg,i){
-                return el('span',{key:tg,className:'tagchip'},'#'+tg,
-                  el('button',{onClick:function(){setF(function(s){return Object.assign({},s,{tags:s.tags.filter(function(_,j){return j!==i;})});});}},
-                    el(Icon,{d:IC.x,size:10,sw:2.4}))
-                );
-              }),
-              el('input',{placeholder:'Тег + Enter…',value:tagInput,
-                onChange:function(e){setTagInput(e.target.value);},
-                onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();addTag(tagInput);setTagInput('');}}})
             )
           )
         ),
