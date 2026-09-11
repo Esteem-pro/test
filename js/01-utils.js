@@ -127,7 +127,7 @@ var normTask = function(t){
   if(time&&time.run){
     time={s:time.s+Math.min(Math.round((Date.now()-time.run)/1000),7200),run:null};
   }
-  return Object.assign({},t,{board:b,col:col,types:t.types||[],tags:t.tags||[],repeat:t.repeat||'none',time:time,
+  return Object.assign({},t,{board:b,col:col,types:t.types||[],repeat:t.repeat||'none',time:time,
     project:t.project||null,pinned:!!t.pinned,fav:!!t.fav});
 };
 
