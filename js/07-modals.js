@@ -1,11 +1,8 @@
 // js/07-modals.js
 // Модальные окна: Создание/Редактирование задачи, Настройки, Админка
 
-// Импорт не используется - все функции доступны глобально из предыдущих скриптов
-// import { generateId, formatDate } from './01-utils.js';
-// import { db, saveTask, deleteTask, saveSettings, getSettings, saveType, deleteType, typesRef } from './02-data.js';
-// import { icons } from './03-icons.js';
-// import { renderTaskCard } from './04-components.js';
+// Все функции доступны глобально (window объект)
+// Импорт не используется в версии без сборщика
 
 // --- Элементы модальных окон ---
 const modalOverlay = document.getElementById('modal-overlay');
@@ -19,15 +16,17 @@ document.querySelectorAll('.close-modal').forEach(btn => {
 });
 
 // Закрытие по клику на фон
-modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
-});
+if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+}
 
 let currentEditId = null;
 let isEditMode = false;
 
 // --- Открытие модального окна создания задачи ---
-export function openCreateModal(columnId, defaultType = '') {
+window.openCreateModal = function(columnId, defaultType = '') {
     isEditMode = false;
     currentEditId = null;
     
