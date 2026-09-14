@@ -117,7 +117,6 @@ function TaskModal(props){
       return Object.assign({},init,{
         sub:init.sub.map(function(s){return Object.assign({},s);}),
         coms:init.coms.slice(),
-        tags:(init.tags||[]).slice(),
         types:(init.types||[]).slice(),
         attachments:(init.attachments||[]).slice()
       });
@@ -125,12 +124,11 @@ function TaskModal(props){
     return {id:null,board:defaultBoard||'main',
       col:defaultCol||colsOf(defaultBoard||'main')[0].id,
       title:'',desc:'',ch:firstCh,who:firstWho,pr:'mid',
-      due:defaultDue||iso(addDays(3)),sub:[],coms:[],tags:[],types:[],attachments:[],
+      due:defaultDue||iso(addDays(3)),sub:[],coms:[],types:[],attachments:[],
       repeat:'none',time:null,project:firstProject};
   }), f=sF[0], setF=sF[1];
   
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
-  var sTag=useState(''), tagInput=sTag[0], setTagInput=sTag[1];
   var sTT=useState(''), ttInput=sTT[0], setTtInput=sTT[1];
   var sTTC=useState('#2E6BFF'), ttColor=sTTC[0], setTtColor=sTTC[1];
   
@@ -147,11 +145,6 @@ function TaskModal(props){
     setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
   };
   var addSub=function(t){setF(function(s){return Object.assign({},s,{sub:s.sub.concat([{t:t,done:false}])});});};
-  var addTag=function(v){
-    var tg=v.trim().toLowerCase().replace(/^#/,'');
-    if(!tg||f.tags.includes(tg))return;
-    setF(function(s){return Object.assign({},s,{tags:s.tags.concat([tg])});});
-  };
   var toggleType=function(tid){
     setF(function(s){
       var types=s.types||[];
@@ -235,40 +228,41 @@ function TaskModal(props){
         
         el('div',{className:'frow'},
           el('div',null,
-            el('label',null,'Типы задач'),
-            el('div',{className:'ttbox'},
-              (f.types||[]).map(function(tid){
-                var tp=taskTypes[tid]; if(!tp) return null;
-                return el('span',{key:tid,className:'ttype',style:{background:tp.c}},
-                  tp.label,
-                  el('button',{onClick:function(){toggleType(tid);},title:'Убрать тип'},el(Icon,{d:IC.x,size:9}))
-                );
-              }),
-              el('div',{className:'ttadd'},
-                el('input',{placeholder:'Выбрать или создать…',list:'tt-list',value:ttInput,
-                  onChange:function(e){setTtInput(e.target.value);},
-                  onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();submitType();}}}),
-                el('datalist',{id:'tt-list'},
-                  Object.entries(taskTypes).map(function(e){
-                    return el('option',{key:e[0],value:e[1].label});
-                  })
-                )
+        el('div',null,
+          el('label',null,'Типы задач'),
+          el('div',{className:'ttbox'},
+            (f.types||[]).map(function(tid){
+              var tp=taskTypes[tid]; if(!tp) return null;
+              return el('span',{key:tid,className:'ttype',style:{background:tp.c}},
+                tp.label,
+                el('button',{onClick:function(){toggleType(tid);},title:'Убрать тип'},el(Icon,{d:IC.x,size:9}))
+              );
+            }),
+            el('div',{className:'ttadd'},
+              el('input',{placeholder:'Выбрать или создать…',list:'tt-list',value:ttInput,
+                onChange:function(e){setTtInput(e.target.value);},
+                onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();submitType();}}}),
+              el('datalist',{id:'tt-list'},
+                Object.entries(taskTypes).map(function(e){
+                  return el('option',{key:e[0],value:e[1].label});
+                })
               )
-            ),
-            el('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginTop:6}},
-              Object.entries(taskTypes).filter(function(e){return !(f.types||[]).includes(e[0]);}).map(function(e){
-                var k=e[0],tp=e[1];
-                return el('button',{key:k,type:'button',className:'ttype',style:{background:tp.c,opacity:.65},
-                  onClick:function(){toggleType(k);},title:'Добавить тип'},tp.label);
-              })
-            ),
-            el('div',{className:'swatches'},
-              ['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E'].map(function(c){
-                return el('button',{key:c,type:'button',className:'sw'+(ttColor===c?' on':''),
-                  style:{background:c},title:c,onClick:function(){setTtColor(c);}});
-              })
             )
           ),
+          el('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginTop:6}},
+            Object.entries(taskTypes).filter(function(e){return !(f.types||[]).includes(e[0]);}).map(function(e){
+              var k=e[0],tp=e[1];
+              return el('button',{key:k,type:'button',className:'ttype',style:{background:tp.c,opacity:.65},
+                onClick:function(){toggleType(k);},title:'Добавить тип'},tp.label);
+            })
+          ),
+          el('div',{className:'swatches'},
+            ['#E5484D','#FF8A00','#E8930C','#0FA36B','#0EA5C6','#2E6BFF','#8B5CF6','#F0447E'].map(function(c){
+              return el('button',{key:c,type:'button',className:'sw'+(ttColor===c?' on':''),
+                style:{background:c},title:c,onClick:function(){setTtColor(c);}});
+            })
+          )
+        ),
           el('div',null,
             el('label',null,'Теги (дополнительно)'),
             el('div',{className:'tagbox'},
