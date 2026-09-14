@@ -213,37 +213,46 @@ function LockScreen(props){
 // Настройки карточки
 function CardSettings(props){
   var cardFields=props.cardFields, setCardFields=props.setCardFields, onClose=props.onClose;
-  return el('div',{className:'modal-overlay',style:{display:'flex'}},
-    el('div',{className:'modal-window',style:{display:'block',maxWidth:'500px'}},
-      el('div',{className:'modal-header'},
-        el('h2',null,'Настройки карточки'),
-        el('button',{className:'close-modal',onClick:onClose},'×')
+  var el = React.createElement;
+  
+  var fieldLabels = {
+    channel: 'Канал',
+    assignee: 'Исполнитель',
+    priority: 'Приоритет',
+    due: 'Дедлайн',
+    subtasks: 'Подзадачи',
+    comments: 'Комментарии',
+    timer: 'Таймер',
+    types: 'Типы',
+    project: 'Проект',
+    desc: 'Описание',
+    photos: 'Фото'
+  };
+  
+  return el('div',{className:'overlay',onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
+    el('div',{className:'modal',style:{maxWidth:'500px'}},
+      el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
+      el('h3',null,'Настройки карточки'),
+      el('p',{style:{color:'var(--mut)',marginBottom:16}},'Выберите поля, которые будут отображаться на карточке задачи:'),
+      el('div',{style:{display:'flex',flexDirection:'column',gap:8}},
+        Object.keys(cardFields).map(function(key){
+          var isVisible = cardFields[key] !== false;
+          return el('label',{key:key,style:{display:'flex',alignItems:'center',gap:8,cursor:'pointer'}},
+            el('input',{
+              type:'checkbox',
+              checked:isVisible,
+              onChange:function(e){
+                var updated = Object.assign({}, cardFields);
+                updated[key] = e.target.checked;
+                setCardFields(updated);
+              }
+            }),
+            el('span',null,fieldLabels[key] || key)
+          );
+        })
       ),
-      el('div',{className:'modal-body'},
-        el('p',null,'Выберите поля, которые будут отображаться на карточке задачи:'),
-        el('div',{className:'form-row'},
-          Object.keys(cardFields).map(function(key){
-            var field=cardFields[key];
-            return el('label',{key:key,className:'checkbox-label',style:{display:'block',marginBottom:'8px'}},
-              el('input',{
-                type:'checkbox',
-                checked:field.visible,
-                onChange:function(e){
-                  var updated={};
-                  Object.keys(cardFields).forEach(function(k){
-                    updated[k]=k===key?{name:cardFields[k].name,visible:e.target.checked}:cardFields[k];
-                  });
-                  setCardFields(updated);
-                }
-              }),
-              ' ',
-              field.name
-            );
-          })
-        )
-      ),
-      el('div',{className:'modal-footer'},
-        el('button',{className:'btn-primary',onClick:onClose},'Готово')
+      el('div',{className:'mfoot',style:{marginTop:20}},
+        el('button',{className:'btn pri',onClick:onClose},'Готово')
       )
     )
   );
