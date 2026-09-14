@@ -233,7 +233,6 @@ function TaskModal(props){
           )
         ),
         
-                el('div',null,
         el('div',null,
           el('label',null,'Типы задач'),
           el('div',{ref:ttRef,style:{position:'relative'}},
