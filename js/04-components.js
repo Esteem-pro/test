@@ -286,8 +286,7 @@ function TaskCard(props){
         onClick:function(e){e.stopPropagation();onFieldClick('types',t.id,e);}
       },'+'+(t.types.length-3))
     ),
-    // Фото
-    cardFields.photos!==false&&el(PhotoStrip,{t:t}),
+    // Фото (рендерится в 08-upload.js)
     // Чек-лист
     cardFields.subtasks&&t.sub.length>0&&React.createElement('div',{className:'subbar'},
       React.createElement('div',{className:'track'},
