@@ -38,7 +38,6 @@ function App(props){
   var r21=useState([]),prjF=r21[0],setPrjF=r21[1];
   var r23=useState('all'),prF=r23[0],setPrF=r23[1];
   var r24=useState('all'),dueF=r24[0],setDueF=r24[1];
-  var r20=useState([]),tagF=r20[0],setTagF=r20[1];
   var r25=useState(null),modal=r25[0],setModal=r25[1];
   var r26=useState([]),toasts=r26[0],setToasts=r26[1];
   var r27=useState(false),notifOpen=r27[0],setNotifOpen=r27[1];
@@ -161,8 +160,8 @@ function App(props){
   var toggle=function(val,cur,set){
     set(cur.includes(val)?cur.filter(function(x){return x!==val;}):cur.concat([val]));
   };
-  var resetF=function(){setQ('');setChF([]);setWhoF([]);setTagF([]);setPrjF([]);setPrF('all');setDueF('all');};
-  var hasF=!!(q.trim()||chF.length||whoF.length||tagF.length||prjF.length||prF!=='all'||dueF!=='all');
+  var resetF=function(){setQ('');setChF([]);setWhoF([]);setPrjF([]);setPrF('all');setDueF('all');};
+  var hasF=!!(q.trim()||chF.length||whoF.length||prjF.length||prF!=='all'||dueF!=='all');
   var openModal=function(m){
     kRef.current++;
     setModal(Object.assign({},m,{k:kRef.current}));
@@ -235,10 +234,6 @@ function App(props){
     return tasks.filter(function(t){
       if(chF.length&&!chF.includes(t.ch)) return false;
       if(whoF.length&&!whoF.includes(t.who)) return false;
-          if(tagF.length){
-        var tt=t.tags||[];
-        if(!tagF.some(function(tg){return tt.includes(tg);})) return false;
-      }
       if(prjF.length&&!prjF.includes(t.project)) return false;
       if(prF!=='all'&&t.pr!==prF) return false;
       if(q.trim()){
@@ -247,7 +242,7 @@ function App(props){
       }
       return true;
     });
-   },[tasks,q,chF,whoF,tagF,prjF,prF]);
+  },[tasks,q,chF,whoF,prjF,prF]);
 
   var dueCounts=useMemo(function(){
     var cnt={today:0,soon:0,week:0,over:0};
@@ -699,10 +694,6 @@ function App(props){
               el('span',{className:'dot',style:{background:(members[k]||{c:'#999'}).c,width:7,height:7}}),
               el('span',{className:'l'},(members[k]||{short:k}).short),
               el('button',{onClick:function(){toggle(k,whoF,setWhoF);}},el(Icon,{d:IC.x,size:10,sw:2.6})));
-          }),
-                           tagF.map(function(tg){
-            return el('span',{key:tg,className:'achip'},el('span',{className:'l'},'#'+tg),
-              el('button',{onClick:function(){toggle(tg,tagF,setTagF);}},el(Icon,{d:IC.x,size:10,sw:2.6})));
           }),
           prjF.map(function(k){
             return el('span',{key:k,className:'achip'},
