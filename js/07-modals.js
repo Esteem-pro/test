@@ -9,17 +9,17 @@ function CommandPalette(props){
       onSelect=props.onSelect, onClose=props.onClose;
   var s1=useState(''), q=s1[0], setQ=s1[1];
   var inputRef=useRef(null);
-  
+
   useEffect(function(){
     if(inputRef.current) inputRef.current.focus();
   },[]);
-  
+
   useEffect(function(){
     var h=function(e){ if(e.key==='Escape') onClose(); };
     window.addEventListener('keydown',h);
     return function(){ window.removeEventListener('keydown',h); };
   },[onClose]);
-  
+
   var items=[];
   tasks.forEach(function(t){
     if(q.trim()==='' || t.title.toLowerCase().includes(q.toLowerCase())){
@@ -36,7 +36,7 @@ function CommandPalette(props){
       items.push({kind:'channel',id:e[0],label:e[1].label,sub:'Канал',color:e[1].c});
     }
   });
-  
+
   return el('div',{className:'overlay',style:{alignItems:'flex-start',paddingTop:'10vh'},
     onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
     el('div',{className:'cmd',onClick:function(e){e.stopPropagation();}},
@@ -70,7 +70,7 @@ function QuickDropdown(props){
   var target=props.target, options=props.options, currentValue=props.currentValue,
       onSelect=props.onSelect, onClose=props.onClose;
   var ref=useRef(null);
-  
+
   useEffect(function(){
     var h=function(e){
       if(ref.current && !ref.current.contains(e.target) && e.target!==target){
@@ -80,10 +80,10 @@ function QuickDropdown(props){
     setTimeout(function(){ document.addEventListener('mousedown',h); },100);
     return function(){ document.removeEventListener('mousedown',h); };
   },[onClose,target]);
-  
+
   if(!target) return null;
   var rect=target.getBoundingClientRect();
-  
+
   return el('div',{ref:ref,className:'qdd',style:{
     position:'fixed',
     left:Math.min(rect.left,window.innerWidth-260)+'px',
@@ -107,11 +107,11 @@ function TaskModal(props){
   var channels=ctx.channels, members=ctx.members, me=ctx.me, now=ctx.now,
       toggleTimer=ctx.toggleTimer, resetTimer=ctx.resetTimer,
       projects=ctx.projects, taskTypes=ctx.taskTypes;
-  
+
   var firstCh=Object.keys(channels)[0];
   var firstWho=Object.keys(members)[0];
   var firstProject=Object.keys(projects).find(function(k){return !projects[k].archived;})||null;
-  
+
   var sF=useState(function(){
     if(init){
       return Object.assign({},init,{
@@ -127,26 +127,29 @@ function TaskModal(props){
       due:defaultDue||iso(addDays(3)),sub:[],coms:[],types:[],attachments:[],
       repeat:'none',time:null,project:firstProject};
   }), f=sF[0], setF=sF[1];
-  
+
   var sCom=useState(''), comText=sCom[0], setComText=sCom[1];
   var sTT=useState(''), ttInput=sTT[0], setTtInput=sTT[1];
   var sTTC=useState('#2E6BFF'), ttColor=sTTC[0], setTtColor=sTTC[1];
   var sTTO=useState(false), ttOpen=sTTO[0], setTtOpen=sTTO[1];
   var ttRef=useRef(null);
+
   var set=function(k,v){setF(function(s){var o=Object.assign({},s);o[k]=v;return o;});};
-  
+
   useEffect(function(){
     var h=function(e){if(e.key==='Escape')onClose();};
     window.addEventListener('keydown',h);
     return function(){window.removeEventListener('keydown',h);};
   },[onClose]);
-    useEffect(function(){
+
+  useEffect(function(){
     var h=function(e){
       if(ttRef.current && !ttRef.current.contains(e.target)) setTtOpen(false);
     };
     document.addEventListener('mousedown',h);
     return function(){document.removeEventListener('mousedown',h);};
   },[]);
+
   var subDone=f.sub.filter(function(s){return s.done;}).length;
   var setSub=function(i,patch){
     setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
@@ -172,7 +175,7 @@ function TaskModal(props){
   };
   var ok=f.title.trim().length>0;
   var liveRunning=live&&live.time&&live.time.run;
-  
+
   return el('div',{className:'overlay',onMouseDown:function(e){if(e.target===e.currentTarget)onClose();}},
     el('div',{className:'modal'},
       el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
@@ -184,7 +187,7 @@ function TaskModal(props){
         el('label',null,'Описание'),
         el('textarea',{rows:2,placeholder:'Детали, ссылки, критерии готовности…',value:f.desc,
           onChange:function(e){set('desc',e.target.value);}}),
-        
+
         el('div',{className:'frow'},
           el('div',null,
             el('label',null,'Доска'),
@@ -208,7 +211,7 @@ function TaskModal(props){
             )
           )
         ),
-        
+
         el('div',{className:'frow'},
           el('div',null,
             el('label',null,'Канал'),
@@ -232,7 +235,7 @@ function TaskModal(props){
             )
           )
         ),
-        
+
         el('div',null,
           el('label',null,'Типы задач'),
           el('div',{ref:ttRef,style:{position:'relative'}},
@@ -275,7 +278,7 @@ function TaskModal(props){
             )
           )
         ),
-        
+
         el('div',{className:'frow3'},
           el('div',null,el('label',null,'Дедлайн'),
             el('input',{type:'date',value:f.due,onChange:function(e){set('due',e.target.value);}})),
@@ -292,7 +295,7 @@ function TaskModal(props){
               })
             ))
         ),
-        
+
         el('div',{className:'frow'},
           el('div',null,
             el('label',null,'Приоритет'),
@@ -314,7 +317,7 @@ function TaskModal(props){
             )
           )
         ),
-        
+
         el('div',{className:'mcols'},
           el('div',null,
             el('label',null,'Чек-лист'+(f.sub.length>0?' · '+subDone+'/'+f.sub.length:'')),
@@ -356,8 +359,7 @@ function TaskModal(props){
             )
           )
         ),
-        
-        // БЛОК ФОТО
+
         el('div',{style:{marginTop:6}},
           el(PhotoBlock,{
             attachments:f.attachments||[],
