@@ -578,3 +578,19 @@ h1 em{font-style:normal;color:var(--accent)}
 .plink{position:absolute;bottom:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center}
 .padd{display:flex;align-items:center;justify-content:center;gap:6px;width:72px;height:72px;border-radius:10px;border:1.5px dashed var(--dash);background:var(--field);color:var(--mut);cursor:pointer;font:600 10px 'Golos Text';transition:.15s}
 .padd:hover{border-color:var(--ink);color:var(--ink)}
+/* мультиселект типов задач */
+.ttsel-btn{display:flex;align-items:center;gap:8px;width:100%;min-height:42px;
+  border:1px solid var(--line);border-radius:10px;background:var(--field);
+  padding:6px 12px;cursor:pointer;font:500 13px 'Golos Text';color:var(--ink);transition:.15s}
+.ttsel-btn:hover{border-color:var(--ink)}
+.ttsel-panel{position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--sh-md);padding:6px;max-height:280px;overflow:auto;animation:mpop .15s}
+.ttsel-item{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border:0;
+  background:transparent;border-radius:8px;cursor:pointer;font:500 13px 'Golos Text';color:var(--ink);transition:.12s}
+.ttsel-item:hover{background:var(--soft2)}
+.ttsel-item.on{background:var(--soft);font-weight:600}
+.ttsel-new{border-top:1px solid var(--line2);margin-top:6px;padding:8px 6px 4px}
+.ttsel-new input{width:100%;border:1px dashed var(--dash);border-radius:8px;padding:8px 10px;
+  font:500 12.5px 'Golos Text';outline:none;background:var(--field);color:var(--ink)}
+.ttsel-new input:focus{border-color:var(--ink);border-style:solid}
