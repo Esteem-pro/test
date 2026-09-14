@@ -226,9 +226,7 @@ function TaskModal(props){
           )
         ),
         
-        el('div',{className:'frow'},
-          el('div',null,
-        el('div',null,
+                el('div',null,
           el('label',null,'Типы задач'),
           el('div',{className:'ttbox'},
             (f.types||[]).map(function(tid){
@@ -261,21 +259,6 @@ function TaskModal(props){
               return el('button',{key:c,type:'button',className:'sw'+(ttColor===c?' on':''),
                 style:{background:c},title:c,onClick:function(){setTtColor(c);}});
             })
-          )
-        ),
-          el('div',null,
-            el('label',null,'Теги (дополнительно)'),
-            el('div',{className:'tagbox'},
-              f.tags.map(function(tg,i){
-                return el('span',{key:tg,className:'tagchip'},'#'+tg,
-                  el('button',{onClick:function(){setF(function(s){return Object.assign({},s,{tags:s.tags.filter(function(_,j){return j!==i;})});});}},
-                    el(Icon,{d:IC.x,size:10,sw:2.4}))
-                );
-              }),
-              el('input',{placeholder:'Тег + Enter…',value:tagInput,
-                onChange:function(e){setTagInput(e.target.value);},
-                onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();addTag(tagInput);setTagInput('');}}})
-            )
           )
         ),
         
