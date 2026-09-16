@@ -119,7 +119,7 @@ function StatsView(props){
     ),
     el('div',{className:'agrid'},
       el('div',{className:'panel',style:{animationDelay:'60ms'}},
-        el('h4',null,'Открытые задачи по каналам'),
+        el('h4',null,'Открытые задачи по командам'),
         byChannel.map(function(x){
           return el('div',{className:'arow',key:x.k},
             el('span',{className:'al',style:{color:x.c.c}},x.c.label),
@@ -364,10 +364,10 @@ function AdminView(props){
       candidates:others,target:others[0][0]});
   };
   var addChannel=function(){
-    var label=newCh.trim(); if(!label){toast('Введите название канала');return;}
+    var label=newCh.trim(); if(!label){toast('Введите название команды');return;}
     var id='c'+Date.now().toString(36);
     setChannels(function(cs){var o=Object.assign({},cs);o[id]={label:label,c:chColor};return o;});
-    setNewCh(''); logEv('admin','Админ: добавлен канал «'+label+'»'); toast('Канал добавлен: '+label);
+    setNewCh(''); logEv('admin','Админ: добавлена команда «'+label+'»'); toast('Канал добавлен: '+label);
   };
   var doDelChannel=function(k,target){
     var label=channels[k].label;
@@ -377,7 +377,7 @@ function AdminView(props){
     });
     setChannels(function(cs){var o=Object.assign({},cs);delete o[k];return o;});
     setChF(function(a){return a.filter(function(x){return x!==k;});});
-    logEv('admin','Админ: удалён канал «'+label+'»'); toast('Канал удалён');
+    logEv('admin','Админ: удалён канал «'+label+'»'); toast('Команда удалена');
   };
   var askDelChannel=function(k){
     if(Object.keys(channels).length<=1){toast('Нельзя удалить последний канал');return;}
@@ -385,7 +385,7 @@ function AdminView(props){
     var others=Object.entries(channels).filter(function(e){return e[0]!==k;});
     if(n===0){doDelChannel(k,null);return;}
     setConfirm({kind:'channel',id:k,title:'Удалить канал?',
-      text:'В канале «'+channels[k].label+'» задач: '+n+'. Выберите канал для переноса.',
+      text:'В команде «'+channels[k].label+'» задач: '+n+'. Выберите команду для переноса.',
       candidates:others,target:others[0][0]});
   };
   var addProject=function(){
@@ -505,7 +505,7 @@ function AdminView(props){
       ),
       // Каналы
       el('div',{className:'panel apanel',style:{animationDelay:'60ms'}},
-        el('h4',null,el(Icon,{d:IC.board,size:14}),'Каналы'),
+        el('h4',null,el(Icon,{d:IC.board,size:14}),'Команды'),
         Object.entries(channels).map(function(e){
           var k=e[0],c=e[1];
           return el('div',{key:k,className:'arow2'},
@@ -519,7 +519,7 @@ function AdminView(props){
           );
         }),
         el('div',{className:'aadd'},
-          el('input',{placeholder:'Название нового канала…',value:newCh,
+          el('input',{placeholder:'Название новой команды…',value:newCh,
             onChange:function(e){setNewCh(e.target.value);},
             onKeyDown:function(e){if(e.key==='Enter')addChannel();}}),
           el('button',{className:'btn pri',style:{height:40},onClick:addChannel},
@@ -635,7 +635,7 @@ function AdminView(props){
         el('div',{className:'adata'},
           el('div',null,el('b',null,tasks.length),'задач'),
           el('div',null,el('b',null,Object.keys(members).length),'сотрудников'),
-          el('div',null,el('b',null,Object.keys(channels).length),'каналов'),
+          el('div',null,el('b',null,Object.keys(channels).length),'команд'),
           el('div',null,el('b',null,Object.keys(projects).length),'проектов'),
           el('div',null,el('b',null,Object.keys(taskTypes).length),'типов')
         ),
