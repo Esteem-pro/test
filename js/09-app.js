@@ -406,6 +406,21 @@ function App(props){
     }
     setModal(null);
   };
+    var autoSave=function(f){
+    var cur=tasks.find(function(x){return x.id===f.id;});
+    if(!cur) return;
+    var merged=Object.assign({},f,{time:cur.time});
+    setTasks(function(ts){return ts.map(function(x){return x.id===f.id?merged:x;});});
+    if(!isDone(cur)&&isDone(merged)&&merged.repeat!=='none') spawnRepeat(merged);
+  };
+  var createDraft=function(f){
+    var t=Object.assign({},f,{id:_id++});
+    setTasks(function(ts){return [t].concat(ts);});
+    logEv('create','Создана «'+t.title+'»');
+    toast('Задача создана');
+    setModal(function(m){return m?Object.assign({},m,{mode:'edit',t:t}):m;});
+    return t;
+  };
   var deleteTask=function(id){
     var t=tasks.find(function(x){return x.id===id;});
     setTasks(function(ts){return ts.filter(function(x){return x.id!==id;});});
@@ -872,7 +887,7 @@ function App(props){
         defaultBoard:modal.board,defaultCol:modal.col,defaultDue:modal.due,
         onClose:function(){setModal(null);},
         onSave:saveTask,onDelete:deleteTask,onSaveAsTemplate:saveAsTemplate,
-        createType:createType}),
+        createType:createType,onAutoSave:autoSave,onCreate:createDraft}),
       showCardSettings&&el(CardSettings,{cardFields:cardFields,setCardFields:setCardFields,
         onClose:function(){setShowCardSettings(false);}}),
       cmdOpen&&el(CommandPalette,{tasks:tasks,channels:channels,projects:projects,
