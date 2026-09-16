@@ -33,7 +33,7 @@ function CommandPalette(props){
   });
   Object.entries(channels).forEach(function(e){
     if(q.trim()==='' || e[1].label.toLowerCase().includes(q.toLowerCase())){
-      items.push({kind:'channel',id:e[0],label:e[1].label,sub:'Канал',color:e[1].c});
+      items.push({kind:'channel',id:e[0],label:e[1].label,sub:'Команда',color:e[1].c});
     }
   });
 
@@ -42,7 +42,7 @@ function CommandPalette(props){
     el('div',{className:'cmd',onClick:function(e){e.stopPropagation();}},
       el('div',{className:'cmd-in'},
         el(Icon,{d:IC.search,size:16}),
-        el('input',{ref:inputRef,placeholder:'Поиск задач, проектов, каналов...',
+        el('input',{ref:inputRef,placeholder:'Поиск задач, проектов, команд...',
           value:q,onChange:function(e){setQ(e.target.value);}}),
         el('span',{style:{fontSize:10,padding:'2px 6px',background:'var(--soft)',borderRadius:4}},'ESC')
       ),
@@ -227,7 +227,7 @@ function TaskModal(props){
         ),
 
         el('div',{className:'msec'},
-          el('label',null,'Канал'),
+          el('label',null,'Команда'),
           el('div',{className:'chipsel'},
             Object.entries(channels).map(function(e){
               var k=e[0],c=e[1];
