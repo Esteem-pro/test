@@ -102,7 +102,8 @@ function QuickDropdown(props){
 function TaskModal(props){
   var init=props.init, live=props.live, defaultBoard=props.defaultBoard, defaultCol=props.defaultCol,
       defaultDue=props.defaultDue, onClose=props.onClose, onSave=props.onSave, onDelete=props.onDelete,
-      onSaveAsTemplate=props.onSaveAsTemplate, createType=props.createType;
+      onSaveAsTemplate=props.onSaveAsTemplate, createType=props.createType,
+      onAutoSave=props.onAutoSave, onCreate=props.onCreate;
   var ctx=useCtx();
   var channels=ctx.channels, members=ctx.members, me=ctx.me, now=ctx.now,
       toggleTimer=ctx.toggleTimer, resetTimer=ctx.resetTimer,
@@ -149,7 +150,38 @@ function TaskModal(props){
     document.addEventListener('mousedown',h);
     return function(){document.removeEventListener('mousedown',h);};
   },[]);
+  var fRef=useRef(f); fRef.current=f;
+  var autoRef=useRef(onAutoSave); autoRef.current=onAutoSave;
+  var createRef=useRef(onCreate); createRef.current=onCreate;
+  var saveTimer=useRef(null);
+  var mounted=useRef(false);
 
+  useEffect(function(){
+    if(!mounted.current){mounted.current=true;return;}
+    if(saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current=setTimeout(function(){
+      var cur=fRef.current;
+      if(!cur||!cur.title.trim()) return;
+      if(!cur.id){
+        var t=createRef.current(Object.assign({},cur));
+        if(t) setF(function(prev){return Object.assign({},prev,{id:t.id});});
+      } else {
+        autoRef.current(cur);
+      }
+    },500);
+    return function(){ if(saveTimer.current) clearTimeout(saveTimer.current); };
+  },[f]);
+
+  useEffect(function(){
+    return function(){
+      if(saveTimer.current) clearTimeout(saveTimer.current);
+      var cur=fRef.current;
+      if(cur&&cur.title.trim()){
+        if(!cur.id){ createRef.current(Object.assign({},cur)); }
+        else { autoRef.current(cur); }
+      }
+    };
+  },[]);
   var subDone=f.sub.filter(function(s){return s.done;}).length;
   var setSub=function(i,patch){
     setF(function(s){return Object.assign({},s,{sub:s.sub.map(function(x,j){return j===i?Object.assign({},x,patch):x;})});});
@@ -180,6 +212,7 @@ function TaskModal(props){
     el('div',{className:'modal'},
       el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
       el('h3',null,init?'Редактировать задачу':'Новая задача'),
+      el('div',{className:'asub',style:{margin:'2px 0 8px'}},'Все изменения сохраняются автоматически'),
       el('div',{className:'f'},
 
         el('div',{className:'msec'},
@@ -378,9 +411,8 @@ function TaskModal(props){
           onClick:function(){onSaveAsTemplate(init);}},
           el(Icon,{d:IC.template,size:14}),'Шаблон'),
         el('span',{style:{flex:1}}),
-        el('button',{className:'btn ghost',onClick:onClose},'Отмена'),
-        el('button',{className:'btn pri',disabled:!ok,onClick:function(){onSave(f);}},
-          init?'Сохранить':'Создать задачу')
+        el('span',{className:'asub',style:{marginRight:8}},'Автосохранение включено'),
+        el('button',{className:'btn ghost',onClick:onClose},'Закрыть')
       )
     )
   );
