@@ -14,8 +14,10 @@ function Kanban(props){
 
   return React.createElement('div',{className:'board'},
     cols.map(function(c,ci){
-      var list = group==='day' ? visible.filter(function(t){return bucketOf(t)===c.id;}) : visible.filter(function(t){return t.col===c.id;});
-      var allN = group==='day' ? all.filter(function(t){return bucketOf(t)===c.id;}).length : all.filter(function(t){return t.col===c.id;}).length;
+      var byTitle=props.byTitle;
+      var matchCol=function(t){return byTitle? colMeta(t).t===c.t : t.col===c.id;};
+      var list = group==='day' ? visible.filter(function(t){return bucketOf(t)===c.id;}) : visible.filter(matchCol);
+      var allN = group==='day' ? all.filter(function(t){return bucketOf(t)===c.id;}).length : all.filter(matchCol).length;
       return React.createElement('section',{
         key:c.id,
         className:'col'+(overCol===c.id?' over':''),
@@ -25,7 +27,7 @@ function Kanban(props){
         onDrop:function(e){
           e.preventDefault();
           var id=Number(e.dataTransfer.getData('text/plain'));
-          if(id) onDropCard(id,c.id);
+          if(id) onDropCard(id, byTitle? c.t : c.id);
           setOverCol(null);
         }
       },
@@ -33,7 +35,7 @@ function Kanban(props){
           React.createElement('span',{className:'col-dot',style:{background:c.c}}),
           React.createElement('h3',null,c.t),
           React.createElement('span',{className:'n'},hasF&&group==='status'?list.length+'/'+allN:list.length),
-          group==='status'&&React.createElement('button',{
+          group==='status'&&!props.noAdd&&React.createElement('button',{
             className:'col-add',
             title:'Добавить в «'+c.t+'»',
             onClick:function(){onNew(c.id);}
