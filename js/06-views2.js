@@ -129,7 +129,7 @@ function StatsView(props){
         })
       ),
       el('div',{className:'panel',style:{animationDelay:'120ms'}},
-        el('h4',null,'Нагрузка команды'),
+        el('h4',null,'Нагрузка сотрудников'),
         byMember.map(function(x){
           return el('div',{className:'arow',key:x.k},
             el(Avatar,{id:x.k,size:22}),
@@ -477,7 +477,7 @@ function AdminView(props){
     el('div',{className:'agrid'},
       // Команда
       el('div',{className:'panel apanel'},
-        el('h4',null,el(Icon,{d:IC.user,size:14}),'Команда и роли'),
+        el('h4',null,el(Icon,{d:IC.user,size:14}),'Сотрудники и роли'),
         Object.entries(members).map(function(e){
           var k=e[0],m=e[1];
           return el('div',{key:k,className:'arow2'},
