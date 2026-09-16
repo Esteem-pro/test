@@ -203,7 +203,7 @@ function LockScreen(props){
       el('b',null,(members[me]||{name:'—'}).name),
       ' · роль «пользователь».',
       el('br'),
-      'Попросите администратора выдать вам права в разделе «Команда и роли».'),
+      'Попросите администратора выдать вам права в разделе «Сотрудники и роли».'),
     authUser&&el('div',{className:'lockadmins'},
       el('button',{className:'btn ghost',onClick:onSignOut},'Выйти из аккаунта')
     )
