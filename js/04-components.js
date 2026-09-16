@@ -229,7 +229,7 @@ function TaskCard(props){
         className:'chip',
         style:{background:cmix(ch.c,15),color:ch.c},
         onClick:function(e){e.stopPropagation();onFieldClick('channel',t.id,e);},
-        title:'Сменить канал'
+        title:'Сменить команду'
       },
         React.createElement('span',{className:'dot',style:{background:ch.c}}),
         React.createElement('span',{className:'lbl'},ch.label)
