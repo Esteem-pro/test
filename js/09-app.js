@@ -442,7 +442,7 @@ function App(props){
     var field=quickDD.field,taskId=quickDD.taskId;
     if(field==='channel'){
       setTasks(function(ts){return ts.map(function(x){return x.id===taskId?Object.assign({},x,{ch:value}):x;});});
-      toast('Канал: '+channels[value].label);
+      toast('Команда: '+channels[value].label);
     } else if(field==='assignee'){
       setTasks(function(ts){return ts.map(function(x){return x.id===taskId?Object.assign({},x,{who:value}):x;});});
       toast('Исполнитель: '+members[value].short);
@@ -574,7 +574,7 @@ function App(props){
           })
         ),
         el('div',{className:'sb'},
-          el('h5',null,'Каналы'),
+          el('h5',null,'Команды'),
           Object.entries(channels).map(function(e){
             var k=e[0],c=e[1];
             return el('button',{key:k,className:'srow'+(chF.includes(k)?' on':''),onClick:function(){toggle(k,chF,setChF);}},
@@ -583,7 +583,7 @@ function App(props){
           })
         ),
         el('div',{className:'sb'},
-          el('h5',null,'Команда'),
+          el('h5',null,'Сотрудники'),
           Object.entries(members).map(function(e){
             var k=e[0],m=e[1];
             return el('button',{key:k,className:'srow'+(whoF.includes(k)?' on':''),onClick:function(){toggle(k,whoF,setWhoF);}},
