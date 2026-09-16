@@ -135,7 +135,7 @@ function FavoritesView(props){
       : React.createElement('div',{className:'ltab'},
           React.createElement('div',{className:'lrow lhead'},
             React.createElement('div',null,'Задача'),
-            React.createElement('div',null,'Канал'),
+            React.createElement('div',null,'Команда'),
             React.createElement('div',null,'Исполнитель'),
             React.createElement('div',null,'Дедлайн'),
             React.createElement('div',null,'Прогресс'),
@@ -216,7 +216,7 @@ function CardSettings(props){
   var el = React.createElement;
   
   var fieldLabels = {
-    channel: 'Канал',
+    channel: 'Команда',
     assignee: 'Исполнитель',
     priority: 'Приоритет',
     due: 'Дедлайн',
