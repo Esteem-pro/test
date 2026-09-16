@@ -2,7 +2,30 @@
 // Главный компонент приложения + синхронизация с Firebase RTDB + роли
 
 var el = React.createElement;
-
+function MineHead(props){
+  var ctx=useCtx();
+  var members=ctx.members, me=ctx.me;
+  var tasks=props.tasks;
+  var m=members[me]||{name:'—'};
+  var my=tasks.filter(function(t){return t.who===me;});
+  var active=my.filter(function(t){return !isDone(t);});
+  var overdue=active.filter(function(t){return daysLeft(t.due)<0;}).length;
+  var hot=active.filter(function(t){var dl=daysLeft(t.due);return dl>=0&&dl<=2;}).length;
+  var done=my.filter(function(t){return isDone(t);}).length;
+  return el('div',{className:'mhead'},
+    el(Avatar,{id:me,size:48}),
+    el('div',null,
+      el('h3',null,'Задачи — '+m.name),
+      el('small',null,'Все доски: основная, фото и видео.')
+    ),
+    el('div',{className:'mstats'},
+      el('div',{className:'mstat'},el('b',{style:{color:'var(--blue)'}},active.length),el('span',null,'активных')),
+      el('div',{className:'mstat'},el('b',{style:{color:'var(--amber)'}},hot),el('span',null,'горят')),
+      el('div',{className:'mstat'},el('b',{style:{color:'var(--red)'}},overdue),el('span',null,'просрочено')),
+      el('div',{className:'mstat'},el('b',{style:{color:'var(--green)'}},done),el('span',null,'готово'))
+    )
+  );
+}
 function App(props){
   var authUser=props.authUser||null;
   var onSignOut=props.onSignOut||function(){};
@@ -508,13 +531,24 @@ function App(props){
 
   /* производные для доски */
   var isBoardView=view==='board'||view==='photo'||view==='video';
+  var isMineView=view==='mine';
+  var isBoardLike=isBoardView||isMineView;
   var bkey=view==='board'?'main':view;
+  var MINE_COLS=(function(){
+    var seen={},out=[];
+    Object.keys(BOARD_COLS).forEach(function(b){
+      BOARD_COLS[b].forEach(function(c){ if(!seen[c.t]){seen[c.t]=1;out.push(c);} });
+    });
+    return out;
+  })();
   var btAll=useMemo(function(){
+    if(isMineView) return tasks.filter(function(t){return t.who===me;});
     return tasks.filter(function(t){return (t.board||'main')===bkey;});
-  },[tasks,bkey]);
+  },[tasks,bkey,isMineView,me]);
   var btVisible=useMemo(function(){
+    if(isMineView) return visible.filter(function(t){return t.who===me;});
     return visible.filter(function(t){return (t.board||'main')===bkey;});
-  },[visible,bkey]);
+  },[visible,bkey,isMineView,me]);
   var btSorted=useMemo(function(){
     var pinned=btVisible.filter(function(t){return t.pinned&&!isDone(t);});
     var rest=btVisible.filter(function(t){return !t.pinned||isDone(t);});
@@ -616,7 +650,7 @@ function App(props){
             el('h1',null,VIEW_H[view],el('em',null,'.'))
           ),
           el('div',{className:'tools'},
-            isBoardView&&el(React.Fragment,null,
+            isBoardLike&&el(React.Fragment,null,
               el('label',{className:'search'},
                 el(Icon,{d:IC.search,size:15}),
                 el('input',{ref:searchRef,placeholder:'Поиск…  ( / )',value:q,onChange:function(e){setQ(e.target.value);}}),
@@ -707,7 +741,8 @@ function App(props){
             el('button',{onClick:function(){setDueF('all');}},el(Icon,{d:IC.x,size:10,sw:2.6}))),
           el('button',{className:'achip clear',onClick:resetF},'Сбросить всё')
         ),
-        isBoardView&&el(React.Fragment,null,
+        isBoardLike&&el(React.Fragment,null,
+          isMineView&&el(MineHead,{tasks:tasks}),
           el('div',{className:'ctrl'},
             el('div',{className:'vseg'},
               el('button',{className:mode==='board'?'on':'',onClick:function(){setMode('board');}},el(Icon,{d:IC.kanban,size:13}),'Доска'),
@@ -729,13 +764,13 @@ function App(props){
               el('option',{value:'due-asc'},'Дедлайн ↑'),
               el('option',{value:'due-desc'},'Дедлайн ↓'),
               el('option',{value:'pr'},'Приоритет'),
-              el('option',{value:'ch'},'Канал'),
+              el('option',{value:'ch'},'Команда'),
               el('option',{value:'who'},'Исполнитель'),
               el('option',{value:'title'},'Название')
             )
           ),
           el('section',{className:'stats'},
-            el(Stat,{lbl:'Открыто',n:btAll.filter(function(t){return !isDone(t);}).length,sub:'из '+btAll.length+' на доске',c:'var(--blue)'}),
+            el(Stat,{lbl:'Открыто',n:btAll.filter(function(t){return !isDone(t);}).length,sub:'из '+btAll.length+(isMineView?' моих':' на доске'),c:'var(--blue)'}),
             el(Stat,{lbl:'Горит',n:btAll.filter(function(t){return !isDone(t)&&daysLeft(t.due)>=0&&daysLeft(t.due)<=2;}).length,sub:'дедлайн ≤ 2 дней',c:'var(--amber)'}),
             el(Stat,{lbl:'Просрочено',n:btAll.filter(function(t){return !isDone(t)&&daysLeft(t.due)<0;}).length,
               sub:btAll.filter(function(t){return !isDone(t)&&daysLeft(t.due)<0;}).length?'требует внимания':'всё по плану',
@@ -743,7 +778,7 @@ function App(props){
             el(Stat,{lbl:'Готово',n:btAll.filter(function(t){return isDone(t);}).length,sub:'завершено',c:'var(--green)'}),
             el('div',{className:'ringbox'},
               el(Ring,{pct:btAll.length?btAll.filter(function(t){return isDone(t);}).length/btAll.length:0}),
-              el('div',null,el('b',null,BOARDS[bkey].title),
+              el('div',null,el('b',null,isMineView?'Мои задачи':BOARDS[bkey].title),
                 el('small',null,group==='day'?'группировка по дням':'группировка по статусу'))
             )
           ),
@@ -764,10 +799,22 @@ function App(props){
             ? el(Kanban,{all:btAll,
                 visible:btSorted.filter(function(t){return !t.pinned||isDone(t);}),
                 group:group,hasF:hasF,
-                cols:group==='day'?DAY_BUCKETS:colsOf(bkey),
+                byTitle:isMineView&&group==='status',
+                noAdd:isMineView,
+                cols:group==='day'?DAY_BUCKETS:(isMineView?MINE_COLS:colsOf(bkey)),
                 onEdit:function(t){openModal({mode:'edit',t:t});},
                 onNew:function(col){openModal({mode:'new',board:bkey,col:col});},
-                onDropCard:function(id,cid){group==='day'?dayDrop(id,cid):moveTo(id,cid);},
+                onDropCard:function(id,cid){
+                  if(group==='day'){dayDrop(id,cid);return;}
+                  if(isMineView){
+                    var t=tasks.find(function(x){return x.id===id;});
+                    if(!t) return;
+                    var target=colsOf(t.board||'main').find(function(c){return c.t===cid;});
+                    if(target) moveTo(id,target.id);
+                    return;
+                  }
+                  moveTo(id,cid);
+                },
                 onPin:togglePin,onFav:toggleFav,onFieldClick:handleFieldClick,
                 selectedIds:selectedIds,onToggleSelect:toggleSelect,onShiftClick:toggleSelect})
             : btSorted.length>0
@@ -800,8 +847,6 @@ function App(props){
           btSorted.length===0&&el('div',{className:'nothing'},
             el('b',null,'Ничего не нашлось'),'Попробуйте изменить фильтры или поисковый запрос')
         ),
-        view==='mine'&&el(MineView,{tasks:tasks,
-          onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
         view==='fav'&&el(FavoritesView,{tasks:tasks,
           onEdit:function(t){openModal({mode:'edit',t:t});},onMove:moveTo}),
         view==='cal'&&el(CalendarView,{tasks:tasks,
