@@ -181,15 +181,30 @@ function TaskModal(props){
       el('button',{className:'mclose',onClick:onClose},el(Icon,{d:IC.x,size:16})),
       el('h3',null,init?'Редактировать задачу':'Новая задача'),
       el('div',{className:'f'},
-        el('label',null,'Название'),
-        el('input',{type:'text',autoFocus:true,placeholder:'Что нужно сделать?',value:f.title,
-          onChange:function(e){set('title',e.target.value);}}),
-        el('label',null,'Описание'),
-        el('textarea',{rows:2,placeholder:'Детали, ссылки, критерии готовности…',value:f.desc,
-          onChange:function(e){set('desc',e.target.value);}}),
 
-        el('div',{className:'frow'},
-          el('div',null,
+        el('div',{className:'msec'},
+          el('label',null,'Название'),
+          el('input',{type:'text',autoFocus:true,placeholder:'Что нужно сделать?',value:f.title,
+            onChange:function(e){set('title',e.target.value);}})
+        ),
+
+        el('div',{className:'msec'},
+          el('label',null,'Описание'),
+          el('textarea',{rows:2,placeholder:'Детали, ссылки, критерии готовности…',value:f.desc,
+            onChange:function(e){set('desc',e.target.value);}})
+        ),
+
+        el('div',{className:'mrow c3'},
+          el('div',{className:'msec'},
+            el('label',null,'Проект'),
+            el('select',{value:f.project||'',onChange:function(e){set('project',e.target.value||null);}},
+              el('option',{value:''},'— Без проекта —'),
+              Object.entries(projects).filter(function(e){return !e[1].archived;}).map(function(e){
+                return el('option',{key:e[0],value:e[0]},e[1].name);
+              })
+            )
+          ),
+          el('div',{className:'msec'},
             el('label',null,'Доска'),
             el('div',{className:'seg',style:{height:'auto'}},
               Object.entries(BOARDS).map(function(e){
@@ -199,32 +214,7 @@ function TaskModal(props){
               })
             )
           ),
-          el('div',null,
-            el('label',null,'Проект'),
-            el('select',{value:f.project||'',style:{width:'100%',border:'1px solid var(--line)',borderRadius:10,
-              padding:'10px 12px',fontSize:14,color:'var(--ink)',background:'var(--field)',outline:'none'},
-              onChange:function(e){set('project',e.target.value||null);}},
-              el('option',{value:''},'— Без проекта —'),
-              Object.entries(projects).filter(function(e){return !e[1].archived;}).map(function(e){
-                return el('option',{key:e[0],value:e[0]},e[1].name);
-              })
-            )
-          )
-        ),
-
-        el('div',{className:'frow'},
-          el('div',null,
-            el('label',null,'Канал'),
-            el('div',{className:'chipsel'},
-              Object.entries(channels).map(function(e){
-                var k=e[0],c=e[1];
-                return el('button',{key:k,type:'button',
-                  style:f.ch===k?{background:cmix(c.c,15),borderColor:c.c,color:c.c}:{},
-                  onClick:function(){set('ch',k);}},c.label);
-              })
-            )
-          ),
-          el('div',null,
+          el('div',{className:'msec'},
             el('label',null,'Исполнитель'),
             el('div',{className:'avasel'},
               Object.entries(members).map(function(e){
@@ -236,8 +226,17 @@ function TaskModal(props){
           )
         ),
 
-        el('div',null,
-          el('label',null,'Типы задач'),
+        el('div',{className:'msec'},
+          el('label',null,'Канал'),
+          el('div',{className:'chipsel'},
+            Object.entries(channels).map(function(e){
+              var k=e[0],c=e[1];
+              return el('button',{key:k,type:'button',
+                style:f.ch===k?{background:cmix(c.c,15),borderColor:c.c,color:c.c}:{},
+                onClick:function(){set('ch',k);}},c.label);
+            })
+          ),
+          el('label',{style:{marginTop:12}},'Типы задач'),
           el('div',{ref:ttRef,style:{position:'relative'}},
             el('button',{type:'button',className:'ttsel-btn',
               onClick:function(){setTtOpen(function(o){return !o;});}},
@@ -279,25 +278,31 @@ function TaskModal(props){
           )
         ),
 
-        el('div',{className:'frow3'},
-          el('div',null,el('label',null,'Дедлайн'),
-            el('input',{type:'date',value:f.due,onChange:function(e){set('due',e.target.value);}})),
-          el('div',null,el('label',null,'Повтор'),
+        el('div',{className:'mrow c3'},
+          el('div',{className:'msec'},
+            el('label',null,'Дедлайн'),
+            el('input',{type:'date',value:f.due,onChange:function(e){set('due',e.target.value);}})
+          ),
+          el('div',{className:'msec'},
+            el('label',null,'Повтор'),
             el('select',{value:f.repeat,onChange:function(e){set('repeat',e.target.value);}},
               Object.entries(REPEAT).map(function(e){
                 return el('option',{key:e[0],value:e[0]},e[1].l);
               })
-            )),
-          el('div',null,el('label',null,'Статус'),
+            )
+          ),
+          el('div',{className:'msec'},
+            el('label',null,'Статус'),
             el('select',{value:f.col,onChange:function(e){set('col',e.target.value);}},
               colsOf(f.board).map(function(c){
                 return el('option',{key:c.id,value:c.id},c.t);
               })
-            ))
+            )
+          )
         ),
 
-        el('div',{className:'frow'},
-          el('div',null,
+        el('div',{className:'mrow '+(init&&live?'c2':'c1')},
+          el('div',{className:'msec'},
             el('label',null,'Приоритет'),
             el('div',{className:'seg',style:{height:'auto'}},
               [['high','▲ Выс.'],['mid','● Сред.'],['low','▽ Низ.']].map(function(e){
@@ -306,7 +311,7 @@ function TaskModal(props){
               })
             )
           ),
-          init&&live&&el('div',null,
+          init&&live&&el('div',{className:'msec'},
             el('label',null,'Таймер задачи'),
             el('div',{className:'trow',style:{marginTop:0}},
               el('b',{className:'ttime',style:{fontSize:17,minWidth:80}},fmtDur(elapsed(live,now))),
@@ -318,49 +323,48 @@ function TaskModal(props){
           )
         ),
 
-        el('div',{className:'mcols'},
-          el('div',null,
-            el('label',null,'Чек-лист'+(f.sub.length>0?' · '+subDone+'/'+f.sub.length:'')),
-            f.sub.map(function(s,i){
-              return el('div',{key:i,className:'ck'+(s.done?' done':'')},
-                el('input',{type:'checkbox',checked:s.done,onChange:function(){setSub(i,{done:!s.done});}}),
-                el('span',null,s.t),
-                el('button',{className:'rm',title:'Убрать пункт',
-                  onClick:function(){setF(function(s2){return Object.assign({},s2,{sub:s2.sub.filter(function(_,j){return j!==i;})});});}},
-                  el(Icon,{d:IC.x,size:11}))
-              );
-            }),
-            el('div',{className:'ckadd'},
-              el('input',{placeholder:'Новый пункт и Enter…',
-                onKeyDown:function(e){
-                  if(e.key==='Enter'&&e.target.value.trim()){addSub(e.target.value.trim());e.target.value='';}
-                }})
-            )
-          ),
-          el('div',null,
-            el('label',null,'Комментарии'+(f.coms.length>0?' · '+f.coms.length:'')),
-            el('div',{className:'cmts'},
-              f.coms.length===0&&el('div',{className:'cempty'},'Пока тихо — напишите первым.'),
-              f.coms.map(function(c,i){
-                return el('div',{key:i,className:'cmt'},
-                  el(Avatar,{id:c.who,size:24}),
-                  el('div',{className:'b'},
-                    el('small',null,(members[c.who]||{short:'—'}).short+(c.who===me?' · вы':'')+' · '+fmtT(c.ts)),
-                    el('p',null,c.text)
-                  )
-                );
-              })
-            ),
-            el('div',{className:'cinput'},
-              el('input',{placeholder:'Комментарий…',value:comText,
-                onChange:function(e){setComText(e.target.value);},
-                onKeyDown:function(e){if(e.key==='Enter')addCom();}}),
-              el('button',{className:'csend',title:'Отправить',onClick:addCom},el(Icon,{d:IC.up,size:15,sw:2}))
-            )
+        el('div',{className:'msec'},
+          el('label',null,'Чек-лист'+(f.sub.length>0?' · '+subDone+'/'+f.sub.length:'')),
+          f.sub.map(function(s,i){
+            return el('div',{key:i,className:'ck'+(s.done?' done':'')},
+              el('input',{type:'checkbox',checked:s.done,onChange:function(){setSub(i,{done:!s.done});}}),
+              el('span',null,s.t),
+              el('button',{className:'rm',title:'Убрать пункт',
+                onClick:function(){setF(function(s2){return Object.assign({},s2,{sub:s2.sub.filter(function(_,j){return j!==i;})});});}},
+                el(Icon,{d:IC.x,size:11}))
+            );
+          }),
+          el('div',{className:'ckadd'},
+            el('input',{placeholder:'Новый пункт и Enter…',
+              onKeyDown:function(e){
+                if(e.key==='Enter'&&e.target.value.trim()){addSub(e.target.value.trim());e.target.value='';}
+              }})
           )
         ),
 
-        el('div',{style:{marginTop:6}},
+        el('div',{className:'msec'},
+          el('label',null,'Комментарии'+(f.coms.length>0?' · '+f.coms.length:'')),
+          el('div',{className:'cmts'},
+            f.coms.length===0&&el('div',{className:'cempty'},'Пока тихо — напишите первым.'),
+            f.coms.map(function(c,i){
+              return el('div',{key:i,className:'cmt'},
+                el(Avatar,{id:c.who,size:24}),
+                el('div',{className:'b'},
+                  el('small',null,(members[c.who]||{short:'—'}).short+(c.who===me?' · вы':'')+' · '+fmtT(c.ts)),
+                  el('p',null,c.text)
+                )
+              );
+            })
+          ),
+          el('div',{className:'cinput'},
+            el('input',{placeholder:'Комментарий…',value:comText,
+              onChange:function(e){setComText(e.target.value);},
+              onKeyDown:function(e){if(e.key==='Enter')addCom();}}),
+            el('button',{className:'csend',title:'Отправить',onClick:addCom},el(Icon,{d:IC.up,size:15,sw:2}))
+          )
+        ),
+
+        el('div',{className:'msec'},
           el(PhotoBlock,{
             attachments:f.attachments||[],
             onChange:function(next){set('attachments',next);}
