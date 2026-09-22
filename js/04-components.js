@@ -14,7 +14,7 @@ var Avatar = function(props) {
   var m = members[id] || {ini:'?',c:'#98A29B',name:'—'};
   return React.createElement('span', {
     className:'ava', title:m.name,
-    onClick: onClick ? function(e){ e.stopPropagation(); onClick(id); } : undefined,
+    onClick: onClick ? function(e){ e.stopPropagation(); onClick(id, e); } : undefined,
     style:{width:size,height:size,background:m.c,fontSize:Math.max(7,Math.round(size*.36))}
   }, m.ini);
 };
@@ -125,8 +125,11 @@ function Popover(props){
   },[]);
   if(!target) return null;
   var rect=target.getBoundingClientRect();
-  return ReactDOM.createPortal(
-    React.createElement('div',{ref:ref,className:'qdd',style:{position:'fixed',
+   return ReactDOM.createPortal(
+    React.createElement('div',{ref:ref,className:'qdd',
+      onClick:function(e){e.stopPropagation();},
+      onMouseDown:function(e){e.stopPropagation();},
+      style:{position:'fixed',
       left:Math.min(rect.left,window.innerWidth-width-12)+'px',top:(rect.bottom+4)+'px',
       minWidth:width+'px',maxWidth:width+'px'}},props.children),
     document.body);
@@ -437,7 +440,7 @@ function TaskCard(props){
     ),
     React.createElement('div',{className:'foot'},
       cardFields.assignee&&React.createElement(React.Fragment,null,
-        React.createElement(Avatar,{id:t.who,onClick:function(){onFieldClick('assignee',t.id,null);}}),
+        React.createElement(Avatar,{id:t.who,onClick:function(id2,e){onFieldClick('assignee',t.id,e);}}),
         React.createElement('span',{className:'who'},(members[t.who]||{short:'—'}).short)
       ),
       t.repeat!=='none'&&React.createElement('span',{className:'rchip',title:REPEAT[t.repeat].l},
