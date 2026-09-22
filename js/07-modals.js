@@ -70,24 +70,38 @@ function QuickDropdown(props){
   var target=props.target, options=props.options, currentValue=props.currentValue,
       onSelect=props.onSelect, onClose=props.onClose;
   var ref=useRef(null);
-
+  var st=useState(null), pos=st[0], setPos=st[1];
   useEffect(function(){
     var h=function(e){
-      if(ref.current && !ref.current.contains(e.target) && e.target!==target){
-        onClose();
-      }
+      if(ref.current&&!ref.current.contains(e.target)&&target&&!target.contains(e.target)) onClose();
     };
-    setTimeout(function(){ document.addEventListener('mousedown',h); },100);
-    return function(){ document.removeEventListener('mousedown',h); };
+    setTimeout(function(){document.addEventListener('mousedown',h);},100);
+    return function(){document.removeEventListener('mousedown',h);};
   },[onClose,target]);
-
+  var measure=function(){
+    if(!target||!ref.current) return;
+    var r=target.getBoundingClientRect();
+    if(r.width===0&&r.height===0){ onClose(); return; }
+    var ph=ref.current.offsetHeight;
+    var top=r.bottom+6;
+    if(top+ph>window.innerHeight-8) top=Math.max(8, r.top-ph-6);
+    var left=Math.max(8, Math.min(r.left, window.innerWidth-260-12));
+    setPos({top:top,left:left});
+  };
+  useLayoutEffect(function(){
+    measure();
+    window.addEventListener('scroll',measure,true);
+    window.addEventListener('resize',measure);
+    return function(){
+      window.removeEventListener('scroll',measure,true);
+      window.removeEventListener('resize',measure);
+    };
+  },[target]);
   if(!target) return null;
-  var rect=target.getBoundingClientRect();
-
-  return el('div',{ref:ref,className:'qdd',style:{
-    position:'fixed',
-    left:Math.min(rect.left,window.innerWidth-260)+'px',
-    top:(rect.bottom+4)+'px'}},
+  return el('div',{ref:ref,className:'qdd',
+    style:{position:'fixed',zIndex:70,visibility:pos?'visible':'hidden',
+      left:(pos?pos.left:0)+'px',top:(pos?pos.top:0)+'px',
+      minWidth:'180px',maxWidth:'260px',maxHeight:'70vh',overflowY:'auto'}},
     options.map(function(o){
       return el('button',{key:String(o.value),className:o.value===currentValue?'on':'',
         onClick:function(){onSelect(o.value);onClose();}},
