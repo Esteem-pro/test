@@ -330,7 +330,7 @@ function TaskCard(props){
       now=ctx.now, toggleTimer=ctx.toggleTimer;
   var t=props.t, onEdit=props.onEdit, onPin=props.onPin, onFav=props.onFav,
       onFieldClick=props.onFieldClick, cardFields=props.cardFields,
-            selected=props.selected, onToggleSelect=props.onToggleSelect, onShiftClick=props.onShiftClick,
+      selected=props.selected, onToggleSelect=props.onToggleSelect, onShiftClick=props.onShiftClick,
       onPatch=props.onPatch;
 
   var ch = channels[t.ch] || {label:'—',c:'#98A29B'};
@@ -355,7 +355,6 @@ function TaskCard(props){
       e.dataTransfer.effectAllowed='move';
     }
   },
-    // Верхняя часть
     React.createElement('div',{className:'card-top'},
       cardFields.project&&project&&React.createElement('button',{
         className:'chip',
@@ -402,17 +401,14 @@ function TaskCard(props){
         },React.createElement(Icon,{d:t.fav?IC.starFill:IC.star,size:12}))
       )
     ),
-    // Заголовок (inline)
     React.createElement('h4',{style:{display:'flex',gap:6,alignItems:'baseline',margin:0}},
       isDone(t)&&React.createElement('span',{className:'donecheck'},'✓ '),
       React.createElement(InlineText,{tag:'span',value:t.title,style:{flex:1,minWidth:0},
         onSave:function(v){onPatch(t.id,{title:v});}})
     ),
-       // Описание (inline)
     cardFields.desc&&React.createElement(InlineText,{tag:'p',className:'desc',multiline:true,
       value:t.desc||'',placeholder:'Добавить описание…',
       onSave:function(v){onPatch(t.id,{desc:v});}}),
-    // Типы
     cardFields.types&&t.types&&t.types.length>0&&React.createElement('div',{className:'ctypes'},
       t.types.slice(0,3).map(function(tid){
         var tp=taskTypes[tid]; if(!tp) return null;
@@ -427,12 +423,11 @@ function TaskCard(props){
       t.types.length>3&&React.createElement('button',{
         className:'ttype',
         style:{background:'#98A29B'},
-        onClick:function(e){e.stopPropagation();onFieldClick('types',t.id,e);}
+        onClick:function(e){openPop('types',e);}
       },'+'+(t.types.length-3))
     ),
-    // Фото (рендерится в 08-upload.js)
-    // Чек-лист
-        cardFields.subtasks&&t.sub.length>0&&React.createElement('div',{className:'subbar',
+    cardFields.photos!==false&&el(PhotoStrip,{t:t}),
+    cardFields.subtasks&&t.sub.length>0&&React.createElement('div',{className:'subbar',
       style:{cursor:'pointer'},title:'Изменить чек-лист',
       onClick:function(e){openPop('subs',e);}},
       React.createElement('div',{className:'track'},
@@ -440,7 +435,6 @@ function TaskCard(props){
       ),
       React.createElement('span',{className:'subn'},sd+'/'+t.sub.length)
     ),
-    // Нижняя часть
     React.createElement('div',{className:'foot'},
       cardFields.assignee&&React.createElement(React.Fragment,null,
         React.createElement(Avatar,{id:t.who,onClick:function(){onFieldClick('assignee',t.id,null);}}),
@@ -450,12 +444,9 @@ function TaskCard(props){
         React.createElement(Icon,{d:IC.repeat,size:10,sw:2.2}),
         REPEAT[t.repeat].short
       ),
-            cardFields.comments&&t.coms.length>0&&React.createElement('button',{
+      cardFields.comments&&t.coms.length>0&&React.createElement('button',{
         className:'com',
         onClick:function(e){openPop('coms',e);}
-      },
-        className:'com',
-        onClick:function(e){e.stopPropagation();onEdit(t);}
       },
         React.createElement(Icon,{d:IC.chat,size:12}),
         t.coms.length
@@ -465,7 +456,7 @@ function TaskCard(props){
         className:'due '+due.cls,
         style:{marginLeft:'auto'},
         onClick:function(e){openPop('due',e);}
-          },due.txt)
+      },due.txt)
     ),
     pop&&pop.kind==='due'&&React.createElement(InlineDate,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}}),
     pop&&pop.kind==='types'&&React.createElement(InlineTypes,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}}),
@@ -473,5 +464,3 @@ function TaskCard(props){
     pop&&pop.kind==='coms'&&React.createElement(InlineComs,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}})
   );
 }
-
-console.log('✓ 04-components.js загружен');
