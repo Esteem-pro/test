@@ -52,7 +52,8 @@ function Kanban(props){
               cardFields:cardFields,
               selected:selectedIds.includes(t.id),
               onToggleSelect:onToggleSelect,
-              onShiftClick:onShiftClick
+              onShiftClick:onShiftClick,
+              onPatch:props.onPatch
             });
           })
         )
