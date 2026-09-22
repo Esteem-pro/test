@@ -421,6 +421,9 @@ function App(props){
     setModal(function(m){return m?Object.assign({},m,{mode:'edit',t:t}):m;});
     return t;
   };
+    var patchTask=function(id,patch){
+    setTasks(function(ts){return ts.map(function(x){return x.id===id?Object.assign({},x,patch):x;});});
+  };
   var deleteTask=function(id){
     var t=tasks.find(function(x){return x.id===id;});
     setTasks(function(ts){return ts.filter(function(x){return x.id!==id;});});
@@ -805,7 +808,7 @@ function App(props){
                   return el(TaskCard,{key:t.id,t:t,
                     onEdit:function(t2){openModal({mode:'edit',t:t2});},
                     onPin:togglePin,onFav:toggleFav,onFieldClick:handleFieldClick,
-                    cardFields:cardFields,selected:selectedIds.includes(t.id),
+                    cardFields:cardFields,selected:selectedIds.includes(t.id),onPatch:patchTask,
                     onToggleSelect:toggleSelect,onShiftClick:toggleSelect});
                 })
               )
@@ -831,7 +834,8 @@ function App(props){
                   moveTo(id,cid);
                 },
                 onPin:togglePin,onFav:toggleFav,onFieldClick:handleFieldClick,
-                selectedIds:selectedIds,onToggleSelect:toggleSelect,onShiftClick:toggleSelect})
+                                selectedIds:selectedIds,onToggleSelect:toggleSelect,onShiftClick:toggleSelect,
+                onPatch:patchTask})
             : btSorted.length>0
               ? (group==='status'
                 ? el('div',{className:'ltab'},
