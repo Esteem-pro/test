@@ -476,7 +476,10 @@ function App(props){
       if(tt) openModal({mode:'edit',t:tt});
       return;
     }
-    setQuickDD({field:field,taskId:taskId,target:e?e.currentTarget:null});
+        setQuickDD(function(qd){
+      if(qd&&qd.field===field&&qd.taskId===taskId) return null;
+      return {field:field,taskId:taskId,target:e?e.currentTarget:null};
+    });
   };
   var applyQuick=function(value){
     if(!quickDD) return;
