@@ -280,11 +280,14 @@ h1 em{font-style:normal;color:var(--accent)}
 .qdd{position:absolute;z-index:30;background:var(--card);border:1px solid var(--line);
   border-radius:10px;box-shadow:var(--sh-md);padding:4px;min-width:180px;max-width:240px;
   animation:mpop .15s}
-.qdd button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;background:transparent;
+.qdd > button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;background:transparent;
   color:var(--ink);font:500 12px 'Golos Text';border-radius:6px;cursor:pointer;text-align:left;transition:.12s;
   font-family:inherit;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.qdd button:hover{background:var(--soft2)}
-.qdd button.on{background:var(--soft);font-weight:600}
+.qdd > button:hover{background:var(--soft2)}
+.qdd > button.on{background:var(--soft);font-weight:600}
+.qdd .csend{width:38px;height:38px;flex:0 0 auto;background:var(--ink);color:var(--paper);
+  border-radius:10px;padding:0;display:grid;place-items:center}
+.qdd .csend:hover{background:var(--accent);color:#fff}
 .qdd .sep{height:1px;background:var(--line2);margin:4px 0}
 .ltab{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-sm);
   overflow-x:auto;animation:rise .4s both}
