@@ -125,14 +125,24 @@ function Popover(props){
     setTimeout(function(){document.addEventListener('mousedown',h);},50);
     return function(){document.removeEventListener('mousedown',h);};
   },[]);
-  useLayoutEffect(function(){
+  var measure=function(){
     if(!target||!ref.current) return;
     var r=target.getBoundingClientRect();
+    if(r.width===0&&r.height===0){ onClose(); return; }
     var ph=ref.current.offsetHeight;
     var top=r.bottom+6;
     if(top+ph>window.innerHeight-8) top=Math.max(8, r.top-ph-6);
     var left=Math.max(8, Math.min(r.left, window.innerWidth-width-12));
     setPos({top:top,left:left});
+  };
+  useLayoutEffect(function(){
+    measure();
+    window.addEventListener('scroll',measure,true);
+    window.addEventListener('resize',measure);
+    return function(){
+      window.removeEventListener('scroll',measure,true);
+      window.removeEventListener('resize',measure);
+    };
   },[target]);
   if(!target) return null;
   return ReactDOM.createPortal(
