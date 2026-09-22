@@ -607,3 +607,16 @@ h1 em{font-style:normal;color:var(--accent)}
 .msec .seg{box-shadow:none}
 .msec .ttsel-btn{min-height:38px}
 @media(max-width:720px){.mrow.c3,.mrow.c2{grid-template-columns:1fr}}
+/* inline-редакторы на карточке */
+.inline-edit{border:1px solid var(--ink);border-radius:8px;padding:4px 8px;
+  font:600 13px 'Golos Text';color:var(--ink);background:var(--field);outline:none;
+  box-shadow:0 0 0 3px var(--ring);display:block;width:100%}
+textarea.inline-edit{font:500 12px 'Golos Text';resize:vertical;line-height:1.4}
+.qdd input[type=date]{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;
+  font:500 13px 'Golos Text';background:var(--field);color:var(--ink);outline:none}
+.qdd .ck{display:flex;align-items:center;gap:8px;border-radius:6px;margin:0}
+.qdd .ck:hover{background:var(--soft2)}
+.qdd .ckadd input{width:100%}
+.qdd .cinput{display:flex;gap:6px}
+.qdd .cinput input{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px;
+  font:500 12px 'Golos Text';background:var(--field);color:var(--ink);outline:none}
