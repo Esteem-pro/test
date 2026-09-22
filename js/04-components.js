@@ -330,13 +330,16 @@ function TaskCard(props){
       now=ctx.now, toggleTimer=ctx.toggleTimer;
   var t=props.t, onEdit=props.onEdit, onPin=props.onPin, onFav=props.onFav,
       onFieldClick=props.onFieldClick, cardFields=props.cardFields,
-      selected=props.selected, onToggleSelect=props.onToggleSelect, onShiftClick=props.onShiftClick;
+            selected=props.selected, onToggleSelect=props.onToggleSelect, onShiftClick=props.onShiftClick,
+      onPatch=props.onPatch;
 
   var ch = channels[t.ch] || {label:'—',c:'#98A29B'};
   var pr = PR[t.pr];
   var due = dueInfo(t);
   var sd = t.sub.filter(function(s){return s.done;}).length;
   var project = projects[t.project];
+  var popSt=useState(null), pop=popSt[0], setPop=popSt[1];
+  var openPop=function(kind,e){ e.stopPropagation(); setPop({kind:kind,target:e.currentTarget}); };
 
   var className='card'+(t.pinned?' pinned':'')+(t.fav?' fav':'')+(selected?' selected':'');
 
@@ -399,13 +402,16 @@ function TaskCard(props){
         },React.createElement(Icon,{d:t.fav?IC.starFill:IC.star,size:12}))
       )
     ),
-    // Заголовок
-    React.createElement('h4',null,
+    // Заголовок (inline)
+    React.createElement('h4',{style:{display:'flex',gap:6,alignItems:'baseline',margin:0}},
       isDone(t)&&React.createElement('span',{className:'donecheck'},'✓ '),
-      t.title
+      React.createElement(InlineText,{tag:'span',value:t.title,style:{flex:1,minWidth:0},
+        onSave:function(v){onPatch(t.id,{title:v});}})
     ),
-    // Описание
-    cardFields.desc&&t.desc&&React.createElement('p',{className:'desc'},t.desc),
+       // Описание (inline)
+    cardFields.desc&&React.createElement(InlineText,{tag:'p',className:'desc',multiline:true,
+      value:t.desc||'',placeholder:'Добавить описание…',
+      onSave:function(v){onPatch(t.id,{desc:v});}}),
     // Типы
     cardFields.types&&t.types&&t.types.length>0&&React.createElement('div',{className:'ctypes'},
       t.types.slice(0,3).map(function(tid){
@@ -414,7 +420,7 @@ function TaskCard(props){
           key:tid,
           className:'ttype',
           style:{background:tp.c},
-          onClick:function(e){e.stopPropagation();onFieldClick('types',t.id,e);},
+          onClick:function(e){openPop('types',e);},
           title:'Изменить типы'
         },tp.label);
       }),
@@ -426,7 +432,9 @@ function TaskCard(props){
     ),
     // Фото (рендерится в 08-upload.js)
     // Чек-лист
-    cardFields.subtasks&&t.sub.length>0&&React.createElement('div',{className:'subbar'},
+        cardFields.subtasks&&t.sub.length>0&&React.createElement('div',{className:'subbar',
+      style:{cursor:'pointer'},title:'Изменить чек-лист',
+      onClick:function(e){openPop('subs',e);}},
       React.createElement('div',{className:'track'},
         React.createElement('i',{style:{width:(sd/t.sub.length*100)+'%',background:ch.c,transition:'width .5s'}})
       ),
@@ -442,7 +450,10 @@ function TaskCard(props){
         React.createElement(Icon,{d:IC.repeat,size:10,sw:2.2}),
         REPEAT[t.repeat].short
       ),
-      cardFields.comments&&t.coms.length>0&&React.createElement('button',{
+            cardFields.comments&&t.coms.length>0&&React.createElement('button',{
+        className:'com',
+        onClick:function(e){openPop('coms',e);}
+      },
         className:'com',
         onClick:function(e){e.stopPropagation();onEdit(t);}
       },
@@ -453,9 +464,13 @@ function TaskCard(props){
       cardFields.due&&React.createElement('button',{
         className:'due '+due.cls,
         style:{marginLeft:'auto'},
-        onClick:function(e){e.stopPropagation();onFieldClick('due',t.id,e);}
-      },due.txt)
-    )
+        onClick:function(e){openPop('due',e);}
+          },due.txt)
+    ),
+    pop&&pop.kind==='due'&&React.createElement(InlineDate,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}}),
+    pop&&pop.kind==='types'&&React.createElement(InlineTypes,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}}),
+    pop&&pop.kind==='subs'&&React.createElement(InlineSubs,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}}),
+    pop&&pop.kind==='coms'&&React.createElement(InlineComs,{t:t,target:pop.target,onPatch:onPatch,onClose:function(){setPop(null);}})
   );
 }
 
