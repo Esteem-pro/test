@@ -112,7 +112,145 @@ function TimerChip(props){
     React.createElement('span',null,fmtDur(s))
   );
 }
+/* ================= INLINE-РЕДАКТОРЫ ================= */
+function Popover(props){
+  var target=props.target, onClose=props.onClose, width=props.width||260;
+  var ref=useRef(null);
+  useEffect(function(){
+    var h=function(e){
+      if(ref.current&&!ref.current.contains(e.target)&&target&&!target.contains(e.target)) onClose();
+    };
+    setTimeout(function(){document.addEventListener('mousedown',h);},50);
+    return function(){document.removeEventListener('mousedown',h);};
+  },[]);
+  if(!target) return null;
+  var rect=target.getBoundingClientRect();
+  return ReactDOM.createPortal(
+    React.createElement('div',{ref:ref,className:'qdd',style:{position:'fixed',
+      left:Math.min(rect.left,window.innerWidth-width-12)+'px',top:(rect.bottom+4)+'px',
+      minWidth:width+'px',maxWidth:width+'px'}},props.children),
+    document.body);
+}
 
+function InlineText(props){
+  var value=props.value||'', multiline=props.multiline, onSave=props.onSave,
+      placeholder=props.placeholder, tag=props.tag||'span', extraStyle=props.style;
+  var st=useState(false), editing=st[0], setEditing=st[1];
+  var sv=useState(value), v=sv[0], setV=sv[1];
+  useEffect(function(){ if(!editing) setV(value); },[value,editing]);
+  var commit=function(){
+    setEditing(false);
+    var nv=v.trim();
+    if(nv&&nv!==value) onSave(nv); else setV(value);
+  };
+  if(!editing){
+    return React.createElement(tag,{
+      style:Object.assign({cursor:'text'},extraStyle),
+      title:'Кликните, чтобы изменить',
+      onClick:function(e){e.stopPropagation();setEditing(true);}},
+      value||placeholder||'—');
+  }
+  if(multiline){
+    return React.createElement('textarea',{autoFocus:true,rows:2,className:'inline-edit',value:v,
+      onClick:function(e){e.stopPropagation();},
+      onChange:function(e){setV(e.target.value);},
+      onBlur:commit,
+      onKeyDown:function(e){
+        if(e.key==='Escape'){setV(value);setEditing(false);}
+        if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){commit();}
+      }});
+  }
+  return React.createElement('input',{type:'text',autoFocus:true,className:'inline-edit',value:v,
+    onClick:function(e){e.stopPropagation();},
+    onChange:function(e){setV(e.target.value);},
+    onBlur:commit,
+    onKeyDown:function(e){
+      if(e.key==='Enter'){commit();}
+      if(e.key==='Escape'){setV(value);setEditing(false);}
+    }});
+}
+
+function InlineDate(props){
+  var t=props.t, onPatch=props.onPatch, onClose=props.onClose, target=props.target;
+  return React.createElement(Popover,{target:target,onClose:onClose,width:220},
+    React.createElement('input',{type:'date',value:t.due,autoFocus:true,
+      onChange:function(e){ if(e.target.value){onPatch(t.id,{due:e.target.value}); onClose(); } }})
+  );
+}
+
+function InlineTypes(props){
+  var ctx=useCtx(); var taskTypes=ctx.taskTypes;
+  var t=props.t, onPatch=props.onPatch, onClose=props.onClose, target=props.target;
+  var toggle=function(tid){
+    var types=(t.types||[]).slice();
+    var i=types.indexOf(tid);
+    if(i>=0) types.splice(i,1); else types.push(tid);
+    onPatch(t.id,{types:types});
+  };
+  return React.createElement(Popover,{target:target,onClose:onClose,width:240},
+    Object.entries(taskTypes).map(function(e){
+      var k=e[0],tp=e[1]; var on=(t.types||[]).includes(k);
+      return React.createElement('button',{key:k,type:'button',className:'ttsel-item'+(on?' on':''),
+        onClick:function(){toggle(k);}},
+        React.createElement('span',{className:'dot',style:{background:tp.c}}),
+        React.createElement('span',{style:{flex:1,textAlign:'left'}},tp.label),
+        on&&React.createElement(Icon,{d:IC.check,size:14}));
+    })
+  );
+}
+
+function InlineSubs(props){
+  var t=props.t, onPatch=props.onPatch, onClose=props.onClose, target=props.target;
+  var s=useState(''), val=s[0], setVal=s[1];
+  var toggle=function(i){
+    onPatch(t.id,{sub:t.sub.map(function(x,j){return j===i?Object.assign({},x,{done:!x.done}):x;})});
+  };
+  var add=function(){
+    if(!val.trim())return;
+    onPatch(t.id,{sub:t.sub.concat([{t:val.trim(),done:false}])});
+    setVal('');
+  };
+  return React.createElement(Popover,{target:target,onClose:onClose,width:260},
+    t.sub.length===0&&React.createElement('div',{style:{padding:'6px 8px',color:'var(--mut)',fontSize:12}},'Пока нет пунктов'),
+    t.sub.map(function(s2,i){
+      return React.createElement('label',{key:i,className:'ck',style:{padding:'4px 6px'}},
+        React.createElement('input',{type:'checkbox',checked:s2.done,onChange:function(){toggle(i);}}),
+        React.createElement('span',null,s2.t));
+    }),
+    React.createElement('div',{className:'ckadd',style:{marginTop:6}},
+      React.createElement('input',{placeholder:'Новый пункт + Enter',value:val,
+        onChange:function(e){setVal(e.target.value);},
+        onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();add();}}}))
+  );
+}
+
+function InlineComs(props){
+  var ctx=useCtx(); var members=ctx.members, me=ctx.me;
+  var t=props.t, onPatch=props.onPatch, onClose=props.onClose, target=props.target;
+  var s=useState(''), val=s[0], setVal=s[1];
+  var add=function(){
+    if(!val.trim())return;
+    onPatch(t.id,{coms:t.coms.concat([{who:me,ts:Date.now(),text:val.trim()}])});
+    setVal('');
+  };
+  return React.createElement(Popover,{target:target,onClose:onClose,width:280},
+    React.createElement('div',{style:{maxHeight:160,overflow:'auto'}},
+      t.coms.length===0&&React.createElement('div',{style:{padding:'6px 8px',color:'var(--mut)',fontSize:12}},'Пока тихо — напишите первым'),
+      t.coms.slice(-5).map(function(c,i){
+        return React.createElement('div',{key:i,className:'cmt',style:{marginBottom:6}},
+          React.createElement(Avatar,{id:c.who,size:20}),
+          React.createElement('div',{className:'b'},
+            React.createElement('small',null,(members[c.who]||{short:'—'}).short+' · '+fmtT(c.ts)),
+            React.createElement('p',null,c.text)));
+      })
+    ),
+    React.createElement('div',{className:'cinput',style:{marginTop:6}},
+      React.createElement('input',{placeholder:'Комментарий + Enter',value:val,autoFocus:true,
+        onChange:function(e){setVal(e.target.value);},
+        onKeyDown:function(e){if(e.key==='Enter'){e.preventDefault();add();}}}),
+      React.createElement('button',{className:'csend',onClick:add},React.createElement(Icon,{d:IC.up,size:14,sw:2})))
+  );
+}
 // Строка задачи (для списка)
 function TaskRow(props){
   var ctx=useCtx();
