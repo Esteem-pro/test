@@ -145,15 +145,6 @@ function PhotoStrip(props){
     att.length>3&&el('span',{className:'pmore'},'+'+(att.length-3))
   );
 }
-// Обновление TaskCard для использования PhotoStrip
-(function(){
-  var originalTaskCard = window.TaskCard || TaskCard;
-  window.TaskCard = function(props) {
-    var result = originalTaskCard(props);
-    // Фото уже рендерятся внутри originalTaskCard через условную логику
-    return result;
-  };
-})();
 
 /* ---------- блок фото в модалке ---------- */
 function PhotoBlock(props){
