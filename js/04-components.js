@@ -364,7 +364,10 @@ function TaskCard(props){
   var sd = t.sub.filter(function(s){return s.done;}).length;
   var project = projects[t.project];
   var popSt=useState(null), pop=popSt[0], setPop=popSt[1];
-  var openPop=function(kind,e){ e.stopPropagation(); setPop({kind:kind,target:e.currentTarget}); };
+  var openPop=function(kind,e){
+    e.stopPropagation();
+    setPop(function(p){ return (p&&p.kind===kind) ? null : {kind:kind,target:e.currentTarget}; });
+  };
 
   var className='card'+(t.pinned?' pinned':'')+(t.fav?' fav':'')+(selected?' selected':'');
 
