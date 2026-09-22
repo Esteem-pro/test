@@ -5,6 +5,7 @@ var useState = React.useState;
 var useEffect = React.useEffect;
 var useMemo = React.useMemo;
 var useRef = React.useRef;
+var useLayoutEffect = React.useLayoutEffect;
 
 // Аватар
 var Avatar = function(props) {
