@@ -116,6 +116,7 @@ function TimerChip(props){
 function Popover(props){
   var target=props.target, onClose=props.onClose, width=props.width||260;
   var ref=useRef(null);
+  var st=useState(null), pos=st[0], setPos=st[1];
   useEffect(function(){
     var h=function(e){
       if(ref.current&&!ref.current.contains(e.target)&&target&&!target.contains(e.target)) onClose();
@@ -123,15 +124,25 @@ function Popover(props){
     setTimeout(function(){document.addEventListener('mousedown',h);},50);
     return function(){document.removeEventListener('mousedown',h);};
   },[]);
+  useLayoutEffect(function(){
+    if(!target||!ref.current) return;
+    var r=target.getBoundingClientRect();
+    var ph=ref.current.offsetHeight;
+    var top=r.bottom+6;
+    if(top+ph>window.innerHeight-8) top=Math.max(8, r.top-ph-6);
+    var left=Math.max(8, Math.min(r.left, window.innerWidth-width-12));
+    setPos({top:top,left:left});
+  },[target]);
   if(!target) return null;
-  var rect=target.getBoundingClientRect();
-   return ReactDOM.createPortal(
+  return ReactDOM.createPortal(
     React.createElement('div',{ref:ref,className:'qdd',
       onClick:function(e){e.stopPropagation();},
       onMouseDown:function(e){e.stopPropagation();},
-      style:{position:'fixed',
-      left:Math.min(rect.left,window.innerWidth-width-12)+'px',top:(rect.bottom+4)+'px',
-      minWidth:width+'px',maxWidth:width+'px'}},props.children),
+      style:{position:'fixed',zIndex:70,
+        visibility:pos?'visible':'hidden',
+        left:(pos?pos.left:0)+'px',top:(pos?pos.top:0)+'px',
+        minWidth:width+'px',maxWidth:width+'px',
+        maxHeight:'70vh',overflowY:'auto'}},props.children),
     document.body);
 }
 
